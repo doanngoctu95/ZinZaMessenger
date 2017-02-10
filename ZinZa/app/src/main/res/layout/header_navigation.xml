@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:background="@color/mainColor"
+              android:layout_width="match_parent"
+              android:layout_height="200dp">
+
+   <de.hdodenhof.circleimageview.CircleImageView
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       android:layout_width="72dp"
+       android:layout_height="72dp"
+       app:civ_border_width="1dp"
+       app:civ_border_color="@color/white"
+       app:civ_border_overlay="true"
+       android:layout_marginLeft="30dp"
+       android:src="@drawable/a7"
+       android:layout_centerVertical="true"
+       android:layout_alignParentLeft="true"
+       android:layout_alignParentStart="true"
+       android:id="@+id/imageView2"
+       />
+
+    <TextView
+        android:text="Hoài Sơn"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp"
+        android:id="@+id/txtUsername"
+        android:layout_alignTop="@+id/imageView2"
+        android:layout_toRightOf="@+id/imageView2"
+        android:layout_toEndOf="@+id/imageView2"
+        android:layout_marginTop="12dp"/>
+
+    <TextView
+        android:textColor="@color/white"
+        android:text="hoaison95@gmail.com"
+        android:textSize="13sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtEmail"
+        android:layout_below="@+id/txtUsername"
+        android:layout_alignLeft="@+id/txtUsername"
+        android:layout_alignStart="@+id/txtUsername"
+        android:layout_marginTop="10dp"/>
+</RelativeLayout>

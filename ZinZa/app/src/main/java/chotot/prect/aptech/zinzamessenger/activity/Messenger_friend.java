@@ -1,5 +1,6 @@
 package chotot.prect.aptech.zinzamessenger.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ public class Messenger_friend extends AppCompatActivity {
     private void initControl(){
         drawerLayout = (DrawerLayout)findViewById(R.id.drawerlayout);
         toolbar = (Toolbar)findViewById(R.id.mainToolbar);
+
         setSupportActionBar(toolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.draw_open,R.string.draw_close){
             @Override
@@ -80,6 +82,14 @@ public class Messenger_friend extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_friend_ol:
+                Intent frOL = new Intent(Messenger_friend.this,Friend_online.class);
+                startActivity(frOL);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
