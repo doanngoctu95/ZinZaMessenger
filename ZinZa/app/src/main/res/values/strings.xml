@@ -2,4 +2,11 @@
     <string name="app_name">ZinzaMessenger</string>
     <string name="draw_open">Open</string>
     <string name="draw_close">Close</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="app_overview_1st_item_text">Thanks for using \ZinzaMessenger with it you can</string>
+    <string name="app_overview_2nd_item_text">Free chat with your friends</string>
+    <string name="app_overview_3rd_item_text">Search and add new friend</string>
+    <string name="app_overview_4th_item_text">Send and receive file quickly</string>
+    <string name="StartMessaging">Skip</string>
 </resources>
