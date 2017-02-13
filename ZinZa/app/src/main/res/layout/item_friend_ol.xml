@@ -9,7 +9,6 @@
         android:layout_marginTop="5dp"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:src="@drawable/a7"
         android:id="@+id/imgFrendAvatar"
         app:civ_border_width="1dp"
         app:civ_border_color="@color/black"/>
@@ -26,11 +25,9 @@
         android:id="@+id/txtNameFriend"
         android:textSize="16sp"/>
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:layout_width="10dp"
         android:layout_height="10dp"
-        android:background="@android:color/holo_green_light"
-        app:civ_border_width="3dp"
         android:layout_alignTop="@+id/txtNameFriend"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"

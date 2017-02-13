@@ -5,10 +5,61 @@
     android:id="@+id/activity_setting"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="chotot.prect.aptech.zinzamessenger.activity.SettingActivity">
+    <android.support.v4.widget.DrawerLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/settingDrawerlayout">
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/toolbar_friend_ol"
+                />
+            <Switch
+                android:layout_marginLeft="10dp"
+                android:text="Auto download file attachment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch1"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="40dp"
+                android:lines="2"
+                android:text="Recomend turn on to download file from conversation to your device"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView"/>
+
+            <Switch
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Notification to device"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch2"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="40dp"
+                android:text="Notifcation to device when have new message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"/>
+        </LinearLayout>
+
+    </android.support.v4.widget.DrawerLayout>
 
 </RelativeLayout>

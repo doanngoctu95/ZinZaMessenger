@@ -3,21 +3,25 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:title="Setting"
+        android:id="@+id/action_setting"
         android:icon="@drawable/ic_action_setting"
         app:showAsAction="always"
         />
     <item
         android:title="Rating"
-        android:icon="@drawable/ic_action_setting"
+        android:id="@+id/action_rating"
+        android:icon="@drawable/ic_action_rating"
         app:showAsAction="always"
         />
     <item
         android:title="About us"
-        android:icon="@drawable/ic_action_setting"
+        android:id="@+id/action_about"
+        android:icon="@drawable/ic_action_about"
         app:showAsAction="always"
         />
     <item
         android:title="Log out"
+        android:id="@+id/action_logout"
         android:icon="@drawable/ic_action_logout"
         app:showAsAction="always"
         />

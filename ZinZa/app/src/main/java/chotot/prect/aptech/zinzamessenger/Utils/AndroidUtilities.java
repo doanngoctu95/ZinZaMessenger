@@ -9,13 +9,18 @@
 package chotot.prect.aptech.zinzamessenger.Utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import chotot.prect.aptech.zinzamessenger.R;
 
 public class AndroidUtilities {
 
@@ -69,6 +74,20 @@ public class AndroidUtilities {
 
         }
         return new SpannableStringBuilder(str);
+    }
+    public static Drawable getDrawable(String status){
+        Resources res = Resources.getSystem();
+        Drawable drawable = null;
+        if(status.equals("online")){
+             drawable = res.getDrawable(R.drawable.online);
+        } else if(status.equals("offline")){
+            drawable = res.getDrawable(R.drawable.offline);
+        }
+        return drawable;
+
+    }
+    public static void showAlert(String alert,Context context){
+        Toast.makeText(context,alert,Toast.LENGTH_SHORT).show();
     }
 
 }

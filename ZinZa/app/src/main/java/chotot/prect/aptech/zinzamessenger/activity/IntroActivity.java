@@ -28,7 +28,6 @@ import android.widget.TextView;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 
-import chotot.prect.aptech.zinzamessenger.MainActivity;
 import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.Utils.AndroidUtilities;
 

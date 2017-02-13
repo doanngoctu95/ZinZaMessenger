@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="chotot.prect.aptech.zinzamessenger.activity.Friend_online">
+    tools:context="chotot.prect.aptech.zinzamessenger.activity.FriendOnlineActivity">
     <android.support.v4.widget.DrawerLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,11 +15,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <include
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 layout="@layout/toolbar_friend_ol"
                 />
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

@@ -7,4 +7,5 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="colorNormal">#003380</color>
+    <color name="senderColor">#21ec9b</color>
 </resources>

@@ -23,18 +23,6 @@
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txtContent"
-        android:layout_alignBottom="@+id/imgAvatar"
-        android:layout_alignLeft="@+id/txtName"
-        android:layout_alignStart="@+id/txtName"
-        android:layout_marginBottom="11dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:id="@+id/txtName"
@@ -44,5 +32,24 @@
         android:textSize="18sp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/txtName"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/txtTime"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtContent"
+        android:layout_marginBottom="12dp"
+        android:layout_alignBottom="@+id/imgAvatar"
+        android:layout_alignLeft="@+id/txtName"
+        android:layout_alignStart="@+id/txtName"/>
 
 </RelativeLayout>
