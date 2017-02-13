@@ -32,15 +32,15 @@ import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.Utils.AndroidUtilities;
 
 public class IntroActivity extends Activity {
-    private ViewPager viewPager;
-    private PageIndicator indicator;
-    private ImageView topImage1;
-    private ImageView topImage2;
-    private int lastPage = 0;
-    private boolean startPressed = false;
-    private int[] icons;
-    private int[] messages;
-    private TextView startLogin,startMessagingButton;
+    private ViewPager mViewPager;
+    private PageIndicator mIndicator;
+    private ImageView mTopImage1;
+    private ImageView mTopImage2;
+    private int mLastPage = 0;
+    private boolean mStartPressed = false;
+    private int[] mIcons;
+    private int[] mMessages;
+    private TextView mStartLogin, mStartMessagingButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,58 +50,58 @@ public class IntroActivity extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.intro_layout);
 
-        icons = new int[]{
+        mIcons = new int[]{
                 R.drawable.zinza_icon,
                 R.drawable.chat,
                 R.drawable.search_friend,
                 R.drawable.transfer_files
         };
-        messages = new int[]{
+        mMessages = new int[]{
                 R.string.app_overview_1st_item_text,
                 R.string.app_overview_2nd_item_text,
                 R.string.app_overview_3rd_item_text,
                 R.string.app_overview_4th_item_text
         };
-        viewPager = (ViewPager) findViewById(R.id.intro_view_pager);
-        startMessagingButton = (TextView) findViewById(R.id.start_messaging_button);
-        startLogin= (TextView) findViewById(R.id.startLogin);
+        mViewPager = (ViewPager) findViewById(R.id.intro_view_pager);
+        mStartMessagingButton = (TextView) findViewById(R.id.start_messaging_button);
+        mStartLogin= (TextView) findViewById(R.id.startLogin);
 //        startLogin.setVisibility(View.INVISIBLE);
-        startMessagingButton.setText(getString(R.string.StartMessaging));
+        mStartMessagingButton.setText(getString(R.string.StartMessaging));
         if (Build.VERSION.SDK_INT >= 21) {
             StateListAnimator animator = new StateListAnimator();
-            animator.addState(new int[]{android.R.attr.state_pressed}, ObjectAnimator.ofFloat(startMessagingButton, "translationZ", AndroidUtilities.dp(2, this), AndroidUtilities.dp(4, this)).setDuration(200));
-            animator.addState(new int[]{}, ObjectAnimator.ofFloat(startMessagingButton, "translationZ", AndroidUtilities.dp(4, this), AndroidUtilities.dp(2, this)).setDuration(200));
-            startMessagingButton.setStateListAnimator(animator);
+            animator.addState(new int[]{android.R.attr.state_pressed}, ObjectAnimator.ofFloat(mStartMessagingButton, "translationZ", AndroidUtilities.dp(2, this), AndroidUtilities.dp(4, this)).setDuration(200));
+            animator.addState(new int[]{}, ObjectAnimator.ofFloat(mStartMessagingButton, "translationZ", AndroidUtilities.dp(4, this), AndroidUtilities.dp(2, this)).setDuration(200));
+            mStartMessagingButton.setStateListAnimator(animator);
         }
-        topImage1 = (ImageView) findViewById(R.id.icon_image1);
-        topImage2 = (ImageView) findViewById(R.id.icon_image2);
-        indicator = (CirclePageIndicator) findViewById(R.id.indicator);
+        mTopImage1 = (ImageView) findViewById(R.id.icon_image1);
+        mTopImage2 = (ImageView) findViewById(R.id.icon_image2);
+        mIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
 
-        topImage2.setVisibility(View.GONE);
-        viewPager.setAdapter(new IntroAdapter());
-        viewPager.setPageMargin(0);
-        viewPager.setOffscreenPageLimit(1);
-        indicator.setViewPager(viewPager);
-        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mTopImage2.setVisibility(View.GONE);
+        mViewPager.setAdapter(new IntroAdapter());
+        mViewPager.setPageMargin(0);
+        mViewPager.setOffscreenPageLimit(1);
+        mIndicator.setViewPager(mViewPager);
+        mIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                if (lastPage != viewPager.getCurrentItem()) {
-                    lastPage = viewPager.getCurrentItem();
+                if (mLastPage != mViewPager.getCurrentItem()) {
+                    mLastPage = mViewPager.getCurrentItem();
 
                     final ImageView fadeoutImage;
                     final ImageView fadeinImage;
-                    if (topImage1.getVisibility() == View.VISIBLE) {
-                        fadeoutImage = topImage1;
-                        fadeinImage = topImage2;
+                    if (mTopImage1.getVisibility() == View.VISIBLE) {
+                        fadeoutImage = mTopImage1;
+                        fadeinImage = mTopImage2;
 
                     } else {
-                        fadeoutImage = topImage2;
-                        fadeinImage = topImage1;
+                        fadeoutImage = mTopImage2;
+                        fadeinImage = mTopImage1;
                     }
 
                     fadeinImage.bringToFront();
-                    fadeinImage.setImageResource(icons[lastPage]);
+                    fadeinImage.setImageResource(mIcons[mLastPage]);
                     fadeinImage.clearAnimation();
                     fadeoutImage.clearAnimation();
 
@@ -156,20 +156,20 @@ public class IntroActivity extends Activity {
             }
         });
 
-        startMessagingButton.setOnClickListener(new View.OnClickListener() {
+        mStartMessagingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (startPressed) {
+                if (mStartPressed) {
                     return;
                 }
-                startPressed = true;
+                mStartPressed = true;
                 Intent intent2 = new Intent(IntroActivity.this, LoginActivity.class);
                 startActivity(intent2);
                 finish();
             }
         });
 
-        startLogin.setOnClickListener(new View.OnClickListener() {
+        mStartLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent2 = new Intent(IntroActivity.this, LoginActivity.class);
@@ -196,14 +196,14 @@ public class IntroActivity extends Activity {
             View view = View.inflate(container.getContext(), R.layout.intro_view_layout, null);
             TextView messageTextView = (TextView) view.findViewById(R.id.message_text);
             container.addView(view, 0);
-            messageTextView.setText(AndroidUtilities.replaceTags(getString(messages[position]), getApplicationContext()));
+            messageTextView.setText(AndroidUtilities.replaceTags(getString(mMessages[position]), getApplicationContext()));
             if (position==3){
-                startLogin.setVisibility(View.VISIBLE);
-                startMessagingButton.setVisibility(View.INVISIBLE);
+                mStartLogin.setVisibility(View.VISIBLE);
+                mStartMessagingButton.setVisibility(View.INVISIBLE);
             }
             else {
-                startLogin.setVisibility(View.INVISIBLE);
-                startMessagingButton.setVisibility(View.VISIBLE);
+                mStartLogin.setVisibility(View.INVISIBLE);
+                mStartMessagingButton.setVisibility(View.VISIBLE);
             }
             return view;
         }

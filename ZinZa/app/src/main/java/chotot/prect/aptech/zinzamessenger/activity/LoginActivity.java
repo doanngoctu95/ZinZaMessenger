@@ -14,7 +14,8 @@ import chotot.prect.aptech.zinzamessenger.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button btnSignUp;
+    private Button mBtnSignUp;
+    private Button mBtnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +25,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initView() {
-        btnSignUp= (Button) findViewById(R.id.btnSignUp);
+        mBtnSignUp = (Button) findViewById(R.id.btnSignUp);
 
-        btnSignUp.setOnClickListener(this);
+        mBtnLogin= (Button) findViewById(R.id.btnLogin);
+        mBtnSignUp.setOnClickListener(this);
+        mBtnLogin.setOnClickListener(this);
 
     }
 
@@ -37,6 +40,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btnSignUp:
                 Intent intent2 = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent2);
+                break;
+            case R.id.btnLogin:
+                Intent intent1 = new Intent(LoginActivity.this, MessageFriendActivity.class);
+                startActivity(intent1);
                 break;
         }
     }

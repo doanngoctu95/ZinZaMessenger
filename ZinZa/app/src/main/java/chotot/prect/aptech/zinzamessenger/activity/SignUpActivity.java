@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import chotot.prect.aptech.zinzamessenger.R;
@@ -14,7 +13,7 @@ import chotot.prect.aptech.zinzamessenger.R;
  */
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
-    private ImageView imgBack;
+    private ImageView mImgBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +23,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initView() {
-        imgBack= (ImageView) findViewById(R.id.btnBackSignUp);
-        imgBack.setOnClickListener(this);
+        mImgBack = (ImageView) findViewById(R.id.btnBackSignUp);
+        mImgBack.setOnClickListener(this);
     }
 
     @Override
