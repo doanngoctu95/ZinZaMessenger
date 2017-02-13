@@ -20,19 +20,19 @@ import chotot.prect.aptech.zinzamessenger.model.User;
  */
 
 public class AdapterFriendOnline extends BaseAdapter {
-    Context mContext;
-    int mLayout;
-    List<User> list;
+    private Context mContext;
+    private int mLayout;
+    private List<User> mListUser;
 
-    public AdapterFriendOnline(Context mContext, int mLayout, List<User> list) {
+    public AdapterFriendOnline(Context mContext, int mLayout, List<User> mListUser) {
         this.mContext = mContext;
         this.mLayout = mLayout;
-        this.list = list;
+        this.mListUser = mListUser;
     }
 
     @Override
     public int getCount() {
-        return list.size();
+        return mListUser.size();
     }
 
     @Override
@@ -52,9 +52,9 @@ public class AdapterFriendOnline extends BaseAdapter {
         ImageView avatarUser = (ImageView)convertView.findViewById(R.id.imgFrendAvatar);
         TextView nameUser = (TextView)convertView.findViewById(R.id.txtNameFriend);
         ImageView statusUser = (ImageView)convertView.findViewById(R.id.imgStatus);
-        Picasso.with(mContext).load(list.get(position).getAvatar()).into(avatarUser);
-        nameUser.setText(list.get(position).getUsername());
-        statusUser.setImageResource(list.get(position).getStatus());
+        Picasso.with(mContext).load(mListUser.get(position).getAvatar()).into(avatarUser);
+        nameUser.setText(mListUser.get(position).getUsername());
+        statusUser.setImageResource(mListUser.get(position).getStatus());
         return convertView;
     }
 }

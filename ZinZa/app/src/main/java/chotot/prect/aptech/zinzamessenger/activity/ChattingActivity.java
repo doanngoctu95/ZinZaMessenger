@@ -14,25 +14,25 @@ import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.model.Message;
 
 public class ChattingActivity extends AppCompatActivity implements View.OnClickListener{
-    ImageButton btnBack;
-    ImageView imgAvatar;
-    TextView txtName;
+    private ImageButton mBtnBack;
+    private ImageView mImgAvatar;
+    private TextView mTxtName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
         initControl();
-        btnBack.setOnClickListener(this);
+        mBtnBack.setOnClickListener(this);
         getExtra();
     }
     private void initControl(){
-        btnBack = (ImageButton)findViewById(R.id.btnBackChatting);
-        imgAvatar = (ImageView)findViewById(R.id.imgAvatarFriend);
-        txtName = (TextView)findViewById(R.id.txtnameFriendChatting);
+        mBtnBack = (ImageButton)findViewById(R.id.btnBackChatting);
+        mImgAvatar = (ImageView)findViewById(R.id.imgAvatarFriend);
+        mTxtName = (TextView)findViewById(R.id.txtnameFriendChatting);
     }
     @Override
     public void onClick(View v) {
-        if(v==btnBack){
+        if(v== mBtnBack){
             finish();
         }
     }
@@ -50,8 +50,8 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
                 nameRecipient = "Nhung";
                 urlAvatarRecipient = "http://1.bp.blogspot.com/-U96MqFNsOGA/Uzv6DLtpsHI/AAAAAAAABHs/P7lp0Kc-hYg/s1600/hinh+avatar+dep+6.jpg";
             }
-            Picasso.with(this).load(urlAvatarRecipient).into(imgAvatar);
-            txtName.setText(nameRecipient);
+            Picasso.with(this).load(urlAvatarRecipient).into(mImgAvatar);
+            mTxtName.setText(nameRecipient);
 
         }
     }

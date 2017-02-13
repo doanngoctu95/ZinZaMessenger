@@ -27,13 +27,13 @@ import chotot.prect.aptech.zinzamessenger.Utils.AndroidUtilities;
 import chotot.prect.aptech.zinzamessenger.model.Message;
 
 public class MessageFriendActivity extends AppCompatActivity implements ListView.OnItemClickListener,NavigationView.OnNavigationItemSelectedListener{
-    DrawerLayout drawerLayout;
-    Toolbar toolbar;
-    ActionBarDrawerToggle actionBarDrawerToggle;
-    ListView listMessage;
-    List<Message> list;
-    NavigationView navigationView;
-    AdapterMessage adapterMessage;
+    private DrawerLayout mDrawerLayout;
+    private Toolbar mToolbar;
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
+    private ListView mListMessage;
+    private List<Message> mList;
+    private NavigationView mNavigationView;
+    private AdapterMessage mAdapterMessage;
     private static final String TAG_NAME = "NAME";
     private static final String TAG_AVATAR = "AVATAR";
     public static final String TAG_MESSAGE = "MESSAGE";
@@ -45,18 +45,18 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         loadData();
         loadListview();
         //Setup implement
-        listMessage.setOnItemClickListener(this);
-        navigationView.setNavigationItemSelectedListener(this);
+        mListMessage.setOnItemClickListener(this);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
     }
 
     private void initControl(){
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawerlayout);
-        toolbar = (Toolbar)findViewById(R.id.mainToolbar);
-        listMessage  = (ListView)findViewById(R.id.lstListmessage);
-        navigationView = (NavigationView)findViewById(R.id.navigation_view);
-        setSupportActionBar(toolbar);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.draw_open,R.string.draw_close){
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawerlayout);
+        mToolbar = (Toolbar)findViewById(R.id.mainToolbar);
+        mListMessage = (ListView)findViewById(R.id.lstListmessage);
+        mNavigationView = (NavigationView)findViewById(R.id.navigation_view);
+        setSupportActionBar(mToolbar);
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,R.string.draw_open,R.string.draw_close){
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
@@ -69,19 +69,19 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 invalidateOptionsMenu();
             }
         };
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        actionBarDrawerToggle.syncState();
+        mActionBarDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        actionBarDrawerToggle.onConfigurationChanged(newConfig);
+        mActionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -118,19 +118,19 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     }
 
     private void loadData(){
-        list = new ArrayList<>();
-        list.add(new Message(0,1,2,1,"Hello",13/02));
-        list.add(new Message(0,1,3,1,"How are you",13/02));
+        mList = new ArrayList<>();
+        mList.add(new Message(0,1,2,1,"Hello",13/02));
+        mList.add(new Message(0,1,3,1,"How are you",13/02));
     }
     private void loadListview(){
-        adapterMessage = new AdapterMessage(this,R.layout.activity_item_message,list);
-        listMessage.setAdapter(adapterMessage);
+        mAdapterMessage = new AdapterMessage(this,R.layout.activity_item_message, mList);
+        mListMessage.setAdapter(mAdapterMessage);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent chatting = new Intent(this,ChattingActivity.class);
-        Message message = list.get(position);
+        Message message = mList.get(position);
         chatting.putExtra(TAG_MESSAGE,message);
         startActivity(chatting);
     }
