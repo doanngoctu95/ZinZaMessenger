@@ -11,7 +11,7 @@
         android:layout_gravity="top|left"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="230dp"
-        android:textColor="#808080"/>
+        android:layout_marginTop="250dp"
+        android:textColor="@color/black"/>
 
 </FrameLayout>

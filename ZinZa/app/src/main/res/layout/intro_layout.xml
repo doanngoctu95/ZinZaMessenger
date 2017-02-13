@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fafafa">
-
         <FrameLayout
             android:layout_gravity="top"
             android:layout_width="match_parent"
@@ -24,7 +23,6 @@
                 android:src="@drawable/zinza_icon"
                 app:civ_border_width="2dp"
                 app:civ_border_color="#FF000000"
-
                 />
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -32,34 +30,43 @@
                 android:layout_gravity="center"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-
                 android:src="@drawable/zinza_icon"
                 app:civ_border_width="2dp"
                 app:civ_border_color="#FF000000"
-
                 />
-
-
 
         </FrameLayout>
 
         <TextView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="500dp"
-            android:background="@drawable/regbtn_states"
             android:textSize="16dp"
-            android:textColor="#ffffff"
-
+            android:textColor="@color/black"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:layout_marginLeft="40dp"
-
-            android:layout_marginBottom="26dp"
+            android:layout_marginBottom="33dp"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
             android:id="@+id/start_messaging_button"/>
+
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="500dp"
+            android:textSize="16dp"
+            android:text="@string/start"
+            android:textColor="@color/black"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="33dp"
+            android:layout_gravity="bottom|right"
+            android:id="@+id/startLogin"/>
 
 
         <com.viewpagerindicator.CirclePageIndicator
@@ -70,11 +77,11 @@
             android:paddingTop="30dp"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="26dp"
-            app:fillColor="#2CA5E0"
+            app:fillColor="@color/colorPrimaryDark"
             app:pageColor="#ffffff"
             app:radius="6dp"
             app:strokeWidth="2dp"
-            app:strokeColor="#2CA5E0"
+            app:strokeColor="@color/colorPrimaryDark"
             android:layout_alignParentBottom="true"/>
 
         <android.support.v4.view.ViewPager

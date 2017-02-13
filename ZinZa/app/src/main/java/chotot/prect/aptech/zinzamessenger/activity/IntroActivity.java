@@ -41,6 +41,7 @@ public class IntroActivity extends Activity {
     private boolean startPressed = false;
     private int[] icons;
     private int[] messages;
+    private TextView startLogin,startMessagingButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,9 @@ public class IntroActivity extends Activity {
                 R.string.app_overview_4th_item_text
         };
         viewPager = (ViewPager) findViewById(R.id.intro_view_pager);
-        TextView startMessagingButton = (TextView) findViewById(R.id.start_messaging_button);
+        startMessagingButton = (TextView) findViewById(R.id.start_messaging_button);
+        startLogin= (TextView) findViewById(R.id.startLogin);
+//        startLogin.setVisibility(View.INVISIBLE);
         startMessagingButton.setText(getString(R.string.StartMessaging));
         if (Build.VERSION.SDK_INT >= 21) {
             StateListAnimator animator = new StateListAnimator();
@@ -161,7 +164,16 @@ public class IntroActivity extends Activity {
                     return;
                 }
                 startPressed = true;
-                Intent intent2 = new Intent(IntroActivity.this, MainActivity.class);
+                Intent intent2 = new Intent(IntroActivity.this, LoginActivity.class);
+                startActivity(intent2);
+                finish();
+            }
+        });
+
+        startLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent2 = new Intent(IntroActivity.this, LoginActivity.class);
                 startActivity(intent2);
                 finish();
             }
@@ -186,6 +198,14 @@ public class IntroActivity extends Activity {
             TextView messageTextView = (TextView) view.findViewById(R.id.message_text);
             container.addView(view, 0);
             messageTextView.setText(AndroidUtilities.replaceTags(getString(messages[position]), getApplicationContext()));
+            if (position==3){
+                startLogin.setVisibility(View.VISIBLE);
+                startMessagingButton.setVisibility(View.INVISIBLE);
+            }
+            else {
+                startLogin.setVisibility(View.INVISIBLE);
+                startMessagingButton.setVisibility(View.VISIBLE);
+            }
             return view;
         }
 
