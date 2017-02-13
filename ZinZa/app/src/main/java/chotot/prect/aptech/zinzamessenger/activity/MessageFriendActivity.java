@@ -16,7 +16,7 @@ import android.view.View;
 
 import chotot.prect.aptech.zinzamessenger.R;
 
-public class Messenger_friend extends AppCompatActivity {
+public class MessageFriendActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     ActionBarDrawerToggle actionBarDrawerToggle;
@@ -86,7 +86,7 @@ public class Messenger_friend extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_friend_ol:
-                Intent frOL = new Intent(Messenger_friend.this,Friend_online.class);
+                Intent frOL = new Intent(MessageFriendActivity.this,FriendOnlineActivity.class);
                 startActivity(frOL);
                 break;
         }

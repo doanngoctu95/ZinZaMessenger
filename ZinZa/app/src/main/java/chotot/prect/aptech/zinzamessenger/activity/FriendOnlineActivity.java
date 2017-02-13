@@ -9,7 +9,7 @@ import android.widget.ImageButton;
 
 import chotot.prect.aptech.zinzamessenger.R;
 
-public class Friend_online extends AppCompatActivity {
+public class FriendOnlineActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     ImageButton btnBack;
