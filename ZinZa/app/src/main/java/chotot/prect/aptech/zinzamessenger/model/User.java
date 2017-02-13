@@ -5,97 +5,97 @@ package chotot.prect.aptech.zinzamessenger.model;
  */
 
 public class User {
-    private int id;
-    private String username;
-    private String email;
-    private String password;
-    private String avatar;
-    private long dateOfBirth;
-    private int status;
-    private String token;
-    private long createdAt;
+    private int mId;
+    private String mUsername;
+    private String mEmail;
+    private String mPassword;
+    private String mAvatar;
+    private long mDateOfBirth;
+    private int mStatus;
+    private String mToken;
+    private long mCreatedAt;
 
-    public User(int id, String username, String email, String password, String avatar, long dateOfBirth, int status, String token, long createdAt) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.avatar = avatar;
-        this.dateOfBirth = dateOfBirth;
-        this.status = status;
-        this.token = token;
-        this.createdAt = createdAt;
+    public User(int mId, String mUsername, String mEmail, String mPassword, String mAvatar, long mDateOfBirth, int mStatus, String mToken, long mCreatedAt) {
+        this.mId = mId;
+        this.mUsername = mUsername;
+        this.mEmail = mEmail;
+        this.mPassword = mPassword;
+        this.mAvatar = mAvatar;
+        this.mDateOfBirth = mDateOfBirth;
+        this.mStatus = mStatus;
+        this.mToken = mToken;
+        this.mCreatedAt = mCreatedAt;
     }
 
-    public int getId() {
-        return id;
+    public int getmId() {
+        return mId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setmId(int mId) {
+        this.mId = mId;
     }
 
-    public String getUsername() {
-        return username;
+    public String getmUsername() {
+        return mUsername;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setmUsername(String mUsername) {
+        this.mUsername = mUsername;
     }
 
-    public String getEmail() {
-        return email;
+    public String getmEmail() {
+        return mEmail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setmEmail(String mEmail) {
+        this.mEmail = mEmail;
     }
 
-    public String getPassword() {
-        return password;
+    public String getmPassword() {
+        return mPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setmPassword(String mPassword) {
+        this.mPassword = mPassword;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public String getmAvatar() {
+        return mAvatar;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setmAvatar(String mAvatar) {
+        this.mAvatar = mAvatar;
     }
 
-    public long getDateOfBirth() {
-        return dateOfBirth;
+    public long getmDateOfBirth() {
+        return mDateOfBirth;
     }
 
-    public void setDateOfBirth(long dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setmDateOfBirth(long mDateOfBirth) {
+        this.mDateOfBirth = mDateOfBirth;
     }
 
-    public int getStatus() {
-        return status;
+    public int getmStatus() {
+        return mStatus;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setmStatus(int mStatus) {
+        this.mStatus = mStatus;
     }
 
-    public String getToken() {
-        return token;
+    public String getmToken() {
+        return mToken;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setmToken(String mToken) {
+        this.mToken = mToken;
     }
 
-    public long getCreatedAt() {
-        return createdAt;
+    public long getmCreatedAt() {
+        return mCreatedAt;
     }
 
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
+    public void setmCreatedAt(long mCreatedAt) {
+        this.mCreatedAt = mCreatedAt;
     }
 }

@@ -7,67 +7,67 @@ import java.io.Serializable;
  */
 
 public class Message implements Serializable{
-    private int id;
-    private int idSender;
-    private int idRecipient;
-    private int type;
-    private String content;
-    private long time;
+    private int mId;
+    private int mIdSender;
+    private int mIdRecipient;
+    private int mType;
+    private String mContent;
+    private long mTime;
 
-    public Message(int id, int idSender, int idRecipient, int type, String content, long time) {
-        this.id = id;
-        this.idSender = idSender;
-        this.idRecipient = idRecipient;
-        this.type = type;
-        this.content = content;
-        this.time = time;
+    public Message(int mId, int mIdSender, int mIdRecipient, int mType, String mContent, long mTime) {
+        this.mId = mId;
+        this.mIdSender = mIdSender;
+        this.mIdRecipient = mIdRecipient;
+        this.mType = mType;
+        this.mContent = mContent;
+        this.mTime = mTime;
     }
 
-    public int getId() {
-        return id;
+    public int getmId() {
+        return mId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setmId(int mId) {
+        this.mId = mId;
     }
 
-    public int getIdSender() {
-        return idSender;
+    public int getmIdSender() {
+        return mIdSender;
     }
 
-    public void setIdSender(int idSender) {
-        this.idSender = idSender;
+    public void setmIdSender(int mIdSender) {
+        this.mIdSender = mIdSender;
     }
 
-    public int getIdRecipient() {
-        return idRecipient;
+    public int getmIdRecipient() {
+        return mIdRecipient;
     }
 
-    public void setIdRecipient(int idRecipient) {
-        this.idRecipient = idRecipient;
+    public void setmIdRecipient(int mIdRecipient) {
+        this.mIdRecipient = mIdRecipient;
     }
 
-    public int getType() {
-        return type;
+    public int getmType() {
+        return mType;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setmType(int mType) {
+        this.mType = mType;
     }
 
-    public String getContent() {
-        return content;
+    public String getmContent() {
+        return mContent;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setmContent(String mContent) {
+        this.mContent = mContent;
     }
 
-    public long getTime() {
-        return time;
+    public long getmTime() {
+        return mTime;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setmTime(long mTime) {
+        this.mTime = mTime;
     }
 }
