@@ -29,6 +29,7 @@
             android:id="@+id/edtEmailLogin"
             android:drawableLeft="@drawable/avatar"
             android:hint="@string/Email"
+
             android:drawablePadding="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
