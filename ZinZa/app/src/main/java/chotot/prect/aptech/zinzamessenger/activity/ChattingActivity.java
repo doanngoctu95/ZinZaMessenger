@@ -43,10 +43,10 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
             String urlAvatarRecipient="";
             String nameRecipient ="";
             Message message = (Message)t.getSerializableExtra("MESSAGE");
-            if(message.getIdRecipient()==2){
+            if(message.getmIdRecipient()==2){
                 urlAvatarRecipient = "http://4.bp.blogspot.com/-8Kef_ymC9t0/U2TgDlHZwiI/AAAAAAAACi8/XzNlxhXtR80/s1600/anh+avatar+dep+4.jpg";
                 nameRecipient = "Văn Nam";
-            } else if(message.getIdRecipient()==3){
+            } else if(message.getmIdRecipient()==3){
                 nameRecipient = "Nhung";
                 urlAvatarRecipient = "http://1.bp.blogspot.com/-U96MqFNsOGA/Uzv6DLtpsHI/AAAAAAAABHs/P7lp0Kc-hYg/s1600/hinh+avatar+dep+6.jpg";
             }

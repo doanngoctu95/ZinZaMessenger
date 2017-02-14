@@ -8,4 +8,5 @@
     <color name="black">#000000</color>
     <color name="colorNormal">#003380</color>
     <color name="senderColor">#21ec9b</color>
+    <color name="fbcolor">#3b5998</color>
 </resources>

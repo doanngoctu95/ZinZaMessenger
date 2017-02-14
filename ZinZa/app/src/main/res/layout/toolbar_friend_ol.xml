@@ -5,7 +5,7 @@
     android:id="@+id/toolbarFr"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/mainColor"
+    android:background="@color/fbcolor"
     android:fitsSystemWindows="true"
     android:minHeight="?attr/actionBarSize"
     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
