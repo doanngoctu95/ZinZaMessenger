@@ -11,7 +11,7 @@
     </corners>
 
     <!--<solid android:color="#494848" />-->
-    <solid android:color="@color/colorPrimaryDark"
+    <solid android:color="@color/colorPrimary"
         />
 
     <!--<gradient-->

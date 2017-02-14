@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import chotot.prect.aptech.zinzamessenger.R;
 
@@ -16,6 +17,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private Button mBtnSignUp;
     private Button mBtnLogin;
+    private EditText mEdtUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mBtnSignUp = (Button) findViewById(R.id.btnSignUp);
 
         mBtnLogin= (Button) findViewById(R.id.btnLogin);
+        mEdtUsername= (EditText) findViewById(R.id.edtEmailLogin);
+        mEdtUsername.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        mEdtUsername.setCompoundDrawablePadding(55);
+
+
         mBtnSignUp.setOnClickListener(this);
         mBtnLogin.setOnClickListener(this);
 
