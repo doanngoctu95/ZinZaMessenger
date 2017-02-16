@@ -24,6 +24,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
@@ -31,7 +32,7 @@ import com.viewpagerindicator.PageIndicator;
 import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.Utils.AndroidUtilities;
 
-public class IntroActivity extends Activity {
+public class IntroActivity extends Activity{
     private ViewPager mViewPager;
     private PageIndicator mIndicator;
     private ImageView mTopImage1;
@@ -63,9 +64,8 @@ public class IntroActivity extends Activity {
                 R.string.app_overview_4th_item_text
         };
         mViewPager = (ViewPager) findViewById(R.id.intro_view_pager);
-        mStartMessagingButton = (TextView) findViewById(R.id.start_messaging_button);
-        mStartLogin= (TextView) findViewById(R.id.startLogin);
-//        startLogin.setVisibility(View.INVISIBLE);
+        mStartMessagingButton = (TextView) this.findViewById(R.id.start_messaging_button);
+        mStartLogin = (TextView) this.findViewById(R.id.startLogin);
         mStartMessagingButton.setText(getString(R.string.StartMessaging));
         if (Build.VERSION.SDK_INT >= 21) {
             StateListAnimator animator = new StateListAnimator();
@@ -86,6 +86,13 @@ public class IntroActivity extends Activity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+                if (mViewPager.getCurrentItem() == 3) {
+                    mStartLogin.setVisibility(View.VISIBLE);
+                    mStartMessagingButton.setVisibility(View.INVISIBLE);
+                } else {
+                    mStartLogin.setVisibility(View.INVISIBLE);
+                    mStartMessagingButton.setVisibility(View.VISIBLE);
+                }
                 if (mLastPage != mViewPager.getCurrentItem()) {
                     mLastPage = mViewPager.getCurrentItem();
 
@@ -177,7 +184,11 @@ public class IntroActivity extends Activity {
                 finish();
             }
         });
+
     }
+
+
+
 
     private class IntroAdapter extends PagerAdapter {
 
@@ -197,14 +208,7 @@ public class IntroActivity extends Activity {
             TextView messageTextView = (TextView) view.findViewById(R.id.message_text);
             container.addView(view, 0);
             messageTextView.setText(AndroidUtilities.replaceTags(getString(mMessages[position]), getApplicationContext()));
-            if (position==3){
-                mStartLogin.setVisibility(View.VISIBLE);
-                mStartMessagingButton.setVisibility(View.INVISIBLE);
-            }
-            else {
-                mStartLogin.setVisibility(View.INVISIBLE);
-                mStartMessagingButton.setVisibility(View.VISIBLE);
-            }
+
             return view;
         }
 
