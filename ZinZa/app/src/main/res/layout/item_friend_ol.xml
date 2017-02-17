@@ -13,18 +13,6 @@
         app:civ_border_width="1dp"
         app:civ_border_color="@color/black"/>
 
-    <TextView
-        android:text="Văn Cường"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imgFrendAvatar"
-        android:layout_toRightOf="@+id/imgFrendAvatar"
-        android:layout_marginLeft="14dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginBottom="25dp"
-        android:id="@+id/txtNameFriend"
-        android:textSize="16sp"/>
-
     <ImageView
         android:layout_width="10dp"
         android:layout_height="10dp"
@@ -34,4 +22,17 @@
         android:layout_marginRight="26dp"
         android:layout_marginEnd="26dp"
         android:id="@+id/imgStatus"/>
+
+    <TextView
+        android:text="Văn Cường"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp"
+        android:layout_marginBottom="25dp"
+        android:id="@+id/txtNameFriend"
+        android:textSize="16sp"
+        android:layout_alignBottom="@+id/imgFrendAvatar"
+        android:layout_toRightOf="@+id/imgFrendAvatar"
+        android:layout_toEndOf="@+id/imgFrendAvatar" />
 </RelativeLayout>

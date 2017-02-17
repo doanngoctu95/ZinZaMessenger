@@ -142,6 +142,10 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 Intent setting = new Intent(MessageFriendActivity.this, SettingActivity.class);
                 startActivity(setting);
                 break;
+            case R.id.action_history_file:
+                Intent history_file = new Intent(MessageFriendActivity.this, HistoryFileActivity.class);
+                startActivity(history_file);
+                break;
             case R.id.action_rating:
                 AndroidUtilities.showAlert("Rating",this);
                 break;

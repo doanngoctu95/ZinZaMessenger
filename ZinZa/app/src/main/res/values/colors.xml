@@ -9,4 +9,5 @@
     <color name="colorNormal">#003380</color>
     <color name="senderColor">#21ec9b</color>
     <color name="fbcolor">#3b5998</color>
+    <color name="gray">#787676</color>
 </resources>
