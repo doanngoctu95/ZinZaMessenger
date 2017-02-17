@@ -6,7 +6,7 @@
  * Copyright Nikolai Kudashov, 2013-2014.
  */
 
-package chotot.prect.aptech.zinzamessenger.Utils;
+package chotot.prect.aptech.zinzamessenger.utils;
 
 import android.content.Context;
 import android.content.res.Resources;

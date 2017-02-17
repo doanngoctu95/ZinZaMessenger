@@ -24,13 +24,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 
 import chotot.prect.aptech.zinzamessenger.R;
-import chotot.prect.aptech.zinzamessenger.Utils.AndroidUtilities;
+import chotot.prect.aptech.zinzamessenger.utils.AndroidUtilities;
 
 public class IntroActivity extends Activity{
     private ViewPager mViewPager;

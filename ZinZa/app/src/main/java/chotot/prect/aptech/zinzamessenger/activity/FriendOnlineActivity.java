@@ -10,7 +10,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import chotot.prect.aptech.zinzamessenger.Adapter.AdapterFriendOnline;
+import chotot.prect.aptech.zinzamessenger.adapter.AdapterFriendOnline;
 import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.model.User;
 

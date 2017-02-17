@@ -21,9 +21,9 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import chotot.prect.aptech.zinzamessenger.Adapter.AdapterMessage;
+import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessage;
 import chotot.prect.aptech.zinzamessenger.R;
-import chotot.prect.aptech.zinzamessenger.Utils.AndroidUtilities;
+import chotot.prect.aptech.zinzamessenger.utils.AndroidUtilities;
 import chotot.prect.aptech.zinzamessenger.model.Message;
 
 public class MessageFriendActivity extends AppCompatActivity implements ListView.OnItemClickListener,NavigationView.OnNavigationItemSelectedListener{

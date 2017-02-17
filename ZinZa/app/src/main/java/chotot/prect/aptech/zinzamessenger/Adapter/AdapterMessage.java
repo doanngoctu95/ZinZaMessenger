@@ -1,4 +1,4 @@
-package chotot.prect.aptech.zinzamessenger.Adapter;
+package chotot.prect.aptech.zinzamessenger.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
