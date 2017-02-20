@@ -12,25 +12,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/drawerlayout">
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
             <include
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 layout="@layout/toolbar"
                 />
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </FrameLayout>
             <ListView
+                android:layout_marginTop="55dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/lstListmessage">
             </ListView>
-        </LinearLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabAdd"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="bottom|right"
+                android:src="@drawable/add_contact"
+
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp" />
+        </FrameLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

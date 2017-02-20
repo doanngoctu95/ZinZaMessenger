@@ -1,11 +1,16 @@
 package chotot.prect.aptech.zinzamessenger.activity;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +25,7 @@ public class FriendOnlineActivity extends AppCompatActivity {
     private ListView mListFriend;
     private List<User> mListUser;
     private AdapterFriendOnline mAdapterFriendOnline;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +50,8 @@ public class FriendOnlineActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
     }
     private void loadData(){
         mListUser = new ArrayList<>();
@@ -55,4 +63,6 @@ public class FriendOnlineActivity extends AppCompatActivity {
         mAdapterFriendOnline = new AdapterFriendOnline(this,R.layout.item_friend_ol, mListUser);
         mListFriend.setAdapter(mAdapterFriendOnline);
     }
+
+
 }

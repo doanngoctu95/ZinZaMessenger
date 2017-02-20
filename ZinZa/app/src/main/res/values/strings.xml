@@ -22,6 +22,8 @@
     <string name="confirm">Confirm</string>
     <string name="Dob">Date of birth</string>
     <string name="start">Start</string>
+    <string name="searchFriend">Input and find they on Messenger</string>
+    <string name="addFriend">Add contact</string>
 
     <string name="title_activity_settings">Settings</string>
 

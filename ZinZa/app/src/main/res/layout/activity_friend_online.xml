@@ -11,26 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/olDrawerlayout">
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            >
             <include
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 layout="@layout/toolbar_friend_ol"
                 />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </FrameLayout>
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/lstListFriend">
+                android:id="@+id/lstListFriend"
+                android:layout_marginTop="55dp">
+
             </ListView>
-        </LinearLayout>
+
+        </FrameLayout>
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>

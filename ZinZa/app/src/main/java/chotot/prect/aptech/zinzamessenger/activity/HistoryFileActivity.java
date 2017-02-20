@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import chotot.prect.aptech.zinzamessenger.model.FileHistory;
  * Created by dell on 17/02/2017.
  */
 
-public class HistoryFileActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class HistoryFileActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     private Toolbar mToolbarHis;
     private ListView lvListHistory;
     private AdapterHistoryFile adapterHistoryFile;
@@ -40,12 +41,16 @@ public class HistoryFileActivity extends AppCompatActivity implements AdapterVie
         mToolbarHis= (Toolbar) findViewById(R.id.historyToolbar);
         setSupportActionBar(mToolbarHis);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        mToolbarHis.setNavigationIcon(R.drawable.ic_action_back);
+
 
         lvListHistory= (ListView) findViewById(R.id.lvListFileHistory);
         loadData();
         adapterHistoryFile= new AdapterHistoryFile(this,android.R.layout.simple_list_item_1,listFileHis);
         lvListHistory.setAdapter(adapterHistoryFile);
         lvListHistory.setOnItemClickListener(this);
+
+        mToolbarHis.setNavigationOnClickListener(this);
     }
 
     //load data file.
@@ -94,5 +99,10 @@ public class HistoryFileActivity extends AppCompatActivity implements AdapterVie
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        finish();
     }
 }
