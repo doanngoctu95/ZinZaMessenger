@@ -1,9 +1,6 @@
 package chotot.prect.aptech.zinzamessenger.activity;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -18,8 +15,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.adapter.AdapterHistoryFile;
+import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.model.FileHistory;
 
 /**

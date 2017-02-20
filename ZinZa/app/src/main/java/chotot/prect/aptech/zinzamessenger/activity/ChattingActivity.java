@@ -4,12 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessageChat;
 import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.model.Message;
 
@@ -17,24 +24,47 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     private ImageButton mBtnBack;
     private ImageView mImgAvatar;
     private TextView mTxtName;
+    private AdapterMessageChat mAdapterMessageChat;
+    private ListView mListview;
+    private Button mBtnSendMessage;
+    private EditText mEdtMessage;
+    private List<Message> mMessageList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
         initControl();
         mBtnBack.setOnClickListener(this);
+        mBtnSendMessage.setOnClickListener(this);
         getExtra();
+        loadMessageContent();
+        setListview();
     }
     private void initControl(){
         mBtnBack = (ImageButton)findViewById(R.id.btnBackChatting);
         mImgAvatar = (ImageView)findViewById(R.id.imgAvatarFriend);
         mTxtName = (TextView)findViewById(R.id.txtnameFriendChatting);
+        mBtnSendMessage = (Button)findViewById(R.id.btnSendMessage);
+        mListview = (ListView) findViewById(R.id.list_content_message);
+        mEdtMessage = (EditText)findViewById(R.id.edtMessageInput);
     }
     @Override
     public void onClick(View v) {
         if(v== mBtnBack){
             finish();
+        } else if(v==mBtnSendMessage){
+            String message = mEdtMessage.getText().toString();
+            sendMessage(message);
+            mEdtMessage.setText("");
         }
+    }
+    private void setListview() {
+       mAdapterMessageChat = new AdapterMessageChat(this,mMessageList);
+        mListview.setAdapter(mAdapterMessageChat);
+    }
+    private void sendMessage(String message){
+        mMessageList.add(new Message(mMessageList.size()+1,2,1,1,message,0));
+        mAdapterMessageChat.notifyDataSetChanged();
     }
     private void getExtra(){
         Bundle bd = getIntent().getExtras();
@@ -53,6 +83,23 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
             Picasso.with(this).load(urlAvatarRecipient).into(mImgAvatar);
             mTxtName.setText(nameRecipient);
 
+        }
+    }
+    private void loadMessageContent() {
+        mMessageList = new ArrayList<>();
+        String[] content = {"Hello","How are you","I'm fine,thank you","How old are you","16 years old"};
+        Message newMessage;
+        for(int j=0;j<content.length;j++){
+            if (j % 2 == 0) {
+                newMessage = new Message(j,1,2,1,content[j],0);
+                newMessage.setRecipientOrSenderStatus(AdapterMessageChat.SENDER);
+            } else {
+                newMessage = new Message(j,2,1,1,content[j],0);
+                newMessage.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT);
+            }
+            mMessageList.add(newMessage);
+//            mAdapterMessageChat.refillAdapter(newMessage);
+//            mChatRecyclerView.scrollToPosition(mAdapterMessageChat.getItemCount()-1);
         }
     }
 }

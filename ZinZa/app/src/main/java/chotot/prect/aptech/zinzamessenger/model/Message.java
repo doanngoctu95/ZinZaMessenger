@@ -1,5 +1,7 @@
 package chotot.prect.aptech.zinzamessenger.model;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 
 /**
@@ -13,7 +15,7 @@ public class Message implements Serializable{
     private int mType;
     private String mContent;
     private long mTime;
-
+    private int mRecipientOrSenderStatus;
     public Message(int mId, int mIdSender, int mIdRecipient, int mType, String mContent, long mTime) {
         this.mId = mId;
         this.mIdSender = mIdSender;
@@ -69,5 +71,12 @@ public class Message implements Serializable{
 
     public void setmTime(long mTime) {
         this.mTime = mTime;
+    }
+    @Exclude
+    public int getRecipientOrSenderStatus() {
+        return mRecipientOrSenderStatus;
+    }
+    public void setRecipientOrSenderStatus(int recipientOrSenderStatus) {
+        this.mRecipientOrSenderStatus = recipientOrSenderStatus;
     }
 }

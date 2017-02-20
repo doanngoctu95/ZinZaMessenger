@@ -7,10 +7,10 @@
         android:icon="@drawable/ic_action_setting"
         app:showAsAction="always"
         />
-    <asdasd
+    <item
         android:title="History file"
         android:id="@+id/action_history_file"
-        android:icon="@android:dr"
+        android:icon="@drawable/ic_file_history"
         app:showAsAction="always"
         />
     <item
