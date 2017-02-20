@@ -5,21 +5,6 @@
               android:layout_width="match_parent"
               android:layout_height="200dp">
 
-   <de.hdodenhof.circleimageview.CircleImageView
-       xmlns:app="http://schemas.android.com/apk/res-auto"
-       android:layout_width="72dp"
-       android:layout_height="72dp"
-       app:civ_border_width="1dp"
-       app:civ_border_color="@color/white"
-       app:civ_border_overlay="true"
-       android:layout_marginLeft="30dp"
-       android:src="@drawable/a7"
-       android:layout_centerVertical="true"
-       android:layout_alignParentLeft="true"
-       android:layout_alignParentStart="true"
-       android:id="@+id/imageView2"
-       />
-
     <TextView
         android:text="Hoài Sơn"
         android:textSize="15sp"
@@ -45,4 +30,18 @@
         android:layout_alignLeft="@+id/txtUsername"
         android:layout_alignStart="@+id/txtUsername"
         android:layout_marginTop="10dp"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        app:civ_border_width="1dp"
+        app:civ_border_color="@color/white"
+        app:civ_border_overlay="true"
+        android:layout_marginLeft="31dp"
+        android:src="@drawable/a7"
+        android:id="@+id/imageView2"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="31dp"/>
 </RelativeLayout>
