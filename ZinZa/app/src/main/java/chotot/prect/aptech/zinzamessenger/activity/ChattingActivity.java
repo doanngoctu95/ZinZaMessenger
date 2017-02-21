@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessageChat;
@@ -24,11 +25,15 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     private ImageButton mBtnBack;
     private ImageView mImgAvatar;
     private TextView mTxtName;
+
     private AdapterMessageChat mAdapterMessageChat;
     private ListView mListview;
+    private List<Message> mMessageList;
+
     private Button mBtnSendMessage;
     private EditText mEdtMessage;
-    private List<Message> mMessageList;
+
+    private Calendar mCalendar = Calendar.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +68,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         mListview.setAdapter(mAdapterMessageChat);
     }
     private void sendMessage(String message){
-        mMessageList.add(new Message(mMessageList.size()+1,2,1,1,message,0));
+        mMessageList.add(new Message(mMessageList.size()+1,2,1,1,message,getTimeNow()));
         mAdapterMessageChat.notifyDataSetChanged();
     }
     private void getExtra(){
@@ -86,20 +91,30 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         }
     }
     private void loadMessageContent() {
+        String url = "http://1.bp.blogspot.com/-U96MqFNsOGA/Uzv6DLtpsHI/AAAAAAAABHs/P7lp0Kc-hYg/s1600/hinh+avatar+dep+6.jpg";
         mMessageList = new ArrayList<>();
-        String[] content = {"Hello","How are you","I'm fine,thank you","How old are you","16 years old"};
+        String[] content = {"Hello","How are you","I'm fine,thank you","How old are you","16 years old",url};
         Message newMessage;
         for(int j=0;j<content.length;j++){
-            if (j % 2 == 0) {
-                newMessage = new Message(j,1,2,1,content[j],0);
+            if (j % 2 == 0 && j != 5) {
+                newMessage = new Message(j,1,2,1,content[j],"12:30");
+                newMessage.setRecipientOrSenderStatus(AdapterMessageChat.SENDER);
+            } else if(j == 5) {
+                newMessage = new Message(j,1,2,3,content[j],"12:30");
                 newMessage.setRecipientOrSenderStatus(AdapterMessageChat.SENDER);
             } else {
-                newMessage = new Message(j,2,1,1,content[j],0);
+                newMessage = new Message(j,2,1,1,content[j],"09:41");
                 newMessage.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT);
             }
             mMessageList.add(newMessage);
 //            mAdapterMessageChat.refillAdapter(newMessage);
 //            mChatRecyclerView.scrollToPosition(mAdapterMessageChat.getItemCount()-1);
         }
+    }
+
+    private String getTimeNow(){
+        int hour = mCalendar.get(Calendar.HOUR_OF_DAY);
+        int minute = mCalendar.get(Calendar.MINUTE);
+        return String.valueOf(hour)+":" + String.valueOf(minute);
     }
 }

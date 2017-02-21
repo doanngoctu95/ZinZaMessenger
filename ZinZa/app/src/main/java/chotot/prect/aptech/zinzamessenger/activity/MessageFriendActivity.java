@@ -1,7 +1,9 @@
 package chotot.prect.aptech.zinzamessenger.activity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -23,36 +25,57 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessage;
 import chotot.prect.aptech.zinzamessenger.R;
-import chotot.prect.aptech.zinzamessenger.utils.AndroidUtilities;
+import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessage;
 import chotot.prect.aptech.zinzamessenger.model.Message;
+import chotot.prect.aptech.zinzamessenger.utils.AndroidUtilities;
 
 public class MessageFriendActivity extends AppCompatActivity implements ListView.OnItemClickListener,NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
+
     private ListView mListMessage;
     private List<Message> mList;
     private NavigationView mNavigationView;
     private AdapterMessage mAdapterMessage;
+
     private static final String TAG_NAME = "NAME";
     private static final String TAG_AVATAR = "AVATAR";
     public static final String TAG_MESSAGE = "MESSAGE";
     private FloatingActionButton mFabAddFriend;
+
     private Dialog mDlAddFriend;
+    private AlertDialog.Builder mBuilder;
+
+    private TextView mUsername;
+    private TextView mEmail;
+
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messenger_friend);
         initControl();
+        setAuthInstace();
         loadData();
         loadListview();
+        loadUser();
         //Setup implement
         mListMessage.setOnItemClickListener(this);
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -64,6 +87,10 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         mToolbar = (Toolbar)findViewById(R.id.mainToolbar);
         mListMessage = (ListView)findViewById(R.id.lstListmessage);
         mNavigationView = (NavigationView)findViewById(R.id.navigation_view);
+        View hView =  mNavigationView.getHeaderView(0);
+        mUsername = (TextView)hView.findViewById(R.id.txtUsername);
+        mEmail = (TextView)hView.findViewById(R.id.txtEmail);
+
         setSupportActionBar(mToolbar);
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,R.string.draw_open,R.string.draw_close){
             @Override
@@ -131,8 +158,8 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
 
     private void loadData(){
         mList = new ArrayList<>();
-        mList.add(new Message(0,1,2,1,"Hello",13/02));
-        mList.add(new Message(0,1,3,1,"How are you",13/02));
+        mList.add(new Message(0,1,2,1,"Hello","13/02"));
+        mList.add(new Message(0,1,3,1,"How are you","13/02"));
     }
     private void loadListview(){
         mAdapterMessage = new AdapterMessage(this,R.layout.activity_item_message, mList);
@@ -165,7 +192,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 AndroidUtilities.showAlert("About",this);
                 break;
             case R.id.action_logout:
-                AndroidUtilities.showAlert("Logout",this);
+                setUpAlert("Log out","Are you sure to log out ? ");
                 break;
         }
         return true;
@@ -198,5 +225,50 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
+    }
+    private void setUpAlert(String title,String message){
+        mBuilder = new AlertDialog.Builder(this);
+        mBuilder.setTitle(title);
+        mBuilder.setMessage(message);
+
+        mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(MessageFriendActivity.this,LoginActivity.class));
+            }
+        });
+        mBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        AlertDialog dialog = mBuilder.create();
+        dialog.show();
+    }
+    private void setAuthInstace(){
+        mAuth = FirebaseAuth.getInstance();
+    }
+    private void loadUser(){
+        final String userId = mAuth.getCurrentUser().getUid();
+        String email = mAuth.getCurrentUser().getEmail();
+        mReference = mDatabase.getInstance().getReference();
+        mReference.child("users").orderByChild("mEmail").equalTo(email).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String username = "";
+               for(DataSnapshot ds:dataSnapshot.getChildren()){
+                   username = (String) ds.child("mUsername").getValue();
+               }
+                mUsername.setText(username);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        mEmail.setText(email);
+
     }
 }

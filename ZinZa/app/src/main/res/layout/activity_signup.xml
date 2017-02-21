@@ -85,7 +85,7 @@
         android:layout_below="@+id/edtPassWrLogin"
         android:drawablePadding="10dp"
         android:paddingLeft="20dp"
-        android:inputType="textEmailAddress"
+        android:inputType="textPassword"
         android:maxLines="1"
         >
     </EditText>
@@ -101,7 +101,7 @@
         android:hint="@string/Dob"
         android:drawablePadding="10dp"
         android:paddingLeft="20dp"
-        android:inputType="textEmailAddress"
+        android:inputType="datetime"
         android:maxLines="1"
         >
     </EditText>
@@ -116,6 +116,7 @@
         android:layout_marginTop="30dp"
         android:layout_below="@+id/edtDob">
         <Button
+            android:id="@+id/btnSignUp"
             android:layout_width="270dp"
             android:layout_height="50dp"
             android:background="@drawable/btn_state"

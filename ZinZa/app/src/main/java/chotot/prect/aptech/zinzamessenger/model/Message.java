@@ -14,9 +14,9 @@ public class Message implements Serializable{
     private int mIdRecipient;
     private int mType;
     private String mContent;
-    private long mTime;
+    private String mTime;
     private int mRecipientOrSenderStatus;
-    public Message(int mId, int mIdSender, int mIdRecipient, int mType, String mContent, long mTime) {
+    public Message(int mId, int mIdSender, int mIdRecipient, int mType, String mContent, String mTime) {
         this.mId = mId;
         this.mIdSender = mIdSender;
         this.mIdRecipient = mIdRecipient;
@@ -65,11 +65,11 @@ public class Message implements Serializable{
         this.mContent = mContent;
     }
 
-    public long getmTime() {
+    public String getmTime() {
         return mTime;
     }
 
-    public void setmTime(long mTime) {
+    public void setmTime(String mTime) {
         this.mTime = mTime;
     }
     @Exclude

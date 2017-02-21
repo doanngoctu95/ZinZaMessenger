@@ -20,5 +20,13 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:background="@drawable/sender_rounded_corners"/>
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:id="@+id/text_view_time_sender"
+        android:layout_below="@+id/text_view_sender_message"
+        android:layout_alignRight="@+id/text_view_sender_message"/>
 
 </RelativeLayout>

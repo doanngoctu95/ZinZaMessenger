@@ -4,18 +4,18 @@ package chotot.prect.aptech.zinzamessenger.model;
  * Created by ASUS on 02/10/2017.
  */
 
-public class User {
-    private int mId;
+    public class User {
+    private String mId;
     private String mUsername;
     private String mEmail;
     private String mPassword;
     private String mAvatar;
-    private long mDateOfBirth;
+    private String mDateOfBirth;
     private int mStatus;
     private String mToken;
-    private long mCreatedAt;
+    private String mCreatedAt;
 
-    public User(int mId, String mUsername, String mEmail, String mPassword, String mAvatar, long mDateOfBirth, int mStatus, String mToken, long mCreatedAt) {
+    public User(String mId, String mUsername, String mEmail, String mPassword, String mAvatar, String mDateOfBirth, int mStatus, String mToken, String mCreatedAt) {
         this.mId = mId;
         this.mUsername = mUsername;
         this.mEmail = mEmail;
@@ -27,11 +27,11 @@ public class User {
         this.mCreatedAt = mCreatedAt;
     }
 
-    public int getmId() {
+    public String getmId() {
         return mId;
     }
 
-    public void setmId(int mId) {
+    public void setmId(String mId) {
         this.mId = mId;
     }
 
@@ -67,11 +67,11 @@ public class User {
         this.mAvatar = mAvatar;
     }
 
-    public long getmDateOfBirth() {
+    public String getmDateOfBirth() {
         return mDateOfBirth;
     }
 
-    public void setmDateOfBirth(long mDateOfBirth) {
+    public void setmDateOfBirth(String mDateOfBirth) {
         this.mDateOfBirth = mDateOfBirth;
     }
 
@@ -91,11 +91,11 @@ public class User {
         this.mToken = mToken;
     }
 
-    public long getmCreatedAt() {
+    public String getmCreatedAt() {
         return mCreatedAt;
     }
 
-    public void setmCreatedAt(long mCreatedAt) {
+    public void setmCreatedAt(String mCreatedAt) {
         this.mCreatedAt = mCreatedAt;
     }
 }

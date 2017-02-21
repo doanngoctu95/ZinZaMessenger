@@ -3,21 +3,8 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:background="@color/fbcolor"
               android:layout_width="match_parent"
-              android:layout_height="200dp">
-
-    <TextView
-        android:text="Hoài Sơn"
-        android:textSize="15sp"
-        android:textColor="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="11dp"
-        android:layout_marginStart="11dp"
-        android:id="@+id/txtUsername"
-        android:layout_alignTop="@+id/imageView2"
-        android:layout_toRightOf="@+id/imageView2"
-        android:layout_toEndOf="@+id/imageView2"
-        android:layout_marginTop="12dp"/>
+              android:layout_height="200dp"
+    android:id="@+id/navigation_header_container">
 
     <TextView
         android:textColor="@color/white"
@@ -44,4 +31,18 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginStart="31dp"/>
+
+    <TextView
+        android:text="Hoài Sơn"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:id="@+id/txtUsername"
+        android:layout_marginTop="12dp"
+        android:layout_alignTop="@+id/imageView2"
+        android:layout_toRightOf="@+id/imageView2"
+        android:layout_toEndOf="@+id/imageView2"/>
 </RelativeLayout>
