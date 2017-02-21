@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -47,6 +48,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
+    private long mBackPressed = 0;
 
     private ListView mListMessage;
     private List<Message> mList;
@@ -234,7 +236,8 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(MessageFriendActivity.this,LoginActivity.class));
+//                startActivity(new Intent(MessageFriendActivity.this,LoginActivity.class));
+                finish();
             }
         });
         mBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -270,5 +273,34 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         });
         mEmail.setText(email);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerlayout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else if (mBackPressed + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+            return;
+        } else {
+            Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT).show();
+        }
+        mBackPressed = System.currentTimeMillis();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }
