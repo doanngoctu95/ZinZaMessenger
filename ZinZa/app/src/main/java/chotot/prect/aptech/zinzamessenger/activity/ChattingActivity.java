@@ -20,6 +20,8 @@ import java.util.List;
 import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessageChat;
 import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.model.Message;
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
 public class ChattingActivity extends AppCompatActivity implements View.OnClickListener{
     private ImageButton mBtnBack;
@@ -31,7 +33,10 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     private List<Message> mMessageList;
 
     private Button mBtnSendMessage;
-    private EditText mEdtMessage;
+    private EmojiconEditText mEdtMessage;
+    private EmojIconActions mEmojIcon;
+    private ImageView mBtEmoji;
+    private View contentRoot;
 
     private Calendar mCalendar = Calendar.getInstance();
     @Override
@@ -46,22 +51,35 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         setListview();
     }
     private void initControl(){
+        contentRoot = findViewById(R.id.activity_chatting);
         mBtnBack = (ImageButton)findViewById(R.id.btnBackChatting);
         mImgAvatar = (ImageView)findViewById(R.id.imgAvatarFriend);
         mTxtName = (TextView)findViewById(R.id.txtnameFriendChatting);
         mBtnSendMessage = (Button)findViewById(R.id.btnSendMessage);
         mListview = (ListView) findViewById(R.id.list_content_message);
-        mEdtMessage = (EditText)findViewById(R.id.edtMessageInput);
+        mBtEmoji = (ImageView)findViewById(R.id.btnEmotion);
+        mEdtMessage = (EmojiconEditText)findViewById(R.id.edtMessageInput);
+        mEmojIcon = new EmojIconActions(this,contentRoot,mEdtMessage,mBtEmoji);
+        mEmojIcon.ShowEmojIcon();
+        mBtEmoji.setOnClickListener(this);
     }
     @Override
     public void onClick(View v) {
-        if(v== mBtnBack){
-            finish();
-        } else if(v==mBtnSendMessage){
-            String message = mEdtMessage.getText().toString();
-            sendMessage(message);
-            mEdtMessage.setText("");
+        int id= v.getId();
+        switch (id){
+            case R.id.btnEmotion:
+                mEmojIcon.ShowEmojIcon();
+                break;
+            case R.id.btnBackChatting:
+                finish();
+                break;
+            case R.id.btnSendMessage:
+                String message = mEdtMessage.getText().toString();
+                sendMessage(message);
+                mEdtMessage.setText("");
+                break;
         }
+
     }
     private void setListview() {
        mAdapterMessageChat = new AdapterMessageChat(this,mMessageList);

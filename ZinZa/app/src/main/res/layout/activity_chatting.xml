@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_chatting"
@@ -15,123 +14,127 @@
         android:id="@+id/layoutTop"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/fbcolor"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true">
+        android:background="@color/fbcolor">
 
         <ImageButton
-            android:background="@drawable/ic_action_back"
+            android:id="@+id/btnBackChatting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnBackChatting"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"/>
+            android:background="@drawable/ic_action_back" />
+
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imgAvatarFriend"
             android:layout_width="46dp"
             android:layout_height="46dp"
-            android:src="@drawable/a7"
-            android:id="@+id/imgAvatarFriend"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:src="@drawable/a7" />
 
         <TextView
+            android:id="@+id/txtnameFriendChatting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Văn Cường"
-            android:id="@+id/txtnameFriendChatting"
-            android:textColor="@color/white"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/imgAvatarFriend"/>
+            android:layout_toRightOf="@+id/imgAvatarFriend"
+            android:text="Văn Cường"
+            android:textColor="@color/white" />
     </RelativeLayout>
 
     <LinearLayout
-        android:background="@drawable/bordertop"
-        android:orientation="vertical"
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:weightSum="2"
-        android:id="@+id/linearLayout">
+        android:background="@drawable/bordertop"
+        android:orientation="vertical"
+        android:weightSum="2">
+
         <RelativeLayout
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1">
 
             <Button
+                android:id="@+id/btnTypeText"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:id="@+id/btnTypeText"
-                android:background="@drawable/ic_action_text"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"/>
+                android:background="@drawable/ic_action_text" />
 
             <Button
+                android:id="@+id/btnOpenCamera"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="35dp"
                 android:layout_marginStart="35dp"
-                android:id="@+id/btnOpenCamera"
-                android:background="@drawable/ic_action_camera"/>
+                android:background="@drawable/ic_action_camera" />
 
             <Button
+                android:id="@+id/btnOpenGalery"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:id="@+id/btnOpenGalery"
                 android:layout_alignBaseline="@+id/btnOpenCamera"
                 android:layout_alignBottom="@+id/btnOpenCamera"
-                android:layout_toRightOf="@+id/btnOpenCamera"
                 android:layout_toEndOf="@+id/btnOpenCamera"
-                android:background="@drawable/ic_action_galery"/>
+                android:layout_toRightOf="@+id/btnOpenCamera"
+                android:background="@drawable/ic_action_galery" />
 
-            <Button
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+            <ImageView
                 android:id="@+id/btnEmotion"
-                android:background="@drawable/ic_action_emotion"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/btnOpenGalery"
-                android:layout_toEndOf="@+id/btnOpenGalery"/>
-
-            <Button
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:id="@+id/btnOpenAttachment"
-                android:background="@drawable/ic_action_attachment"
                 android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/btnOpenGalery"
+                android:layout_toRightOf="@+id/btnOpenGalery"
+                android:src="@drawable/ic_action_emotion" />
+
+            <Button
+                android:id="@+id/btnOpenAttachment"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/btnEmotion"
                 android:layout_toRightOf="@+id/btnEmotion"
-                android:layout_toEndOf="@+id/btnEmotion"/>
+                android:background="@drawable/ic_action_attachment" />
 
         </RelativeLayout>
+
         <RelativeLayout
-            android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <EditText
-            android:layout_marginLeft="10dp"
-            android:background="@null"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="textPersonName"
-            android:hint="Type message here.."
-            android:ems="10"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/edtMessageInput"
-            android:textSize="14sp"
-            android:layout_toLeftOf="@+id/btnSendMessage"
-            android:layout_toStartOf="@+id/btnSendMessage"/>
+            android:layout_weight="1">
+
+            <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
+                android:id="@+id/edtMessageInput"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toLeftOf="@+id/btnSendMessage"
+                android:layout_toStartOf="@+id/btnSendMessage"
+                android:background="@null"
+                android:ems="10"
+                android:hint="Type message here.."
+                android:inputType="textPersonName"
+                android:textSize="14sp" />
 
             <Button
+                android:id="@+id/btnSendMessage"
                 android:layout_width="36dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/btnSendMessage"
-                android:background="@drawable/ic_action_send"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="14dp"
                 android:layout_marginRight="14dp"
-                android:layout_marginEnd="14dp"/>
+                android:background="@drawable/ic_action_send" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -139,10 +142,10 @@
         android:id="@+id/list_content_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/linearLayout"
         android:layout_alignParentLeft="true"
-        android:dividerHeight="0px"
-        android:divider="@null"
         android:layout_below="@+id/layoutTop"
-        android:layout_above="@+id/linearLayout"/>
+        android:divider="@null"
+        android:dividerHeight="0px" />
 
 </RelativeLayout>

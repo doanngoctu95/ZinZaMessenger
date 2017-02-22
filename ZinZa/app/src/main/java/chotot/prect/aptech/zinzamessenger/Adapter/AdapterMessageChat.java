@@ -14,6 +14,7 @@ import java.util.List;
 
 import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.model.Message;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 /**
  * Created by ASUS on 02/20/2017.
@@ -48,13 +49,13 @@ public class AdapterMessageChat extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        TextView content;
+        EmojiconTextView content;
         TextView time;
         ImageView imageContent;
         if(mList.get(position).getmType() == 1 && mList.get(position).getRecipientOrSenderStatus() == SENDER){
             mLayout = R.layout.layout_sender_message;
             convertView = inflater.inflate(mLayout,null);
-            content = (TextView)convertView.findViewById(R.id.text_view_sender_message);
+            content = (EmojiconTextView)convertView.findViewById(R.id.text_view_sender_message);
             time = (TextView)convertView.findViewById(R.id.text_view_time_sender);
             content.setText(mList.get(position).getmContent());
         } else if(mList.get(position).getmType() == 3 && mList.get(position).getRecipientOrSenderStatus() == SENDER) {
@@ -72,7 +73,7 @@ public class AdapterMessageChat extends BaseAdapter {
         } else {
             mLayout = R.layout.layout_recipent_message;
             convertView = inflater.inflate(mLayout,null);
-            content = (TextView)convertView.findViewById(R.id.text_view_recipient_message);
+            content = (EmojiconTextView)convertView.findViewById(R.id.text_view_recipient_message);
             time = (TextView)convertView.findViewById(R.id.text_view_time_recipent);
             content.setText(mList.get(position).getmContent());
         }
