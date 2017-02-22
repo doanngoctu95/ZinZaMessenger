@@ -8,7 +8,6 @@
 
     <TextView
         android:textColor="@color/white"
-        android:text="hoaison95@gmail.com"
         android:textSize="13sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,15 +24,13 @@
         app:civ_border_color="@color/white"
         app:civ_border_overlay="true"
         android:layout_marginLeft="31dp"
-        android:src="@drawable/a7"
-        android:id="@+id/imageView2"
+        android:id="@+id/imCurrentUser"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginStart="31dp"/>
 
     <TextView
-        android:text="Hoài Sơn"
         android:textSize="15sp"
         android:textColor="@color/white"
         android:layout_width="wrap_content"
@@ -42,7 +39,7 @@
         android:layout_marginStart="12dp"
         android:id="@+id/txtUsername"
         android:layout_marginTop="12dp"
-        android:layout_alignTop="@+id/imageView2"
-        android:layout_toRightOf="@+id/imageView2"
-        android:layout_toEndOf="@+id/imageView2"/>
+        android:layout_alignTop="@+id/imCurrentUser"
+        android:layout_toRightOf="@+id/imCurrentUser"
+        android:layout_toEndOf="@+id/imCurrentUser"/>
 </RelativeLayout>

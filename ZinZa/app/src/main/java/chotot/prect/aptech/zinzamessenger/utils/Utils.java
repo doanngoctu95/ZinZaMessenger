@@ -3,6 +3,7 @@ package chotot.prect.aptech.zinzamessenger.utils;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.widget.Toast;
 
 /**
@@ -10,6 +11,8 @@ import android.widget.Toast;
  */
 
 public class Utils {
+    public static String INTERNET="Turn on internet connection";
+
     public static AlertDialog buildAlertDialog(String title, String message, boolean isCancelable, Context context){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -36,5 +39,14 @@ public class Utils {
 
     public final static void dissmiss(ProgressDialog progressDialog){
         progressDialog.dismiss();
+    }
+
+    public  static boolean verifyConnection(Context context) {
+        boolean conectado;
+        ConnectivityManager conectivtyManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        conectado = conectivtyManager.getActiveNetworkInfo() != null
+                && conectivtyManager.getActiveNetworkInfo().isAvailable()
+                && conectivtyManager.getActiveNetworkInfo().isConnected();
+        return conectado;
     }
 }

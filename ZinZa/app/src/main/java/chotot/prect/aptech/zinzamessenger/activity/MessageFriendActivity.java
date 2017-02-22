@@ -25,6 +25,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +36,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +68,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
 
     private TextView mUsername;
     private TextView mEmail;
+    private ImageView mImCurrenUser;
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase;
@@ -92,6 +96,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         View hView =  mNavigationView.getHeaderView(0);
         mUsername = (TextView)hView.findViewById(R.id.txtUsername);
         mEmail = (TextView)hView.findViewById(R.id.txtEmail);
+        mImCurrenUser= (ImageView) hView.findViewById(R.id.imCurrentUser);
 
         setSupportActionBar(mToolbar);
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,R.string.draw_open,R.string.draw_close){
@@ -260,10 +265,14 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String username = "";
+                String avataUrl="";
                for(DataSnapshot ds:dataSnapshot.getChildren()){
                    username = (String) ds.child("mUsername").getValue();
+                   avataUrl= (String) ds.child("mAvatar").getValue();
                }
                 mUsername.setText(username);
+
+                Picasso.with(getApplicationContext()).load(avataUrl).into(mImCurrenUser);
             }
 
             @Override
