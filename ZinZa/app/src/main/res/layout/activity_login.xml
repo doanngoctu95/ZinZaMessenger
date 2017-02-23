@@ -91,39 +91,7 @@
             android:layout_marginRight="25dp"/>
 
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:layout_below="@+id/llConnect"
-        android:id="@+id/llFG">
 
-    <LinearLayout
-        android:layout_width="290dp"
-        android:layout_height="50dp"
-        >
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="40dp"
-            android:text="@string/facebook"
-            android:textColor="@color/white"
-            android:background="@drawable/btn_fb"
-            android:layout_marginLeft="20dp"/>
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="40dp"
-            android:text="@string/google"
-            android:textColor="@color/white"
-            android:background="@drawable/btn_gg"
-            android:layout_marginRight="20dp"
-            android:id="@+id/sign_in_gg_button" />
-        </LinearLayout>
-
-
-    </LinearLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="20dp"
@@ -188,6 +156,43 @@
             android:gravity="center"
             android:background="@drawable/btn_state"
             android:textColor="@color/white"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:id="@+id/llFG"
+        android:layout_below="@+id/llConnect"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+    <LinearLayout
+        android:layout_width="290dp"
+        android:layout_height="50dp"
+        >
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:text="@string/facebook"
+            android:id="@+id/sign_in_fb_button"
+            android:textColor="@color/white"
+            android:background="@drawable/btn_fb"
+            android:layout_marginLeft="20dp"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:text="@string/google"
+            android:textColor="@color/white"
+            android:background="@drawable/btn_gg"
+            android:layout_marginRight="20dp"
+            android:id="@+id/sign_in_gg_button" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
 

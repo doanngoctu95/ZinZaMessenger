@@ -17,7 +17,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -42,10 +41,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.LogManager;
 
 import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessage;
@@ -78,7 +75,9 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
+
     private GoogleApiClient mGoogleApiClient;
+    private String mProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,6 +228,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     private void showAddDialog() {
         mDlAddFriend= new Dialog(this);
         mDlAddFriend.setContentView(R.layout.dialog_search_friend);
+
         mDlAddFriend.show();
         mDlAddFriend.setCancelable(true);
         final EditText edtSearchFr= (EditText) mDlAddFriend.findViewById(R.id.edtSearchNamePhone);
@@ -251,7 +251,15 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-//                startActivity(new Intent(MessageFriendActivity.this,LoginActivity.class));
+//                if(mProvider.equals("facebook.com")){
+//                    FirebaseAuth.getInstance().signOut();
+//                    LoginManager.getInstance().logOut();
+//                } else if(mProvider.equals("google.com")){
+//                    FirebaseAuth.getInstance().signOut();
+//                    Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+//                } else {
+//                    FirebaseAuth.getInstance().signOut();
+//                }
                 FirebaseAuth.getInstance().signOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 finish();
@@ -270,31 +278,44 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         mAuth = FirebaseAuth.getInstance();
     }
     private void loadUser(){
-        List provider=mAuth.getCurrentUser().getProviders();
-//        String providers=mAuth.getCurrentUser().getProviderId();
-        final String userId = mAuth.getCurrentUser().getUid();
-        String email = mAuth.getCurrentUser().getEmail();
-        mReference = mDatabase.getInstance().getReference();
-        mReference.child("users").orderByChild("mEmail").equalTo(email).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String username = "";
-                String avataUrl="";
-               for(DataSnapshot ds:dataSnapshot.getChildren()){
-                   username = (String) ds.child("mUsername").getValue();
-                   avataUrl= (String) ds.child("mAvatar").getValue();
-               }
-                mUsername.setText(username);
+        String mProvider = getTypeLogIn();
+        String email = "";
+        String avatarURL = "";
+        String displayName = "";
+        if(mProvider.equals("facebook.com")){
+            email = mAuth.getCurrentUser().getEmail();
+            avatarURL = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
+            displayName = mAuth.getCurrentUser().getDisplayName();
+            mEmail.setText(email);
+            mUsername.setText(displayName);
+            Picasso.with(getApplicationContext()).load(avatarURL).into(mImCurrenUser);
 
-                if (!avataUrl.equals("")){
-                    Picasso.with(getApplicationContext()).load(avataUrl).into(mImCurrenUser);
-                }
+        } else {
+            mReference = mDatabase.getInstance().getReference();
+            final String Uemail = mAuth.getCurrentUser().getEmail();
+                mReference.child("users").orderByChild("mEmail").equalTo(Uemail).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String Uname = "";
+                        String Uavatar="";
+                        for(DataSnapshot ds:dataSnapshot.getChildren()){
+                            Uname = (String) ds.child("mUsername").getValue();
+                            Uavatar= (String) ds.child("mAvatar").getValue();
+                        }
+                        mUsername.setText(Uname);
+                        if (!Uavatar.equals("")){
+                            Picasso.with(getApplicationContext()).load(Uavatar).into(mImCurrenUser);
+                        }
+                        mEmail.setText(Uemail);
+
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
             }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        mEmail.setText(email);
     }
 
     @Override
@@ -329,5 +350,8 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+    private String getTypeLogIn(){
+        return mAuth.getCurrentUser().getProviders().get(0);
     }
 }

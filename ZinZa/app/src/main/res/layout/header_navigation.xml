@@ -24,6 +24,7 @@
         app:civ_border_color="@color/white"
         app:civ_border_overlay="true"
         android:layout_marginLeft="31dp"
+        android:src="@drawable/place_hoder"
         android:id="@+id/imCurrentUser"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"

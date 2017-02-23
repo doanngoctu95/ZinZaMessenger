@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 public class Utils {
     public static String INTERNET="Turn on internet connection";
+    public static final String FB_NAME = "FB_NAME";
+    public static final String FB_URL = "FB_URL";
     public static String SIGN_IN_FAIL="Google Sign In failed.";
 
     public static AlertDialog buildAlertDialog(String title, String message, boolean isCancelable, Context context){
