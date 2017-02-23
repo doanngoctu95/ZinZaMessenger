@@ -146,6 +146,8 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/layoutTop"
         android:divider="@null"
-        android:dividerHeight="0px" />
+        android:dividerHeight="0px"
+        android:transcriptMode="alwaysScroll"
+        android:stackFromBottom="true"/>
 
 </RelativeLayout>

@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,6 +31,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,13 +45,14 @@ import com.squareup.picasso.Picasso;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.LogManager;
 
 import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessage;
 import chotot.prect.aptech.zinzamessenger.model.Message;
 import chotot.prect.aptech.zinzamessenger.utils.AndroidUtilities;
 
-public class MessageFriendActivity extends AppCompatActivity implements ListView.OnItemClickListener,NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+public class MessageFriendActivity extends AppCompatActivity implements ListView.OnItemClickListener,NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -73,6 +78,8 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
+    private GoogleApiClient mGoogleApiClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +96,10 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     }
 
     private void initControl(){
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build();
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawerlayout);
         mToolbar = (Toolbar)findViewById(R.id.mainToolbar);
         mListMessage = (ListView)findViewById(R.id.lstListmessage);
@@ -218,7 +229,6 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     private void showAddDialog() {
         mDlAddFriend= new Dialog(this);
         mDlAddFriend.setContentView(R.layout.dialog_search_friend);
-
         mDlAddFriend.show();
         mDlAddFriend.setCancelable(true);
         final EditText edtSearchFr= (EditText) mDlAddFriend.findViewById(R.id.edtSearchNamePhone);
@@ -242,6 +252,8 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
             @Override
             public void onClick(DialogInterface dialog, int which) {
 //                startActivity(new Intent(MessageFriendActivity.this,LoginActivity.class));
+                FirebaseAuth.getInstance().signOut();
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 finish();
             }
         });
@@ -258,6 +270,8 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         mAuth = FirebaseAuth.getInstance();
     }
     private void loadUser(){
+        List provider=mAuth.getCurrentUser().getProviders();
+//        String providers=mAuth.getCurrentUser().getProviderId();
         final String userId = mAuth.getCurrentUser().getUid();
         String email = mAuth.getCurrentUser().getEmail();
         mReference = mDatabase.getInstance().getReference();
@@ -275,16 +289,12 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 if (!avataUrl.equals("")){
                     Picasso.with(getApplicationContext()).load(avataUrl).into(mImCurrenUser);
                 }
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
         mEmail.setText(email);
-
     }
 
     @Override
@@ -314,5 +324,10 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

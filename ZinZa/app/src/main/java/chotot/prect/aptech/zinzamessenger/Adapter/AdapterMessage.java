@@ -10,9 +10,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import chotot.prect.aptech.zinzamessenger.R;
+import chotot.prect.aptech.zinzamessenger.model.FileHistory;
 import chotot.prect.aptech.zinzamessenger.model.Message;
 
 /**
@@ -23,11 +26,15 @@ public class AdapterMessage extends BaseAdapter {
     private Context mContext;
     private int mLayout;
     private List<Message> mListMessage;
+    private List<Message> searchList;
 
     public AdapterMessage(Context mContext, int mLayout, List<Message> mListMessage) {
         this.mContext = mContext;
         this.mLayout = mLayout;
         this.mListMessage = mListMessage;
+
+        searchList= new ArrayList<>();
+        searchList.addAll(mListMessage);
     }
 
     @Override
@@ -71,5 +78,22 @@ public class AdapterMessage extends BaseAdapter {
         timeMessage.setText(time);
 
         return convertView;
+    }
+
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        mListMessage.clear();
+        if (charText.length() == 0) {
+            mListMessage.addAll(searchList);
+        } else {
+            for (Message s : searchList) {
+                // search by name...
+                String nameSearch= "";
+                if (nameSearch.toLowerCase(Locale.getDefault()).contains(charText)) {
+                    mListMessage.add(s);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 }
