@@ -272,7 +272,10 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                }
                 mUsername.setText(username);
 
-                Picasso.with(getApplicationContext()).load(avataUrl).into(mImCurrenUser);
+                if (!avataUrl.equals("")){
+                    Picasso.with(getApplicationContext()).load(avataUrl).into(mImCurrenUser);
+                }
+
             }
 
             @Override
