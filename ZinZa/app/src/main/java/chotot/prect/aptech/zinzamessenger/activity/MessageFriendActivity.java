@@ -317,7 +317,9 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 LoginManager.getInstance().logOut();
 
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                finish();
+                Intent intent = new Intent(MessageFriendActivity.this,LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
         mBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
