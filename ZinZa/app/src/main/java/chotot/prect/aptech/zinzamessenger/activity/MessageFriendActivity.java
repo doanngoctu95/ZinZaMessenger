@@ -2,6 +2,7 @@ package chotot.prect.aptech.zinzamessenger.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,8 +36,6 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,6 +50,7 @@ import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessage;
 import chotot.prect.aptech.zinzamessenger.model.Message;
 import chotot.prect.aptech.zinzamessenger.utils.AndroidUtilities;
+import chotot.prect.aptech.zinzamessenger.utils.Utils;
 
 public class MessageFriendActivity extends AppCompatActivity implements ListView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     private DrawerLayout mDrawerLayout;
@@ -70,6 +70,8 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
 
     private Dialog mDlAddFriend;
     private AlertDialog.Builder mBuilder;
+    private Dialog mDlDetailFriend;
+    private ProgressDialog mProgressDialog;
 
     private TextView mUsername;
     private TextView mEmail;
@@ -97,22 +99,22 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
 
     }
 
-    private void initControl() {
+    private void initControl(){
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
-        mToolbar = (Toolbar) findViewById(R.id.mainToolbar);
-        mListMessage = (ListView) findViewById(R.id.lstListmessage);
-        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
-        View hView = mNavigationView.getHeaderView(0);
-        mUsername = (TextView) hView.findViewById(R.id.txtUsername);
-        mEmail = (TextView) hView.findViewById(R.id.txtEmail);
-        mImCurrenUser = (ImageView) hView.findViewById(R.id.imCurrentUser);
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawerlayout);
+        mToolbar = (Toolbar)findViewById(R.id.mainToolbar);
+        mListMessage = (ListView)findViewById(R.id.lstListmessage);
+        mNavigationView = (NavigationView)findViewById(R.id.navigation_view);
+        View hView =  mNavigationView.getHeaderView(0);
+        mUsername = (TextView)hView.findViewById(R.id.txtUsername);
+        mEmail = (TextView)hView.findViewById(R.id.txtEmail);
+        mImCurrenUser= (ImageView) hView.findViewById(R.id.imCurrentUser);
 
         setSupportActionBar(mToolbar);
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.draw_open, R.string.draw_close) {
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,R.string.draw_open,R.string.draw_close){
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
@@ -127,7 +129,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         };
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
 
-        mFabAddFriend = (FloatingActionButton) findViewById(R.id.fabAdd);
+        mFabAddFriend= (FloatingActionButton) findViewById(R.id.fabAdd);
         mFabAddFriend.setOnClickListener(this);
     }
 
@@ -146,9 +148,9 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_messenger, menu);
+        inflater.inflate(R.menu.menu_messenger,menu);
         MenuItem item = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) item.getActionView();
+        SearchView searchView = (SearchView)item.getActionView();
         searchView.setQueryHint("Search friend...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -166,9 +168,9 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        switch (item.getItemId()){
             case R.id.action_friend_ol:
-                Intent frOL = new Intent(MessageFriendActivity.this, FriendOnlineActivity.class);
+                Intent frOL = new Intent(MessageFriendActivity.this,FriendOnlineActivity.class);
                 startActivity(frOL);
                 break;
 
@@ -176,22 +178,21 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         return super.onOptionsItemSelected(item);
     }
 
-    private void loadData() {
+    private void loadData(){
         mList = new ArrayList<>();
-        mList.add(new Message(0, 1, 2, 1, "Hello", "13/02"));
-        mList.add(new Message(0, 1, 3, 1, "How are you", "13/02"));
+        mList.add(new Message(0,1,2,1,"Hello","13/02"));
+        mList.add(new Message(0,1,3,1,"How are you","13/02"));
     }
-
-    private void loadListview() {
-        mAdapterMessage = new AdapterMessage(this, R.layout.activity_item_message, mList);
+    private void loadListview(){
+        mAdapterMessage = new AdapterMessage(this,R.layout.activity_item_message, mList);
         mListMessage.setAdapter(mAdapterMessage);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent chatting = new Intent(this, ChattingActivity.class);
+        Intent chatting = new Intent(this,ChattingActivity.class);
         Message message = mList.get(position);
-        chatting.putExtra(TAG_MESSAGE, message);
+        chatting.putExtra(TAG_MESSAGE,message);
         startActivity(chatting);
     }
 
@@ -207,13 +208,13 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 startActivity(history_file);
                 break;
             case R.id.action_rating:
-                AndroidUtilities.showAlert("Rating", this);
+                AndroidUtilities.showAlert("Rating",this);
                 break;
             case R.id.action_about:
-                AndroidUtilities.showAlert("About", this);
+                AndroidUtilities.showAlert("About",this);
                 break;
             case R.id.action_logout:
-                setUpAlert("Log out", "Are you sure to log out ? ");
+                setUpAlert("Log out","Are you sure to log out ? ");
                 break;
         }
         return true;
@@ -221,8 +222,8 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
 
     @Override
     public void onClick(View view) {
-        int id = view.getId();
-        switch (id) {
+        int id= view.getId();
+        switch (id){
             case R.id.fabAdd:
                 showAddDialog();
                 break;
@@ -230,25 +231,72 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     }
 
     private void showAddDialog() {
-        mDlAddFriend = new Dialog(this);
+        mDlAddFriend= new Dialog(this);
         mDlAddFriend.setContentView(R.layout.dialog_search_friend);
 
         mDlAddFriend.show();
         mDlAddFriend.setCancelable(true);
-        final EditText edtSearchFr = (EditText) mDlAddFriend.findViewById(R.id.edtSearchNamePhone);
+        final EditText edtSearchFr= (EditText) mDlAddFriend.findViewById(R.id.edtSearchNamePhone);
         edtSearchFr.requestFocus();
-        Button btnAddFr = (Button) mDlAddFriend.findViewById(R.id.btnAddContact);
+        Button btnAddFr= (Button) mDlAddFriend.findViewById(R.id.btnAddContact);
         btnAddFr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "add friend " + edtSearchFr.getText(), Toast.LENGTH_LONG).show();
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                showProgress("Search Friend","Searching");
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                searchByUsername(edtSearchFr.getText().toString().trim());
+
             }
         });
     }
+    private void searchByUsername(String username){
+        mReference = mDatabase.getInstance().getReference();
+        mReference.child("users").orderByChild("mUsername").equalTo(username).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String url = "";
+                String name = "";
+                String mail = "";
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    url = (String) ds.child("mAvatar").getValue();
+                    name = (String) ds.child("mUsername").getValue();
+                    mail = (String) ds.child("mEmail").getValue();
+                }
+                mProgressDialog.dismiss();
+                if (!mail.equals("")) {
+                    showDetailProfileDialog(url, name, mail);
+                } else {
+                    Utils.showToast("Can't search your friend.Please input another name!!", getApplicationContext());
+                }
+            }
 
-    private void setUpAlert(String title, String message) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                mProgressDialog.dismiss();
+            }
+        });
+
+    }
+    private void showDetailProfileDialog(String url,String uName,String uMail){
+        mDlDetailFriend= new Dialog(this);
+        mDlDetailFriend.setContentView(R.layout.dialog_detail_friend);
+
+        mDlDetailFriend.show();
+        mDlDetailFriend.setCancelable(true);
+        ImageView imgAvatar = (ImageView)mDlDetailFriend.findViewById(R.id.imgAvatarDetail);
+        TextView name = (TextView)mDlDetailFriend.findViewById(R.id.txtDetailName);
+        TextView mail = (TextView)mDlDetailFriend.findViewById(R.id.txtDetailEmail);
+        if(!url.equals("")) {
+            Picasso.with(this).load(url).into(imgAvatar);
+        } else {
+
+        }
+        name.setText(uName);
+        mail.setText(uMail);
+
+    }
+    private void setUpAlert(String title,String message){
         mBuilder = new AlertDialog.Builder(this);
         mBuilder.setTitle(title);
         mBuilder.setMessage(message);
@@ -269,11 +317,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 LoginManager.getInstance().logOut();
 
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-
-
-                Intent intent = new Intent(MessageFriendActivity.this, LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                finish();
             }
         });
         mBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -285,18 +329,15 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         AlertDialog dialog = mBuilder.create();
         dialog.show();
     }
-
-
-    private void setAuthInstace() {
+    private void setAuthInstace(){
         mAuth = FirebaseAuth.getInstance();
     }
-
-    private void loadUser() {
+    private void loadUser(){
         String mProvider = getTypeLogIn();
         String email = "";
         String avatarURL = "";
         String displayName = "";
-        if (mProvider.equals("facebook.com")) {
+        if(mProvider.equals("facebook.com")){
             email = mAuth.getCurrentUser().getEmail();
             avatarURL = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
             displayName = mAuth.getCurrentUser().getDisplayName();
@@ -307,30 +348,29 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         } else {
             mReference = mDatabase.getInstance().getReference();
             final String Uemail = mAuth.getCurrentUser().getEmail();
-            mReference.child("users").orderByChild("mEmail").equalTo(Uemail).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    String Uname = "";
-                    String Uavatar = "";
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        Uname = (String) ds.child("mUsername").getValue();
-                        Uavatar = (String) ds.child("mAvatar").getValue();
+                mReference.child("users").orderByChild("mEmail").equalTo(Uemail).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String Uname = "";
+                        String Uavatar="";
+                        for(DataSnapshot ds:dataSnapshot.getChildren()){
+                            Uname = (String) ds.child("mUsername").getValue();
+                            Uavatar= (String) ds.child("mAvatar").getValue();
+                        }
+                        mUsername.setText(Uname);
+                        if (!Uavatar.equals("")){
+                            Picasso.with(getApplicationContext()).load(Uavatar).into(mImCurrenUser);
+                        }
+                        mEmail.setText(Uemail);
+
                     }
-                    mUsername.setText(Uname);
-                    if (!Uavatar.equals("")) {
-                        Picasso.with(getApplicationContext()).load(Uavatar).into(mImCurrenUser);
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
                     }
-                    mEmail.setText(Uemail);
+                });
 
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-        }
+            }
     }
 
     @Override
@@ -366,22 +406,14 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
-
-    private String getTypeLogIn() {
-        String providerId = null;
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            for (UserInfo profile : user.getProviderData()) {
-                // Id of the provider (ex: google.com)
-                providerId = profile.getProviderId();
-            }
-        }
-        return providerId;
+    private String getTypeLogIn(){
+        return mAuth.getCurrentUser().getProviders().get(0);
     }
-
-    @Override
-    protected void onDestroy() {
-        finish();
-        super.onDestroy();
+    private void showProgress(String title, String message){
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setTitle(title);
+        mProgressDialog.setMessage(message);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
     }
 }

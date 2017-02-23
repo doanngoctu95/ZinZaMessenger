@@ -354,9 +354,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
     }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 }
