@@ -254,6 +254,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 checkExitedUser(account);
             } else {
                 Log.e(TAG, "Google Sign In failed.");
+                mProgressDialog.dismiss();
             }
         }
         mCallbackManager.onActivityResult(requestCode,resultCode,data);
@@ -327,7 +328,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         } else {
                             startActivity(new Intent(LoginActivity.this, MessageFriendActivity.class));
                             mProgressDialog.dismiss();
-//                            finish();
+                            finish();
                         }
                     }
                 });
@@ -352,5 +353,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mProgressDialog.setMessage(message);
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
