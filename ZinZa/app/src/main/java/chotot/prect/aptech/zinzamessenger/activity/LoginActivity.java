@@ -118,6 +118,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onSuccess(LoginResult loginResult) {
                 handleFacebookAccessToken(loginResult.getAccessToken());
+
             }
 
             @Override
@@ -147,8 +148,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                     if(!task.isSuccessful()){
+
                         Utils.showToast("Firebase fb login error",getApplicationContext());
+                    } else {
+                        final String id = task.getResult().getUser().getUid();
+                        String username = task.getResult().getUser().getDisplayName();
+                        String email = task.getResult().getUser().getEmail();
+                        String photoUrl = String.valueOf(task.getResult().getUser().getPhotoUrl());
+                        final User mUser = new User(id,username,email,"",photoUrl,"",1,"",createAt());
+                        mReference.child("users").orderByChild("mID").equalTo(id).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.getChildrenCount() > 0){
+                                    mReference.child(id).setValue(mUser);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
                     }
+
             }
         });
     }
@@ -262,11 +285,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //check user existed or not
     private void checkExitedUser(final GoogleSignInAccount account){
-        mReference.child("users").orderByChild("mEmail").equalTo(account.getEmail()).addValueEventListener(new ValueEventListener() {
+        String id = account.getId();
+        mReference.child("users").orderByChild("mID").equalTo(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getChildrenCount() > 0){
-
                    firebaseAuthWithGoogle(account);
                 }
                 else {
@@ -295,7 +318,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
     private void initUserDatabase(GoogleSignInAccount account) {
 //        setDbReference();
-        String id = mReference.push().getKey();
+        String id = account.getId();
         String displayName= account.getDisplayName();
         String email = account.getEmail();
         String password = "";
