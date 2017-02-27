@@ -1,49 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/place_hoder"
-        app:civ_border_width="1dp"
-        app:civ_border_color="@color/black"
-        android:id="@+id/imgAvatarDetail"/>
-
+              android:layout_height="wrap_content">
     <TextView
-        android:text="TextView"
-        android:gravity="center"
-        android:textColor="@color/black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imgAvatarDetail"
-        android:layout_marginTop="20dp"
-        android:id="@+id/txtDetailName"
-        android:textSize="18sp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
-        android:id="@+id/txtDetailEmail"
-        android:layout_below="@+id/txtDetailName"
-        android:layout_centerHorizontal="true"/>
-
-    <Button
-        android:id="@+id/btnAddContact"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
         android:background="@color/colorPrimary"
-        android:text="@string/addFriend"
-        android:textColor="@color/white"
-        android:layout_below="@+id/txtDetailEmail"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="13dp"/>
-</RelativeLayout>
+        android:text="Result"
+        android:gravity="center"
+        android:textSize="25sp"
+        android:textColor="@color/white"/>
+    <ListView
+        android:id="@+id/lstFriendSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+</LinearLayout>

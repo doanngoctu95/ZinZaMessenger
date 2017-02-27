@@ -26,7 +26,7 @@
         android:text="@string/searchFriend" />
 
     <Button
-        android:id="@+id/btnAddContact"
+        android:id="@+id/btnSearchFriend"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/tvNameSearch"

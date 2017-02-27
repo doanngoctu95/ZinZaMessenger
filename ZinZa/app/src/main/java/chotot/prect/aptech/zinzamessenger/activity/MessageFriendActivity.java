@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -47,8 +48,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chotot.prect.aptech.zinzamessenger.R;
+import chotot.prect.aptech.zinzamessenger.adapter.AdapterFriendSearch;
 import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessage;
 import chotot.prect.aptech.zinzamessenger.model.Message;
+import chotot.prect.aptech.zinzamessenger.model.User;
 import chotot.prect.aptech.zinzamessenger.utils.Utils;
 
 public class MessageFriendActivity extends AppCompatActivity implements ListView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
@@ -58,7 +61,11 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     private long mBackPressed = 0;
 
     private ListView mListMessage;
+    private ListView mLstFriendSearch;
     private List<Message> mList;
+    private List<User> mListFriendSearch;
+    private AdapterFriendSearch mAdapterFriendSearch;
+
     private NavigationView mNavigationView;
     private AdapterMessage mAdapterMessage;
 
@@ -85,6 +92,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messenger_friend);
         initControl();
@@ -240,14 +248,13 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     }
 
     private void showAddDialog() {
-        mDlAddFriend= new Dialog(this);
+        mDlAddFriend= new Dialog(this,android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);;
         mDlAddFriend.setContentView(R.layout.dialog_search_friend);
-
         mDlAddFriend.show();
         mDlAddFriend.setCancelable(true);
         final EditText edtSearchFr= (EditText) mDlAddFriend.findViewById(R.id.edtSearchNamePhone);
         edtSearchFr.requestFocus();
-        Button btnAddFr= (Button) mDlAddFriend.findViewById(R.id.btnAddContact);
+        Button btnAddFr= (Button) mDlAddFriend.findViewById(R.id.btnSearchFriend);
         btnAddFr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -260,21 +267,23 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         });
     }
     private void searchByUsername(String username){
+        mListFriendSearch = new ArrayList<>();
         mReference = mDatabase.getInstance().getReference();
-        mReference.child("users").orderByChild("mUsername").equalTo(username).addValueEventListener(new ValueEventListener() {
+        mReference.child("users").orderByChild("mUsername").startAt(username)
+                .endAt(username+"\uf8ff").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String url = "";
-                String name = "";
-                String mail = "";
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    url = (String) ds.child("mAvatar").getValue();
-                    name = (String) ds.child("mUsername").getValue();
-                    mail = (String) ds.child("mEmail").getValue();
+                    String id = (String) ds.child("mId").getValue();
+                    String url = (String) ds.child("mAvatar").getValue();
+                    String name = (String) ds.child("mUsername").getValue();
+                    String email = (String) ds.child("mEmail").getValue();
+                    User mUser = new User(id,name,email,"",url,"",0,"","");
+                    mListFriendSearch.add(mUser);
                 }
                 mProgressDialog.dismiss();
-                if (!mail.equals("")) {
-                    showDetailProfileDialog(url, name, mail);
+                if (mListFriendSearch.size()>0) {
+                    showDetailProfileDialog(mListFriendSearch);
                 } else {
                     Utils.showToast("Can't search your friend.Please input another name!!", getApplicationContext());
                 }
@@ -287,23 +296,15 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         });
 
     }
-    private void showDetailProfileDialog(String url,String uName,String uMail){
-        mDlDetailFriend= new Dialog(this);
+    private void showDetailProfileDialog(List<User> list){
+        mDlDetailFriend= new Dialog(this,android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
         mDlDetailFriend.setContentView(R.layout.dialog_detail_friend);
 
         mDlDetailFriend.show();
         mDlDetailFriend.setCancelable(true);
-        ImageView imgAvatar = (ImageView)mDlDetailFriend.findViewById(R.id.imgAvatarDetail);
-        TextView name = (TextView)mDlDetailFriend.findViewById(R.id.txtDetailName);
-        TextView mail = (TextView)mDlDetailFriend.findViewById(R.id.txtDetailEmail);
-        if(!url.equals("")) {
-            Picasso.with(this).load(url).into(imgAvatar);
-        } else {
-
-        }
-        name.setText(uName);
-        mail.setText(uMail);
-
+        mLstFriendSearch = (ListView) mDlDetailFriend.findViewById(R.id.lstFriendSearch);
+        mAdapterFriendSearch = new AdapterFriendSearch(this,R.layout.item_search_friend,mListFriendSearch);
+        mLstFriendSearch.setAdapter(mAdapterFriendSearch);
     }
     private void setUpAlert(String title,String message){
         mBuilder = new AlertDialog.Builder(this);
