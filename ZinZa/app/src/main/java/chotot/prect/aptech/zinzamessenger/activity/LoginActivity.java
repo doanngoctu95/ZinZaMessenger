@@ -118,7 +118,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onSuccess(LoginResult loginResult) {
                 handleFacebookAccessToken(loginResult.getAccessToken());
-
             }
 
             @Override
@@ -171,7 +170,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         });
 
                     }
-
             }
         });
     }

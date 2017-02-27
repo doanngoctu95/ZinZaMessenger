@@ -42,8 +42,6 @@ public class HistoryFileActivity extends AppCompatActivity implements AdapterVie
         setSupportActionBar(mToolbarHis);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         mToolbarHis.setNavigationIcon(R.drawable.ic_action_back);
-
-
         lvListHistory= (ListView) findViewById(R.id.lvListFileHistory);
         loadData();
         adapterHistoryFile= new AdapterHistoryFile(this,android.R.layout.simple_list_item_1,listFileHis);

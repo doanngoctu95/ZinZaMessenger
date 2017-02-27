@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,7 +23,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -45,11 +45,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.adapter.AdapterFriendSearch;
 import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessage;
+import chotot.prect.aptech.zinzamessenger.model.Friend;
 import chotot.prect.aptech.zinzamessenger.model.Message;
 import chotot.prect.aptech.zinzamessenger.model.User;
 import chotot.prect.aptech.zinzamessenger.utils.Utils;
@@ -89,10 +91,11 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
 
     private GoogleApiClient mGoogleApiClient;
     private String mProvider;
+    private String idCurrentUser;
+    private String idFriend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messenger_friend);
         initControl();
@@ -303,8 +306,9 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         mDlDetailFriend.show();
         mDlDetailFriend.setCancelable(true);
         mLstFriendSearch = (ListView) mDlDetailFriend.findViewById(R.id.lstFriendSearch);
-        mAdapterFriendSearch = new AdapterFriendSearch(this,R.layout.item_search_friend,mListFriendSearch);
+        mAdapterFriendSearch = new AdapterFriendSearch(this,R.layout.item_search_friend,mListFriendSearch,idCurrentUser);
         mLstFriendSearch.setAdapter(mAdapterFriendSearch);
+
     }
     private void setUpAlert(String title,String message){
         mBuilder = new AlertDialog.Builder(this);
@@ -314,15 +318,6 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-//                if(mProvider.equals("facebook.com")){
-//                    FirebaseAuth.getInstance().signOut();
-//                    LoginManager.getInstance().logOut();
-//                } else if(mProvider.equals("google.com")){
-//                    FirebaseAuth.getInstance().signOut();
-//                    Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-//                } else {
-//                    FirebaseAuth.getInstance().signOut();
-//                }
                 FirebaseAuth.getInstance().signOut();
                 LoginManager.getInstance().logOut();
 
@@ -343,6 +338,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     }
     private void setAuthInstace(){
         mAuth = FirebaseAuth.getInstance();
+        idCurrentUser=mAuth.getCurrentUser().getUid();
     }
     private void loadUser(){
         String mProvider = getTypeLogIn();
@@ -421,7 +417,49 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     private String getTypeLogIn(){
         return mAuth.getCurrentUser().getProviders().get(0);
     }
-    private void showProgress(String title, String message){
+
+    private void addNewFriend(){
+        String idTblFriend="";
+        final String tblContact=idCurrentUser+"-"+idFriend;
+        idTblFriend= tblContact;
+        final Friend friend= new Friend(idTblFriend,idCurrentUser,idFriend,createAt());
+
+
+        mReference= mDatabase.getInstance().getReference();
+        mReference.orderByChild("tblFriend").equalTo(tblContact).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() > 0){
+                    Toast.makeText(getApplicationContext(),"no add",Toast.LENGTH_LONG).show();
+                }
+                else {
+                    mReference= mDatabase.getInstance().getReference("tblFriend");
+                    mReference.child(tblContact).setValue(friend);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    private String createAt(){
+        return java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+    }
+
+    private boolean checkIdFriendExisted(String tblContact){
+
+        return false;
+    }
+
+
+
+    private void showProgress(String title, String message) {
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setTitle(title);
         mProgressDialog.setMessage(message);
