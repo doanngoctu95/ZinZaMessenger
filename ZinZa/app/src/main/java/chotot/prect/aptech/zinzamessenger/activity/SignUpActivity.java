@@ -116,7 +116,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             });
 
             //Register to database
-
+            User mUser = new User(id,username,email,password,"",dateOfBirth,1,"",createAt());
+            mReference.child(id).setValue(mUser);
             Utils.showToast("Register success",this);
             goToMainActivity();
             mProgressDialog.dismiss();
