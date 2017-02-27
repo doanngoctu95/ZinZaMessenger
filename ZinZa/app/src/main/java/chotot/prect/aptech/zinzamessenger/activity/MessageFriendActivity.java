@@ -49,7 +49,6 @@ import java.util.List;
 import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessage;
 import chotot.prect.aptech.zinzamessenger.model.Message;
-import chotot.prect.aptech.zinzamessenger.utils.AndroidUtilities;
 import chotot.prect.aptech.zinzamessenger.utils.Utils;
 
 public class MessageFriendActivity extends AppCompatActivity implements ListView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
@@ -208,10 +207,10 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 startActivity(history_file);
                 break;
             case R.id.action_rating:
-                AndroidUtilities.showAlert("Rating",this);
+                shareApp();
                 break;
             case R.id.action_about:
-                AndroidUtilities.showAlert("About",this);
+                aboutUs();
                 break;
             case R.id.action_logout:
                 setUpAlert("Log out","Are you sure to log out ? ");
@@ -219,7 +218,17 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         }
         return true;
     }
-
+    private void shareApp(){
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_EMAIL, "This is my text to send.");
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
+    private void aboutUs(){
+        Intent aboutIntent = new Intent(this,AboutActivity.class);
+        startActivity(aboutIntent);
+    }
     @Override
     public void onClick(View view) {
         int id= view.getId();

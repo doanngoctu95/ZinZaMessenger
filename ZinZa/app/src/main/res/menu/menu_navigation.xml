@@ -14,7 +14,7 @@
         app:showAsAction="always"
         />
     <item
-        android:title="Rating"
+        android:title="Share"
         android:id="@+id/action_rating"
         android:icon="@drawable/ic_action_rating"
         app:showAsAction="always"
