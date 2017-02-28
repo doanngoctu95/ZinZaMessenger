@@ -38,6 +38,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -321,13 +322,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String email = account.getEmail();
         String password = "";
         String avata = account.getPhotoUrl()+"";
-
-        User mUser = new User(id,displayName,email,password,avata,"",1,"",createAt());
+        String token = FirebaseInstanceId.getInstance().getToken();
+        User mUser = new User(id,displayName,email,password,avata,"",1,token,createAt());
         mReference.child(id).setValue(mUser);
 
     }
     private String createAt(){
         return java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+    }
+    private String generateCustomToken(String uID){
+         String t = Utils.TOKEN;
+        if(t.equals("")){
+            Utils.TOKEN = FirebaseInstanceId.getInstance().getToken();
+        } else {
+
+        }
+        return  t;
     }
 
     @Override

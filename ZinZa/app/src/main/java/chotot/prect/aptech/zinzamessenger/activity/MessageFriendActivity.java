@@ -50,7 +50,6 @@ import java.util.List;
 import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.adapter.AdapterFriendSearch;
 import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessage;
-import chotot.prect.aptech.zinzamessenger.model.Friend;
 import chotot.prect.aptech.zinzamessenger.model.Message;
 import chotot.prect.aptech.zinzamessenger.model.User;
 import chotot.prect.aptech.zinzamessenger.utils.Utils;
@@ -90,8 +89,10 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
 
     private GoogleApiClient mGoogleApiClient;
     private String mProvider;
-    private String idCurrentUser;
+//    private String idCurrentUser;
+    private User mUser;
     private String idFriend;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -279,8 +280,9 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                     String id = (String) ds.child("mId").getValue();
                     String url = (String) ds.child("mAvatar").getValue();
                     String name = (String) ds.child("mUsername").getValue();
+                    String token = (String)ds.child("mToken").getValue();
                     String email = (String) ds.child("mEmail").getValue();
-                    User mUser = new User(id,name,email,"",url,"",0,"","");
+                    User mUser = new User(id,name,email,"",url,"",0,token,"");
                     mListFriendSearch.add(mUser);
                 }
                 mProgressDialog.dismiss();
@@ -306,7 +308,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         mDlDetailFriend.show();
         mDlDetailFriend.setCancelable(true);
         mLstFriendSearch = (ListView) mDlDetailFriend.findViewById(R.id.lstFriendSearch);
-        mAdapterFriendSearch = new AdapterFriendSearch(this,R.layout.item_search_friend,mListFriendSearch,idCurrentUser);
+        mAdapterFriendSearch = new AdapterFriendSearch(this,R.layout.item_search_friend,mListFriendSearch,mUser);
         mLstFriendSearch.setAdapter(mAdapterFriendSearch);
 
     }
@@ -338,7 +340,11 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     }
     private void setAuthInstace(){
         mAuth = FirebaseAuth.getInstance();
-        idCurrentUser=mAuth.getCurrentUser().getUid();
+
+        String id = mAuth.getCurrentUser().getUid();
+        String username = mAuth.getCurrentUser().getDisplayName();
+        String photoUrl = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
+        mUser = new User(id,username,"","",photoUrl,"",1,"","");
     }
     private void loadUser(){
         String mProvider = getTypeLogIn();
@@ -418,35 +424,35 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         return mAuth.getCurrentUser().getProviders().get(0);
     }
 
-    private void addNewFriend(){
-        String idTblFriend="";
-        final String tblContact=idCurrentUser+"-"+idFriend;
-        idTblFriend= tblContact;
-        final Friend friend= new Friend(idTblFriend,idCurrentUser,idFriend,createAt());
-
-
-        mReference= mDatabase.getInstance().getReference();
-        mReference.orderByChild("tblFriend").equalTo(tblContact).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount() > 0){
-                    Toast.makeText(getApplicationContext(),"no add",Toast.LENGTH_LONG).show();
-                }
-                else {
-                    mReference= mDatabase.getInstance().getReference("tblFriend");
-                    mReference.child(tblContact).setValue(friend);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-    }
+//    private void addNewFriend(){
+//        String idTblFriend="";
+//        final String tblContact=idCurrentUser+"-"+idFriend;
+//        idTblFriend= tblContact;
+//        final Friend friend= new Friend(idTblFriend,idCurrentUser,idFriend,createAt());
+//
+//
+//        mReference= mDatabase.getInstance().getReference();
+//        mReference.orderByChild("tblFriend").equalTo(tblContact).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.getChildrenCount() > 0){
+//                    Toast.makeText(getApplicationContext(),"no add",Toast.LENGTH_LONG).show();
+//                }
+//                else {
+//                    mReference= mDatabase.getInstance().getReference("tblFriend");
+//                    mReference.child(tblContact).setValue(friend);
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//
+//    }
 
     private String createAt(){
         return java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());

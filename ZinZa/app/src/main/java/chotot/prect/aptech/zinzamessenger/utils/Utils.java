@@ -11,10 +11,15 @@ import android.widget.Toast;
  */
 
 public class Utils {
-    public static String INTERNET="Turn on internet connection";
+    public static  String TOKEN = "";
+    public static final String FCM_KEY = "AAAAxJKOUg8:APA91bFCRClxYF_8Ro_sEvS2gMQmfXzA4eNcSFKFVNwM8TkCJOZTpVGTXecgrJFDKCRqAHDoWpJm1_c5r8Jxt2PmQ5coamI5_um8V0dXfOhNarGGZ20Mi9IqtMNYHof5FVsbKmLBSTnm";
+    public static final String FCM_SEND_URL = "https://fcm.googleapis.com";
+
+    public static final String INTERNET = "Turn on internet connection";
+    public static final String SIGN_IN_FAIL = "Google Sign In failed.";
     public static final String FB_NAME = "FB_NAME";
     public static final String FB_URL = "FB_URL";
-    public static String SIGN_IN_FAIL="Google Sign In failed.";
+
 
     public static AlertDialog buildAlertDialog(String title, String message, boolean isCancelable, Context context){
 
