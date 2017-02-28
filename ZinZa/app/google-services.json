@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "844272390671",
+    "firebase_url": "https://zinza-4acc9.firebaseio.com",
+    "project_id": "zinza-4acc9",
+    "storage_bucket": "zinza-4acc9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844272390671:android:b934d3a68a7fa980",
+        "android_client_info": {
+          "package_name": "chotot.prect.aptech.zinzamessenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "844272390671-ncf735p1677i1cka8ln20vaf31rt6uo6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "chotot.prect.aptech.zinzamessenger",
+            "certificate_hash": "b477ffd77361084052c68c51170803fce9e0715a"
+          }
+        },
+        {
+          "client_id": "844272390671-fht66l9j5fiaagr7mn3vmgp01ra4m9b8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "chotot.prect.aptech.zinzamessenger",
+            "certificate_hash": "33c4b0accef27056d27b9130f2d21ac3ebc3535c"
+          }
+        },
+        {
+          "client_id": "844272390671-dtsg2rp4k07iua3a7di8mgvtqdet8mht.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFS83_B7Qv1IcnAMskVJq0eqwwkwfiqjg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "844272390671-dtsg2rp4k07iua3a7di8mgvtqdet8mht.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
