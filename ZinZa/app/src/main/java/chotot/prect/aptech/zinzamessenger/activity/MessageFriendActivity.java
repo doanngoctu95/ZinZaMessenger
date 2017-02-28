@@ -285,6 +285,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 }
                 mProgressDialog.dismiss();
                 if (mListFriendSearch.size()>0) {
+                    mDlAddFriend.dismiss();
                     showDetailProfileDialog(mListFriendSearch);
                 } else {
                     Utils.showToast("Can't search your friend.Please input another name!!", getApplicationContext());
