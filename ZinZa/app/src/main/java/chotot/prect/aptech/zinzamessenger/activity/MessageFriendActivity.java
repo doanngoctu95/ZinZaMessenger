@@ -89,7 +89,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
 
     private GoogleApiClient mGoogleApiClient;
     private String mProvider;
-//    private String idCurrentUser;
+    //    private String idCurrentUser;
     private User mUser;
     private String idFriend;
 
@@ -109,22 +109,22 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
 
     }
 
-    private void initControl(){
+    private void initControl() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawerlayout);
-        mToolbar = (Toolbar)findViewById(R.id.mainToolbar);
-        mListMessage = (ListView)findViewById(R.id.lstListmessage);
-        mNavigationView = (NavigationView)findViewById(R.id.navigation_view);
-        View hView =  mNavigationView.getHeaderView(0);
-        mUsername = (TextView)hView.findViewById(R.id.txtUsername);
-        mEmail = (TextView)hView.findViewById(R.id.txtEmail);
-        mImCurrenUser= (ImageView) hView.findViewById(R.id.imCurrentUser);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
+        mToolbar = (Toolbar) findViewById(R.id.mainToolbar);
+        mListMessage = (ListView) findViewById(R.id.lstListmessage);
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
+        View hView = mNavigationView.getHeaderView(0);
+        mUsername = (TextView) hView.findViewById(R.id.txtUsername);
+        mEmail = (TextView) hView.findViewById(R.id.txtEmail);
+        mImCurrenUser = (ImageView) hView.findViewById(R.id.imCurrentUser);
 
         setSupportActionBar(mToolbar);
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,R.string.draw_open,R.string.draw_close){
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.draw_open, R.string.draw_close) {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
@@ -139,7 +139,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         };
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
 
-        mFabAddFriend= (FloatingActionButton) findViewById(R.id.fabAdd);
+        mFabAddFriend = (FloatingActionButton) findViewById(R.id.fabAdd);
         mFabAddFriend.setOnClickListener(this);
     }
 
@@ -158,9 +158,9 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_messenger,menu);
+        inflater.inflate(R.menu.menu_messenger, menu);
         MenuItem item = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView)item.getActionView();
+        SearchView searchView = (SearchView) item.getActionView();
         searchView.setQueryHint("Search friend...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -178,9 +178,9 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_friend_ol:
-                Intent frOL = new Intent(MessageFriendActivity.this,FriendOnlineActivity.class);
+                Intent frOL = new Intent(MessageFriendActivity.this, FriendOnlineActivity.class);
                 startActivity(frOL);
                 break;
 
@@ -188,21 +188,22 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         return super.onOptionsItemSelected(item);
     }
 
-    private void loadData(){
+    private void loadData() {
         mList = new ArrayList<>();
-        mList.add(new Message(0,1,2,1,"Hello","13/02"));
-        mList.add(new Message(0,1,3,1,"How are you","13/02"));
+        mList.add(new Message(0, 1, 2, 1, "Hello", "13/02"));
+        mList.add(new Message(0, 1, 3, 1, "How are you", "13/02"));
     }
-    private void loadListview(){
-        mAdapterMessage = new AdapterMessage(this,R.layout.activity_item_message, mList);
+
+    private void loadListview() {
+        mAdapterMessage = new AdapterMessage(this, R.layout.activity_item_message, mList);
         mListMessage.setAdapter(mAdapterMessage);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent chatting = new Intent(this,ChattingActivity.class);
+        Intent chatting = new Intent(this, ChattingActivity.class);
         Message message = mList.get(position);
-        chatting.putExtra(TAG_MESSAGE,message);
+        chatting.putExtra(TAG_MESSAGE, message);
         startActivity(chatting);
     }
 
@@ -224,26 +225,29 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 aboutUs();
                 break;
             case R.id.action_logout:
-                setUpAlert("Log out","Are you sure to log out ? ");
+                setUpAlert("Log out", "Are you sure to log out ? ");
                 break;
         }
         return true;
     }
-    private void shareApp(){
+
+    private void shareApp() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_EMAIL, "This is my text to send.");
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }
-    private void aboutUs(){
-        Intent aboutIntent = new Intent(this,AboutActivity.class);
+
+    private void aboutUs() {
+        Intent aboutIntent = new Intent(this, AboutActivity.class);
         startActivity(aboutIntent);
     }
+
     @Override
     public void onClick(View view) {
-        int id= view.getId();
-        switch (id){
+        int id = view.getId();
+        switch (id) {
             case R.id.fabAdd:
                 showAddDialog();
                 break;
@@ -251,42 +255,44 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     }
 
     private void showAddDialog() {
-        mDlAddFriend= new Dialog(this,android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);;
+        mDlAddFriend = new Dialog(this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
+        ;
         mDlAddFriend.setContentView(R.layout.dialog_search_friend);
         mDlAddFriend.show();
         mDlAddFriend.setCancelable(true);
-        final EditText edtSearchFr= (EditText) mDlAddFriend.findViewById(R.id.edtSearchNamePhone);
+        final EditText edtSearchFr = (EditText) mDlAddFriend.findViewById(R.id.edtSearchNamePhone);
         edtSearchFr.requestFocus();
-        Button btnAddFr= (Button) mDlAddFriend.findViewById(R.id.btnSearchFriend);
+        Button btnAddFr = (Button) mDlAddFriend.findViewById(R.id.btnSearchFriend);
         btnAddFr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showProgress("Search Friend","Searching");
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                showProgress("Search Friend", "Searching");
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 searchByUsername(edtSearchFr.getText().toString().trim());
 
             }
         });
     }
-    private void searchByUsername(String username){
+
+    private void searchByUsername(String username) {
         mListFriendSearch = new ArrayList<>();
         mReference = mDatabase.getInstance().getReference();
         mReference.child("users").orderByChild("mUsername").startAt(username)
-                .endAt(username+"\uf8ff").addValueEventListener(new ValueEventListener() {
+                .endAt(username + "\uf8ff").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String id = (String) ds.child("mId").getValue();
                     String url = (String) ds.child("mAvatar").getValue();
                     String name = (String) ds.child("mUsername").getValue();
-                    String token = (String)ds.child("mToken").getValue();
+                    String token = (String) ds.child("mToken").getValue();
                     String email = (String) ds.child("mEmail").getValue();
-                    User mUser = new User(id,name,email,"",url,"",0,token,"");
+                    User mUser = new User(id, name, email, "", url, "", 0, token, "");
                     mListFriendSearch.add(mUser);
                 }
                 mProgressDialog.dismiss();
-                if (mListFriendSearch.size()>0) {
+                if (mListFriendSearch.size() > 0) {
                     mDlAddFriend.dismiss();
                     showDetailProfileDialog(mListFriendSearch);
                 } else {
@@ -301,18 +307,20 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         });
 
     }
-    private void showDetailProfileDialog(List<User> list){
-        mDlDetailFriend= new Dialog(this,android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
+
+    private void showDetailProfileDialog(List<User> list) {
+        mDlDetailFriend = new Dialog(this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
         mDlDetailFriend.setContentView(R.layout.dialog_detail_friend);
 
         mDlDetailFriend.show();
         mDlDetailFriend.setCancelable(true);
         mLstFriendSearch = (ListView) mDlDetailFriend.findViewById(R.id.lstFriendSearch);
-        mAdapterFriendSearch = new AdapterFriendSearch(this,R.layout.item_search_friend,mListFriendSearch,mUser);
+        mAdapterFriendSearch = new AdapterFriendSearch(this, R.layout.item_search_friend, mListFriendSearch, mUser);
         mLstFriendSearch.setAdapter(mAdapterFriendSearch);
 
     }
-    private void setUpAlert(String title,String message){
+
+    private void setUpAlert(String title, String message) {
         mBuilder = new AlertDialog.Builder(this);
         mBuilder.setTitle(title);
         mBuilder.setMessage(message);
@@ -324,8 +332,8 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 LoginManager.getInstance().logOut();
 
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                Intent intent = new Intent(MessageFriendActivity.this,LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                Intent intent = new Intent(MessageFriendActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         });
@@ -338,20 +346,22 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         AlertDialog dialog = mBuilder.create();
         dialog.show();
     }
-    private void setAuthInstace(){
+
+    private void setAuthInstace() {
         mAuth = FirebaseAuth.getInstance();
 
-        String id = mAuth.getCurrentUser().getUid();
-        String username = mAuth.getCurrentUser().getDisplayName();
-        String photoUrl = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
-        mUser = new User(id,username,"","",photoUrl,"",1,"","");
+        String id = Utils.USER_ID = mAuth.getCurrentUser().getUid();
+        String username = Utils.USER_NAME = mAuth.getCurrentUser().getDisplayName();
+        String photoUrl = Utils.AVATAR_URL = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
+        mUser = new User(id, username, "", "", photoUrl, "", 1, Utils.getToken(), "");
     }
-    private void loadUser(){
+
+    private void loadUser() {
         String mProvider = getTypeLogIn();
         String email = "";
         String avatarURL = "";
         String displayName = "";
-        if(mProvider.equals("facebook.com")){
+        if (mProvider.equals("facebook.com")) {
             email = mAuth.getCurrentUser().getEmail();
             avatarURL = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
             displayName = mAuth.getCurrentUser().getDisplayName();
@@ -362,29 +372,30 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         } else {
             mReference = mDatabase.getInstance().getReference();
             final String Uemail = mAuth.getCurrentUser().getEmail();
-                mReference.child("users").orderByChild("mEmail").equalTo(Uemail).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String Uname = "";
-                        String Uavatar="";
-                        for(DataSnapshot ds:dataSnapshot.getChildren()){
-                            Uname = (String) ds.child("mUsername").getValue();
-                            Uavatar= (String) ds.child("mAvatar").getValue();
-                        }
-                        mUsername.setText(Uname);
-                        if (!Uavatar.equals("")){
-                            Picasso.with(getApplicationContext()).load(Uavatar).into(mImCurrenUser);
-                        }
-                        mEmail.setText(Uemail);
-
+            mReference.child("users").orderByChild("mEmail").equalTo(Uemail).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String Uname = "";
+                    String Uavatar = "";
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        Uname = (String) ds.child("mUsername").getValue();
+                        Uavatar = (String) ds.child("mAvatar").getValue();
                     }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
+                    mUsername.setText(Uname);
+                    if (!Uavatar.equals("")) {
+                        Picasso.with(getApplicationContext()).load(Uavatar).into(mImCurrenUser);
                     }
-                });
+                    mEmail.setText(Uemail);
 
-            }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
     }
 
     @Override
@@ -420,7 +431,8 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
-    private String getTypeLogIn(){
+
+    private String getTypeLogIn() {
         return mAuth.getCurrentUser().getProviders().get(0);
     }
 
@@ -454,15 +466,14 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
 //
 //    }
 
-    private String createAt(){
+    private String createAt() {
         return java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
     }
 
-    private boolean checkIdFriendExisted(String tblContact){
+    private boolean checkIdFriendExisted(String tblContact) {
 
         return false;
     }
-
 
 
     private void showProgress(String title, String message) {

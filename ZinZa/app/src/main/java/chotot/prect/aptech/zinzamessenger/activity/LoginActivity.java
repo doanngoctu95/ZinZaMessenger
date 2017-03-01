@@ -330,15 +330,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String createAt(){
         return java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
     }
-    private String generateCustomToken(String uID){
-         String t = Utils.TOKEN;
-        if(t.equals("")){
-            Utils.TOKEN = FirebaseInstanceId.getInstance().getToken();
-        } else {
-
-        }
-        return  t;
-    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

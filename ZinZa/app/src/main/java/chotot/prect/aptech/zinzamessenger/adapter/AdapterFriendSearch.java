@@ -19,6 +19,7 @@ import java.util.List;
 
 import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.model.BodyRequest;
+import chotot.prect.aptech.zinzamessenger.model.Data;
 import chotot.prect.aptech.zinzamessenger.model.Notification;
 import chotot.prect.aptech.zinzamessenger.model.ResultRequest;
 import chotot.prect.aptech.zinzamessenger.model.User;
@@ -83,9 +84,14 @@ public class AdapterFriendSearch extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 String idFr= mListUser.get(position).getmId();
-                String title = mUser.getmAvatar();
-                String body = mUser.getmUsername()+" muốn gửi lời mời kết bạn đến bạn.Bạn có đồng ý không ?";
-                instanceRetrofit(title,body,mListUser.get(position).getmToken());
+                String tokenFr = mListUser.get(position).getmToken();
+                String currentAvatarUrl = mUser.getmAvatar();
+                String title = "Zinza Messenger";
+                String body = mUser.getmUsername() + " muốn gửi lời mời kết bạn đến bạn.Bạn có đồng ý không ?";
+                String currentToken = mUser.getmToken();
+                Notification mNotification = new Notification(title,body);
+                Data mData = new Data(Utils.USER_ID,currentToken,currentAvatarUrl,Utils.TYPE_ADD);
+                instanceRetrofit(mNotification,mData,tokenFr);
 //                String idTblFriend="";
 //                final String tblContact=idCurrentUser+"-"+idFr;
 //                idTblFriend= tblContact;
@@ -119,14 +125,13 @@ public class AdapterFriendSearch extends BaseAdapter {
     private String createAt(){
         return java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
     }
-    private void instanceRetrofit(String title,String body,String token){
+    private void instanceRetrofit(Notification mNotification,Data mData,String tokenFr){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Utils.FCM_SEND_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         FCMService service = retrofit.create(FCMService.class);
-        Notification mNoti = new Notification(title,body);
-        BodyRequest mBodyRequest = new BodyRequest(token,mNoti);
+        BodyRequest mBodyRequest = new BodyRequest(tokenFr,mNotification,mData);
         Call<ResultRequest> call = service.sendPush(mBodyRequest);
 
         call.enqueue(new Callback<ResultRequest>() {
