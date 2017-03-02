@@ -52,9 +52,15 @@ public class AdapterFriendOnline extends BaseAdapter {
         ImageView avatarUser = (ImageView)convertView.findViewById(R.id.imgFrendAvatar);
         TextView nameUser = (TextView)convertView.findViewById(R.id.txtNameFriend);
         ImageView statusUser = (ImageView)convertView.findViewById(R.id.imgStatus);
-        Picasso.with(mContext).load(mListUser.get(position).getmAvatar()).into(avatarUser);
+        String urlAvatar = mListUser.get(position).getmAvatar();
+        if(!urlAvatar.equals("")){
+            Picasso.with(mContext).load(urlAvatar).into(avatarUser);
+        }
         nameUser.setText(mListUser.get(position).getmUsername());
         statusUser.setImageResource(mListUser.get(position).getmStatus());
         return convertView;
+    }
+    public void refill(){
+        notifyDataSetChanged();
     }
 }
