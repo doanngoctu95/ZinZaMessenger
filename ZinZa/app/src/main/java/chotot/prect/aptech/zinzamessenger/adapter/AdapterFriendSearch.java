@@ -88,6 +88,7 @@ public class AdapterFriendSearch extends BaseAdapter {
                 String currentAvatarUrl = mUser.getmAvatar();
                 String title = "Zinza Messenger";
                 String body = mUser.getmUsername() + " muốn gửi lời mời kết bạn đến bạn.Bạn có đồng ý không ?";
+
                 String currentToken = mUser.getmToken();
                 Notification mNotification = new Notification(title,body);
                 Data mData = new Data(Utils.USER_ID,currentToken,currentAvatarUrl,Utils.TYPE_ADD);

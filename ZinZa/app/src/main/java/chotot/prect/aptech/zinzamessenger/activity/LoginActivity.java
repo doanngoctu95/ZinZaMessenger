@@ -33,11 +33,8 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
@@ -152,23 +149,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Utils.showToast("Firebase fb login error",getApplicationContext());
                     } else {
                         final String id = task.getResult().getUser().getUid();
+                        Utils.USER_ID = id;
                         String username = task.getResult().getUser().getDisplayName();
                         String email = task.getResult().getUser().getEmail();
                         String photoUrl = String.valueOf(task.getResult().getUser().getPhotoUrl());
-                        final User mUser = new User(id,username,email,"",photoUrl,"",1,"",createAt());
-                        mReference.child("users").orderByChild("mID").equalTo(id).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.getChildrenCount() > 0){
-                                    mReference.child(id).setValue(mUser);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
+                        final User mUser = new User(id,username,email,"",photoUrl,"",1,Utils.USER_TOKEN,createAt());
+                        mReference.child(id).setValue(mUser);
+//                        mReference.child("users").orderByChild("mID").equalTo(id).addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(DataSnapshot dataSnapshot) {
+//                                if(dataSnapshot.getChildrenCount() > 0){
+//
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(DatabaseError databaseError) {
+//
+//                            }
+//                        });
 
                     }
             }
@@ -285,26 +284,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //check user existed or not
     private void checkExitedUser(final GoogleSignInAccount account){
         String id = account.getId();
-        mReference.child("users").orderByChild("mID").equalTo(id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount() > 0){
-                   firebaseAuthWithGoogle(account);
-                }
-                else {
-                    // init gmail user in users table db
-                    initUserDatabase(account);
-                    firebaseAuthWithGoogle(account);
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        firebaseAuthWithGoogle(account);
+//        mReference.child("users").orderByChild("mID").equalTo(id).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.getChildrenCount() > 0){
+//
+//                }
+//                else {
+//                    // init gmail user in users table db
+////                    initUserDatabase(account);
+//                    firebaseAuthWithGoogle(account);
+//
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
     private void setDbReference(){
@@ -315,13 +315,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);//AuthUI.getInstance()
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-    private void initUserDatabase(GoogleSignInAccount account) {
+    private void initUserDatabase(Task<AuthResult> task) {
 //        setDbReference();
-        String id = account.getId();
-        String displayName= account.getDisplayName();
-        String email = account.getEmail();
+        String id = task.getResult().getUser().getUid();
+        Utils.USER_ID = id;
+        String displayName= task.getResult().getUser().getDisplayName();
+        String email = task.getResult().getUser().getEmail();
         String password = "";
-        String avata = account.getPhotoUrl()+"";
+        String avata = task.getResult().getUser().getPhotoUrl()+"";
         String token = FirebaseInstanceId.getInstance().getToken();
         User mUser = new User(id,displayName,email,password,avata,"",1,token,createAt());
         mReference.child(id).setValue(mUser);
@@ -348,6 +349,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Utils.showToast("Authentication failed",LoginActivity.this);
                         } else {
+                            initUserDatabase(task);
                             startActivity(new Intent(LoginActivity.this, MessageFriendActivity.class));
                             mProgressDialog.dismiss();
                             finish();

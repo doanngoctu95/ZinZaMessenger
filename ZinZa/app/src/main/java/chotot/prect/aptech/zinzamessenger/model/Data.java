@@ -10,7 +10,7 @@ public class Data {
     private String avatarURL;
     private String type;
 
-    public Data(String id, String token, String avatarURL, String type) {
+    public Data(String id, String token,String avatarURL, String type) {
         this.id = id;
         this.token = token;
         this.avatarURL = avatarURL;

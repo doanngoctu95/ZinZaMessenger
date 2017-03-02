@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -71,6 +73,8 @@ public class FireMsgService extends FirebaseMessagingService {
         if (android.os.Build.VERSION.SDK_INT >= 16) {
             notification.bigContentView = remoteViews;
         }
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        mbBuilder.setSound(alarmSound);
         Intent rejectIntent = new Intent(this, SwitchButtonListener.class);
         rejectIntent.setAction(Utils.REJECT_ACTION);
         PendingIntent pendingRejectClick = PendingIntent.getBroadcast(this, 0, rejectIntent, 0);

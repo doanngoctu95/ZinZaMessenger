@@ -289,7 +289,12 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                     String token = (String) ds.child("mToken").getValue();
                     String email = (String) ds.child("mEmail").getValue();
                     User mUser = new User(id, name, email, "", url, "", 0, token, "");
-                    mListFriendSearch.add(mUser);
+                    if(Utils.USER_ID.equals(id)){
+
+                    } else {
+                        mListFriendSearch.add(mUser);
+                    }
+
                 }
                 mProgressDialog.dismiss();
                 if (mListFriendSearch.size() > 0) {
@@ -330,11 +335,13 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
             public void onClick(DialogInterface dialog, int which) {
                 FirebaseAuth.getInstance().signOut();
                 LoginManager.getInstance().logOut();
-
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+
+                mReference.child("users").child(Utils.USER_ID).child("mStatus").setValue(0);//Set user offline
                 Intent intent = new Intent(MessageFriendActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+
             }
         });
         mBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

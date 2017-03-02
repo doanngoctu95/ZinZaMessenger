@@ -31,7 +31,7 @@ import chotot.prect.aptech.zinzamessenger.utils.Utils;
  * Created by dell on 13/02/2017.
  */
 
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageView mImgBack;
     private EditText mEdtUsername;
     private EditText mEdtEmail;
@@ -48,6 +48,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private Calendar datetime = Calendar.getInstance();
     private DateFormat mDateFormat = DateFormat.getDateInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,90 +62,96 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private void initView() {
         mImgBack = (ImageView) findViewById(R.id.btnBackSignUp);
         mImgBack.setOnClickListener(this);
-        mBtnSignup = (Button)findViewById(R.id.btnSignUp);
+        mBtnSignup = (Button) findViewById(R.id.btnSignUp);
         mBtnSignup.setOnClickListener(this);
-        mEdtUsername = (EditText)findViewById(R.id.edtUsernameSign);
-        mEdtEmail = (EditText)findViewById(R.id.edtEmailSign);
-        mEdtPassword = (EditText)findViewById(R.id.edtPassWrLogin);
-        mEdtConfirm = (EditText)findViewById(R.id.edtConfirm);
-        mEdtDOB = (EditText)findViewById(R.id.edtDob);
+        mEdtUsername = (EditText) findViewById(R.id.edtUsernameSign);
+        mEdtEmail = (EditText) findViewById(R.id.edtEmailSign);
+        mEdtPassword = (EditText) findViewById(R.id.edtPassWrLogin);
+        mEdtConfirm = (EditText) findViewById(R.id.edtConfirm);
+        mEdtDOB = (EditText) findViewById(R.id.edtDob);
     }
 
-    private void showDiaglogPicker(){
+    private void showDiaglogPicker() {
         mEdtDOB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(SignUpActivity.this,d,datetime.get(Calendar.YEAR),datetime.get(Calendar.MONTH),datetime.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(SignUpActivity.this, d, datetime.get(Calendar.YEAR), datetime.get(Calendar.MONTH), datetime.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
     }
+
     DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            datetime.set(Calendar.YEAR,year);
-            datetime.set(Calendar.MONTH,month);
-            datetime.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+            datetime.set(Calendar.YEAR, year);
+            datetime.set(Calendar.MONTH, month);
+            datetime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             mEdtDOB.setText(mDateFormat.format(datetime.getTime()));
         }
     };
 
-    private void logIn(){
-        String id = mReference.push().getKey();
-        String username = mEdtUsername.getText().toString().trim();
-        String email = mEdtEmail.getText().toString().trim();
-        String password = mEdtPassword.getText().toString().trim();
-        String confirm = mEdtConfirm.getText().toString().trim();
-        String dateOfBirth = mEdtDOB.getText().toString().trim();
-        if(username.equals("") || email.equals("") || dateOfBirth.equals("") || password.equals("") || confirm.equals("")){
-            Utils.showToast("Not enough information",this);
-        }else if(Utils.isValidEmail(email)== false){
-            Utils.showToast("Email is uncorrect",this);
-        } else if(isCorrectPassword(password,confirm) == false){
-            Utils.showToast("Password is uncorrect",this);
+    private void logIn() {
+
+        final String username = mEdtUsername.getText().toString().trim();
+        final String email = mEdtEmail.getText().toString().trim();
+        final String password = mEdtPassword.getText().toString().trim();
+        final String confirm = mEdtConfirm.getText().toString().trim();
+        final String dateOfBirth = mEdtDOB.getText().toString().trim();
+        if (username.equals("") || email.equals("") || dateOfBirth.equals("") || password.equals("") || confirm.equals("")) {
+            Utils.showToast("Not enough information", this);
+        } else if (Utils.isValidEmail(email) == false) {
+            Utils.showToast("Email is uncorrect", this);
+        } else if (isCorrectPassword(password, confirm) == false) {
+            Utils.showToast("Password is uncorrect", this);
         } else {
-            showProgress("Sign in","Registering");
+            showProgress("Sign in", "Registering");
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
 
-                    if(task.isSuccessful()){
-
-                    }else {
-                        showAlertDialog(task.getException().getMessage(),true);
+                    if (task.isSuccessful()) {
+                        String id = task.getResult().getUser().getUid();
+                        Utils.USER_ID = id;
+                        User mUser = new User(id, username, email, password, "", dateOfBirth, 1, Utils.USER_TOKEN, createAt());
+                        mReference.child(id).setValue(mUser);
+                        Utils.showToast("Register success", getApplicationContext());
+                        goToMainActivity();
+                    } else {
+                        showAlertDialog(task.getException().getMessage(), true);
                     }
                 }
             });
-
-            //Register to database
-            User mUser = new User(id,username,email,password,"",dateOfBirth,1,"",createAt());
-            mReference.child(id).setValue(mUser);
-            Utils.showToast("Register success",this);
-            goToMainActivity();
             mProgressDialog.dismiss();
         }
 
     }
-    private void showAlertDialog(String message, boolean isCancelable){
-        mDialog = Utils.buildAlertDialog(getString(R.string.title_alert), message,isCancelable,SignUpActivity.this);
+
+    private void showAlertDialog(String message, boolean isCancelable) {
+        mDialog = Utils.buildAlertDialog(getString(R.string.title_alert), message, isCancelable, SignUpActivity.this);
         mDialog.show();
     }
-    private void dismissAlertDialog(){
+
+    private void dismissAlertDialog() {
         mDialog.dismiss();
     }
-    private void setDbReference(){
+
+    private void setDbReference() {
         mReference = mDatabase.getInstance().getReference("users");
     }
-    private void setAuthInstance(){
+
+    private void setAuthInstance() {
         mAuth = FirebaseAuth.getInstance();
     }
-    private void goToMainActivity(){
+
+    private void goToMainActivity() {
         Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
         startActivity(intent);
     }
+
     @Override
     public void onClick(View view) {
-        int id= view.getId();
-        switch (id){
+        int id = view.getId();
+        switch (id) {
             case R.id.btnBackSignUp:
                 Intent intent2 = new Intent(SignUpActivity.this, LoginActivity.class);
                 startActivity(intent2);
@@ -156,17 +163,19 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private String createAt(){
+    private String createAt() {
         return java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
     }
-    private boolean isCorrectPassword(String pass,String confirm){
-        if(pass.equals(confirm)){
+
+    private boolean isCorrectPassword(String pass, String confirm) {
+        if (pass.equals(confirm)) {
             return true;
         } else {
             return false;
         }
     }
-    private void showProgress(String title, String message){
+
+    private void showProgress(String title, String message) {
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setTitle(title);
         mProgressDialog.setMessage(message);
