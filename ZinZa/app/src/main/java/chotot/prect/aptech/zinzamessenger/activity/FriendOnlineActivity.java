@@ -76,23 +76,6 @@ public class FriendOnlineActivity extends AppCompatActivity {
         mReference = mDatabase.getInstance().getReference();
     }
 
-    private void loadData() {
-        for (int i = 0; i < mListFriends.size(); i++) {
-            String myFriendID = "";
-            String currentID = mListFriends.get(i).getmIdCurrentUser();
-            String friendID = mListFriends.get(i).getmIdFriend();
-            if (currentID.equals(Utils.USER_ID)) {
-                myFriendID = friendID;
-                getListUser(myFriendID);
-            } else if (friendID.equals(Utils.USER_ID)) {
-                myFriendID = currentID;
-                getListUser(myFriendID);
-            } else {
-
-            }
-        }
-    }
-
     private void loadFr(Friend friend){
         String myFriendID = "";
         String currentID =friend.getmIdCurrentUser();
