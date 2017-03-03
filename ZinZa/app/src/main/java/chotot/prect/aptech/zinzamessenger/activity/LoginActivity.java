@@ -87,7 +87,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void initGgSignIn() {
         if (!Utils.verifyConnection(this)){
             Utils.showToast(Utils.INTERNET,this);
-            finish();
         }
         mSignInButton = (Button) findViewById(R.id.sign_in_gg_button);
         mSignInButton.setOnClickListener(this);
@@ -153,7 +152,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         String username = task.getResult().getUser().getDisplayName();
                         String email = task.getResult().getUser().getEmail();
                         String photoUrl = String.valueOf(task.getResult().getUser().getPhotoUrl());
-                        final User mUser = new User(id,username,email,"",photoUrl,"",1,Utils.USER_TOKEN,createAt());
+                        final User mUser = new User(id,username,email,"",photoUrl,"","on",Utils.USER_TOKEN,createAt());
                         mReference.child(id).setValue(mUser);
 //                        mReference.child("users").orderByChild("mID").equalTo(id).addValueEventListener(new ValueEventListener() {
 //                            @Override
@@ -324,7 +323,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String password = "";
         String avata = task.getResult().getUser().getPhotoUrl()+"";
         String token = FirebaseInstanceId.getInstance().getToken();
-        User mUser = new User(id,displayName,email,password,avata,"",1,token,createAt());
+        User mUser = new User(id,displayName,email,password,avata,"","on",token,createAt());
         mReference.child(id).setValue(mUser);
 
     }

@@ -57,10 +57,23 @@ public class AdapterFriendOnline extends BaseAdapter {
             Picasso.with(mContext).load(urlAvatar).into(avatarUser);
         }
         nameUser.setText(mListUser.get(position).getmUsername());
-        statusUser.setImageResource(mListUser.get(position).getmStatus());
+
+        if (mListUser.get(position).getmStatus().equals("on")){
+            statusUser.setImageResource(R.drawable.online);
+        }
+        else {
+            statusUser.setImageResource(R.drawable.offline);
+        }
+
+//        statusUser.setImageResource(mListUser.get(position).getmStatus());
         return convertView;
     }
-    public void refill(){
+    public void refill(User user){
+        mListUser.add(user);
+        notifyDataSetChanged();
+    }
+    public void changeStatusUser(int index, User user) {
+        mListUser.set(index,user);
         notifyDataSetChanged();
     }
 }

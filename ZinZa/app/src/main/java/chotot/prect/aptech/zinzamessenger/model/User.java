@@ -11,11 +11,11 @@ package chotot.prect.aptech.zinzamessenger.model;
     private String mPassword;
     private String mAvatar;
     private String mDateOfBirth;
-    private int mStatus;
+    private String mStatus;
     private String mToken;
     private String mCreatedAt;
 
-    public User(String mId, String mUsername, String mEmail, String mPassword, String mAvatar, String mDateOfBirth, int mStatus, String mToken, String mCreatedAt) {
+    public User(String mId, String mUsername, String mEmail, String mPassword, String mAvatar, String mDateOfBirth, String mStatus, String mToken, String mCreatedAt) {
         this.mId = mId;
         this.mUsername = mUsername;
         this.mEmail = mEmail;
@@ -25,6 +25,9 @@ package chotot.prect.aptech.zinzamessenger.model;
         this.mStatus = mStatus;
         this.mToken = mToken;
         this.mCreatedAt = mCreatedAt;
+    }
+
+    public User() {
     }
 
     public String getmId() {
@@ -75,11 +78,11 @@ package chotot.prect.aptech.zinzamessenger.model;
         this.mDateOfBirth = mDateOfBirth;
     }
 
-    public int getmStatus() {
+    public String getmStatus() {
         return mStatus;
     }
 
-    public void setmStatus(int mStatus) {
+    public void setmStatus(String mStatus) {
         this.mStatus = mStatus;
     }
 

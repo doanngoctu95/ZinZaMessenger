@@ -288,7 +288,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                     String name = (String) ds.child("mUsername").getValue();
                     String token = (String) ds.child("mToken").getValue();
                     String email = (String) ds.child("mEmail").getValue();
-                    User mUser = new User(id, name, email, "", url, "", 0, token, "");
+                    User mUser = new User(id, name, email, "", url, "", "off", token, "");
                     if(Utils.USER_ID.equals(id)){
 
                     } else {
@@ -337,7 +337,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 LoginManager.getInstance().logOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
 
-                mReference.child("users").child(Utils.USER_ID).child("mStatus").setValue(0);//Set user offline
+                mReference.child("users").child(Utils.USER_ID).child("mStatus").setValue("off");//Set user offline
                 Intent intent = new Intent(MessageFriendActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -360,7 +360,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         String id = Utils.USER_ID = mAuth.getCurrentUser().getUid();
         String username = Utils.USER_NAME = mAuth.getCurrentUser().getDisplayName();
         String photoUrl = Utils.AVATAR_URL = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
-        mUser = new User(id, username, "", "", photoUrl, "", 1, Utils.getToken(), "");
+        mUser = new User(id, username, "", "", photoUrl, "", "on", Utils.getToken(), "");
     }
 
     private void loadUser() {

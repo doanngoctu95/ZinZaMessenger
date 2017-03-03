@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +34,7 @@ public class FriendOnlineActivity extends AppCompatActivity {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     private List<Friend> mListFriends;
+    private List<String> mListFrStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +42,18 @@ public class FriendOnlineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_friend_online);
         initControl();
         setFirebaseInstace();
-        getDataFriend();
-//        loadListview();
 
+        mListFriends = new ArrayList<>();
+        mListUser = new ArrayList<>();
+        mListFrStr = new ArrayList<>();
+        getListFr();
+        loadListview();
     }
-    private void initControl(){
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.olDrawerlayout);
-        mToolbar = (Toolbar)findViewById(R.id.toolbarFr);
-        mListFriend = (ListView)findViewById(R.id.lstListFriend);
+
+    private void initControl() {
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.olDrawerlayout);
+        mToolbar = (Toolbar) findViewById(R.id.toolbarFr);
+        mListFriend = (ListView) findViewById(R.id.lstListFriend);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -59,120 +65,138 @@ public class FriendOnlineActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
     }
-    private void getDataFriend(){
-        mListFriends = new ArrayList<>();
-        mListUser = new ArrayList<>();
 
-        mReference.child("tblFriend").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                fetchData(dataSnapshot);
-                loadData();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("Error load child friend",databaseError.toString());
-            }
-        });
-
-//        mListUser.add(new User("1","Văn Cường","cuong@gmail.com","123","http://i.9mobi.vn/cf/images/2015/04/nkk/hinh-avatar-dep-11.jpg","",R.drawable.online,"","01/11/1995"));
-//        mListUser.add(new User("2","Văn Nam","cuong@gmail.com","123","http://4.bp.blogspot.com/-8Kef_ymC9t0/U2TgDlHZwiI/AAAAAAAACi8/XzNlxhXtR80/s1600/anh+avatar+dep+4.jpg","",R.drawable.offline,"","01/11/1995"));
-//        mListUser.add(new User("3","Nhung","cuong@gmail.com","123","http://1.bp.blogspot.com/-U96MqFNsOGA/Uzv6DLtpsHI/AAAAAAAABHs/P7lp0Kc-hYg/s1600/hinh+avatar+dep+6.jpg","",R.drawable.online,"","01/11/1995"));
-    }
-    private void fetchData(DataSnapshot dataSnapshot){
-        mListFriends.clear();
-        for(DataSnapshot ds:dataSnapshot.getChildren()){
-            String mIdCurrentUser = (String)ds.child("mIdCurrentUser").getValue();
-            String mIdFriend = (String)ds.child("mIdFriend").getValue();
-            String mID = (String)ds.child("mId").getValue();
-            String mDateCreated = (String)ds.child("dateCreated").getValue();
-            Friend mFriend = new Friend(mID,mIdCurrentUser,mIdFriend,mDateCreated);
-            mListFriends.add(mFriend);
-        }
-//        Log.e("List fr size:",mListFriends.size()+"");
-    }
-    private void loadListview(){
-        mAdapterFriendOnline = new AdapterFriendOnline(this,R.layout.item_friend_ol, mListUser);
-        mAdapterFriendOnline.notifyDataSetChanged();
+    private void loadListview() {
+        mAdapterFriendOnline = new AdapterFriendOnline(this, R.layout.item_friend_ol, mListUser);
         mListFriend.setAdapter(mAdapterFriendOnline);
-
     }
-    private void setFirebaseInstace(){
+
+    private void setFirebaseInstace() {
         mReference = mDatabase.getInstance().getReference();
     }
-    private void loadData(){
-        for(int i=0;i<mListFriends.size();i++){
+
+    private void loadData() {
+        for (int i = 0; i < mListFriends.size(); i++) {
             String myFriendID = "";
             String currentID = mListFriends.get(i).getmIdCurrentUser();
             String friendID = mListFriends.get(i).getmIdFriend();
-            if(currentID.equals(Utils.USER_ID)){
+            if (currentID.equals(Utils.USER_ID)) {
                 myFriendID = friendID;
-                getUser(myFriendID);
-            } else if(friendID.equals(Utils.USER_ID)) {
+                getListUser(myFriendID);
+            } else if (friendID.equals(Utils.USER_ID)) {
                 myFriendID = currentID;
-                getUser(myFriendID);
+                getListUser(myFriendID);
             } else {
 
             }
         }
     }
-    private void getUser(final String id){
-        mReference.child("users").orderByChild("mId").equalTo(id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-//                mListUser.clear();
-                String username = "";
-                String email = "";
-                String password = "";
-                String avatar = "";
-                long status;
-                String token = "";
-                String dateOfBirth = "";
-                String create = "";
-                for(DataSnapshot ds:dataSnapshot.getChildren()){
-                    username = (String)ds.child("mUsername").getValue();
-                    email = (String)ds.child("mEmail").getValue();
-                    password = (String) ds.child("mPassword").getValue();
-                    avatar = (String) ds.child("mAvatar").getValue();
-                    status = (Long) ds.child("mStatus").getValue();
-                    token = (String)ds.child("mToken").getValue();
-                    dateOfBirth = (String)ds.child("mDateOfBirth").getValue();
-                    create = (String)ds.child("mCreatedAt").getValue();
-                    int resID;
-                    if(status == 1) {
-                        resID = R.drawable.online;
-                    } else {
-                        resID = R.drawable.offline;
-                    }
-                    User mUser;
-                    if(!email.equals("")){
-                        mUser = new User(id,username,email,password,avatar,"",resID,token,create);
-                    }else {
-                        mUser = new User(id,username,"",password,avatar,"",resID,token,create);
-                    }
-                    mListUser.add(mUser);
-                }
-                loadListview();
 
+    private void loadFr(Friend friend){
+        String myFriendID = "";
+        String currentID =friend.getmIdCurrentUser();
+        String friendID = friend.getmIdFriend();
+        if (currentID.equals(Utils.USER_ID)) {
+            myFriendID = friendID;
+            getListUser(myFriendID);
+        } else if (friendID.equals(Utils.USER_ID)) {
+            myFriendID = currentID;
+            getListUser(myFriendID);
+        } else {
+
+        }
+    }
+
+    // get list friends
+    private void getListFr() {
+        mReference.child("tblFriend").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()) {
+                    Friend friend = dataSnapshot.getValue(Friend.class);
+                    mListFriends.add(friend);
+
+                    loadFr(friend);
+
+                } else {
+
+                }
+//                loadData();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d("Error load child users",databaseError.toString());
+
             }
         });
-
     }
+
+    //get list fr online
+    private void getListUser(String id) {
+        mReference.child("users").orderByChild("mId").equalTo(id).addChildEventListener(new ChildEventListener() {//
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()) {
+                    User user = dataSnapshot.getValue(User.class);
+                //  mListUser.add(user);
+                    mListFrStr.add(user.getmId());
+                    mAdapterFriendOnline.refill(user);
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()) {
+                    String id = (String) dataSnapshot.child("mId").getValue();
+                    User user = dataSnapshot.getValue(User.class);
+                    int index = mListFrStr.indexOf(id);
+                    if (index > -1) {
+                        mAdapterFriendOnline.changeStatusUser(index, user);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     @Override
     protected void onStop() {
         super.onStop();
-        mListUser.clear();
-        mListFriends.clear();
+//        mListUser.clear();
+//        mListFriends.clear();
     }
 }
