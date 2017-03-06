@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -13,7 +12,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,7 +158,15 @@ public class FriendOnlineActivity extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String id = (String) dataSnapshot.child("mId").getValue();
 
+                    int index = mListFrStr.indexOf(id);
+                    if (index > -1) {
+                        mAdapterFriendOnline.removeUser(index);
+                    }
+
+                }
             }
 
             @Override

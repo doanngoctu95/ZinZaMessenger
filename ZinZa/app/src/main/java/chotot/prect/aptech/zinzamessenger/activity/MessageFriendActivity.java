@@ -36,6 +36,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -78,6 +79,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     private AlertDialog.Builder mBuilder;
     private Dialog mDlDetailFriend;
     private ProgressDialog mProgressDialog;
+    private List<String> mListSearchFrKeys;
 
     private TextView mUsername;
     private TextView mEmail;
@@ -92,6 +94,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     //    private String idCurrentUser;
     private User mUser;
     private String idFriend;
+
 
 
     @Override
@@ -270,57 +273,124 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 searchByUsername(edtSearchFr.getText().toString().trim());
+                showDetailProfileDialog(mListFriendSearch);
+//                if(mListFriendSearch.size() == 0){
+//                    Utils.showToast("Can't search your friend.Please input another name!!", getApplicationContext());
+//                } else {
+//                    showDetailProfileDialog(mListFriendSearch);
+//                Utils.showToast("Size list:"+mListFriendSearch.size(), getApplicationContext());
+//                }
 
+//                mProgressDialog.dismiss();
+//                if(mListFriendSearch.size()!=0){
+//                    showDetailProfileDialog(mListFriendSearch);
+//                } else {
+//                    Utils.showToast("Can't search your friend.Please input another name!!", getApplicationContext());
+//                }
+//
             }
         });
     }
 
     private void searchByUsername(String username) {
         mListFriendSearch = new ArrayList<>();
+        mListSearchFrKeys = new ArrayList<>();
+//        mReference = mDatabase.getInstance().getReference();
+//        mReference.child("users").orderByChild("mUsername").startAt(username)
+//                .endAt(username + "\uf8ff").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+//                    String id = (String) ds.child("mId").getValue();
+//                    String url = (String) ds.child("mAvatar").getValue();
+//                    String name = (String) ds.child("mUsername").getValue();
+//                    String token = (String) ds.child("mToken").getValue();
+//                    String email = (String) ds.child("mEmail").getValue();
+//                    User mUser = new User(id, name, email, "", url, "", "off", token, "");
+//                    if(Utils.USER_ID.equals(id)){
+//
+//                    } else {
+//                        mListFriendSearch.add(mUser);
+//                    }
+//
+//                }
+//                Log.e("ListFriendSearch size:",mListFriendSearch.size()+"");
+//                mProgressDialog.dismiss();
+//                if (mListFriendSearch.size() > 0) {
+//                    mDlAddFriend.dismiss();
+//                    showDetailProfileDialog(mListFriendSearch);
+//                } else {
+//                    Utils.showToast("Can't search your friend.Please input another name!!", getApplicationContext());
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                mProgressDialog.dismiss();
+//            }
+//        });
         mReference = mDatabase.getInstance().getReference();
         mReference.child("users").orderByChild("mUsername").startAt(username)
-                .endAt(username + "\uf8ff").addValueEventListener(new ValueEventListener() {
+                .endAt(username + "\uf8ff").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String id = (String) ds.child("mId").getValue();
-                    String url = (String) ds.child("mAvatar").getValue();
-                    String name = (String) ds.child("mUsername").getValue();
-                    String token = (String) ds.child("mToken").getValue();
-                    String email = (String) ds.child("mEmail").getValue();
-                    User mUser = new User(id, name, email, "", url, "", "off", token, "");
-                    if(Utils.USER_ID.equals(id)){
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    String key = dataSnapshot.getKey();
+                    User user = dataSnapshot.getValue(User.class);
+                    mListSearchFrKeys.add(key);
+                    mAdapterFriendSearch.refill(user);
+            }
 
-                    } else {
-                        mListFriendSearch.add(mUser);
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    String key = dataSnapshot.getKey();
+                    User user = dataSnapshot.getValue(User.class);
+                    int index = mListSearchFrKeys.indexOf(key);
+                    if(index > -1){
+                        mAdapterFriendSearch.changeUser(index,user);
+
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    String key = dataSnapshot.getKey();
+                    int index = mListSearchFrKeys.indexOf(key);
+                    if(index > -1){
+                        mAdapterFriendSearch.removeUser(index);
                     }
 
                 }
-                mProgressDialog.dismiss();
-                if (mListFriendSearch.size() > 0) {
-                    mDlAddFriend.dismiss();
-                    showDetailProfileDialog(mListFriendSearch);
-                } else {
-                    Utils.showToast("Can't search your friend.Please input another name!!", getApplicationContext());
-                }
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                mProgressDialog.dismiss();
+
             }
+
         });
+        mProgressDialog.dismiss();
+
+
 
     }
 
     private void showDetailProfileDialog(List<User> list) {
+
         mDlDetailFriend = new Dialog(this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
         mDlDetailFriend.setContentView(R.layout.dialog_detail_friend);
 
         mDlDetailFriend.show();
         mDlDetailFriend.setCancelable(true);
+
         mLstFriendSearch = (ListView) mDlDetailFriend.findViewById(R.id.lstFriendSearch);
-        mAdapterFriendSearch = new AdapterFriendSearch(this, R.layout.item_search_friend, mListFriendSearch, mUser);
+        mAdapterFriendSearch = new AdapterFriendSearch(this, R.layout.item_search_friend, list, mUser);
         mLstFriendSearch.setAdapter(mAdapterFriendSearch);
 
     }

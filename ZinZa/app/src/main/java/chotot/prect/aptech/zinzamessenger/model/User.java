@@ -28,6 +28,7 @@ package chotot.prect.aptech.zinzamessenger.model;
     }
 
     public User() {
+
     }
 
     public String getmId() {

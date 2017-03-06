@@ -76,4 +76,8 @@ public class AdapterFriendOnline extends BaseAdapter {
         mListUser.set(index,user);
         notifyDataSetChanged();
     }
+    public void removeUser(int index){
+        mListUser.remove(index);
+        notifyDataSetChanged();
+    }
 }

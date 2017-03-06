@@ -39,9 +39,10 @@ public class AdapterFriendSearch extends BaseAdapter {
     private Context mContext;
     private int mLayout;
     private List<User> mListUser;
-//    private String idCurrentUser;
-    private DatabaseReference mReference;
     private User mUser;
+    public static boolean ishaveData = false;
+
+    private DatabaseReference mReference;
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase;
 
@@ -49,11 +50,21 @@ public class AdapterFriendSearch extends BaseAdapter {
         this.mContext = mContext;
         this.mLayout = mLayout;
         this.mListUser = mListUser;
-//        idCurrentUser=idCurUser;
         mAuth = FirebaseAuth.getInstance();
         this.mUser = mUser;
     }
-
+    public void refill(User user){
+        mListUser.add(user);
+        notifyDataSetChanged();
+    }
+    public void changeUser(int index, User user) {
+        mListUser.set(index,user);
+        notifyDataSetChanged();
+    }
+    public void removeUser(int index){
+        mListUser.remove(index);
+        notifyDataSetChanged();
+    }
     @Override
     public int getCount() {
         return mListUser.size();
@@ -73,6 +84,11 @@ public class AdapterFriendSearch extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(mLayout,null);
+        if(mListUser.size()>0){
+            ishaveData = true;
+        } else {
+            ishaveData = false;
+        }
         ImageView avatarUser = (ImageView)convertView.findViewById(R.id.imgFriendSearch);
         TextView nameUser = (TextView)convertView.findViewById(R.id.txtNameFriendSearch);
         Button btnAddFr= (Button) convertView.findViewById(R.id.btnAddFriend);
@@ -93,30 +109,6 @@ public class AdapterFriendSearch extends BaseAdapter {
                 Notification mNotification = new Notification(title,body);
                 Data mData = new Data(Utils.USER_ID,currentToken,currentAvatarUrl,Utils.TYPE_ADD);
                 instanceRetrofit(mNotification,mData,tokenFr);
-//                String idTblFriend="";
-//                final String tblContact=idCurrentUser+"-"+idFr;
-//                idTblFriend= tblContact;
-//                final Friend friend= new Friend(idTblFriend,idCurrentUser,idFr,createAt());
-
-
-//                mReference= mDatabase.getInstance().getReference();
-//                mReference.orderByChild("tblFriend").equalTo(tblContact).addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        if (dataSnapshot.getChildrenCount() > 0){
-//                            Toast.makeText(getApplicationContext(),"no add",Toast.LENGTH_LONG).show();
-//                        }
-//                        else {
-//                            mReference= mDatabase.getInstance().getReference("tblFriend");
-//                            mReference.child(tblContact).setValue(friend);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
             }
         });
         return convertView;
@@ -150,6 +142,9 @@ public class AdapterFriendSearch extends BaseAdapter {
                 Utils.showToast("Failure:"+t.toString(),mContext);
             }
         });
-
     }
+    public static boolean isIshaveData(){
+        return ishaveData;
+    }
+
 }
