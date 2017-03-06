@@ -53,6 +53,7 @@ import chotot.prect.aptech.zinzamessenger.adapter.AdapterFriendSearch;
 import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessage;
 import chotot.prect.aptech.zinzamessenger.model.Message;
 import chotot.prect.aptech.zinzamessenger.model.User;
+import chotot.prect.aptech.zinzamessenger.utils.Helper;
 import chotot.prect.aptech.zinzamessenger.utils.Utils;
 
 public class MessageFriendActivity extends AppCompatActivity implements ListView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
@@ -407,7 +408,7 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
                 LoginManager.getInstance().logOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
 
-                mReference.child("users").child(Utils.USER_ID).child("mStatus").setValue("off");//Set user offline
+                Helper.setUserOffline(mReference);
                 Intent intent = new Intent(MessageFriendActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
