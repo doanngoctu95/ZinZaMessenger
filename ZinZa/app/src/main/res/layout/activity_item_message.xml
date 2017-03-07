@@ -50,6 +50,17 @@
         android:layout_marginBottom="12dp"
         android:layout_alignBottom="@+id/imgAvatar"
         android:layout_alignLeft="@+id/txtName"
-        android:layout_alignStart="@+id/txtName"/>
+        />
+
+    <TextView
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:background="@drawable/rounded_new_message_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtNumberNewMessage"
+        android:layout_alignBottom="@+id/txtContent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>

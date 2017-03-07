@@ -9,14 +9,15 @@ import java.io.Serializable;
  */
 
 public class Message implements Serializable{
-    private int mId;
-    private int mIdSender;
-    private int mIdRecipient;
-    private int mType;
+    private String mId;
+    private String mIdSender;
+    private String mIdRecipient;
+    private String mType;
     private String mContent;
     private String mTime;
     private int mRecipientOrSenderStatus;
-    public Message(int mId, int mIdSender, int mIdRecipient, int mType, String mContent, String mTime) {
+
+    public Message(String mId, String mIdSender, String mIdRecipient, String mType, String mContent, String mTime) {
         this.mId = mId;
         this.mIdSender = mIdSender;
         this.mIdRecipient = mIdRecipient;
@@ -24,36 +25,38 @@ public class Message implements Serializable{
         this.mContent = mContent;
         this.mTime = mTime;
     }
+    public Message(){
 
-    public int getmId() {
+    }
+    public String getmId() {
         return mId;
     }
 
-    public void setmId(int mId) {
+    public void setmId(String mId) {
         this.mId = mId;
     }
 
-    public int getmIdSender() {
+    public String getmIdSender() {
         return mIdSender;
     }
 
-    public void setmIdSender(int mIdSender) {
+    public void setmIdSender(String mIdSender) {
         this.mIdSender = mIdSender;
     }
 
-    public int getmIdRecipient() {
+    public String getmIdRecipient() {
         return mIdRecipient;
     }
 
-    public void setmIdRecipient(int mIdRecipient) {
+    public void setmIdRecipient(String mIdRecipient) {
         this.mIdRecipient = mIdRecipient;
     }
 
-    public int getmType() {
+    public String getmType() {
         return mType;
     }
 
-    public void setmType(int mType) {
+    public void setmType(String mType) {
         this.mType = mType;
     }
 

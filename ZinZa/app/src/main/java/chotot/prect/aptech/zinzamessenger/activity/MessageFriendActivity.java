@@ -18,12 +18,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -56,20 +56,27 @@ import chotot.prect.aptech.zinzamessenger.model.User;
 import chotot.prect.aptech.zinzamessenger.utils.Helper;
 import chotot.prect.aptech.zinzamessenger.utils.Utils;
 
-public class MessageFriendActivity extends AppCompatActivity implements ListView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+public class MessageFriendActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private long mBackPressed = 0;
 
     private ListView mListMessage;
-    private ListView mLstFriendSearch;
     private List<Message> mList;
+    private AdapterMessage mAdapterMessage;
+    private List<String> mListMessageKeys;
+    private List<String> mListConversationKeys;
+
+
+    private ListView mLstFriendSearch;
     private List<User> mListFriendSearch;
     private AdapterFriendSearch mAdapterFriendSearch;
 
+    private List<String> mListUserKey;
+    private List<User> mListUser;
     private NavigationView mNavigationView;
-    private AdapterMessage mAdapterMessage;
+
 
     private static final String TAG_NAME = "NAME";
     private static final String TAG_AVATAR = "AVATAR";
@@ -89,10 +96,11 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
+    private DatabaseReference mRefMessage;
 
     private GoogleApiClient mGoogleApiClient;
     private String mProvider;
-    //    private String idCurrentUser;
+    //private String idCurrentUser;
     private User mUser;
     private String idFriend;
 
@@ -104,11 +112,10 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         setContentView(R.layout.activity_messenger_friend);
         initControl();
         setAuthInstace();
-        loadData();
-        loadListview();
+        loadConversation();
         loadUser();
+        loadListview();
         //Setup implement
-        mListMessage.setOnItemClickListener(this);
         mNavigationView.setNavigationItemSelectedListener(this);
 
     }
@@ -191,24 +198,163 @@ public class MessageFriendActivity extends AppCompatActivity implements ListView
         }
         return super.onOptionsItemSelected(item);
     }
+    private void getMessageFromConversation(final String keyConversation){
+        DatabaseReference mConverRef = mDatabase.getInstance().getReference().child("tblChat").child(keyConversation);
+//        mConverRef.orderByChild("mTime").limitToLast(1).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for(DataSnapshot ds:dataSnapshot.getChildren()){
+//                    Log.e("Result","Key:"+ds.child("mId").getValue()+"Time:"+ds.child("mTime").getValue());
+//                    Message message = ds.getValue(Message.class);
+//                    mAdapterMessage.refill(message);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+        mConverRef.orderByChild("mTime").limitToLast(1).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if(dataSnapshot.exists()){
+                    Log.e("First message",dataSnapshot.getValue()+"");
+                    Message message = dataSnapshot.getValue(Message.class);
+                    mAdapterMessage.refill(message);
 
-    private void loadData() {
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+//    private void getLastestMessage(String idFriend,String key){
+//        DatabaseReference mUserRef = mDatabase.getInstance().getReference().child("users");
+//        mUserRef.orderByKey().equalTo(idFriend).addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                if(dataSnapshot.exists()){
+//                    String key = dataSnapshot.getKey();
+//                    mListUserKey.add(key);
+//                    User user = dataSnapshot.getValue(User.class);
+//                    mListUser.add(user);
+//                    getMessageFromConversation(key);
+//                }
+//
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
+    private boolean isMyConvesation(String key){
+        String []parts = key.split("-");
+        String uId1 = parts[0];
+        String uId2 = parts[1];
+
+        if(Utils.USER_ID.equals(uId1)){
+            return true;
+        } else if(Utils.USER_ID.equals(uId2)){
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    private void loadConversation() {
+        mListUserKey = new ArrayList<>();
+        mListMessageKeys = new ArrayList<>();
+        mListConversationKeys = new ArrayList<>();
         mList = new ArrayList<>();
-        mList.add(new Message(0, 1, 2, 1, "Hello", "13/02"));
-        mList.add(new Message(0, 1, 3, 1, "How are you", "13/02"));
+        mRefMessage = mDatabase.getInstance().getReference().child("tblChat");
+        mRefMessage.orderByKey().addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if(dataSnapshot.exists()){
+                    Log.e("Key",dataSnapshot.getKey());
+
+                    String key = dataSnapshot.getKey();
+                    mListConversationKeys.add(key);
+                    getMessageFromConversation(key);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()) {
+                    Log.e("Key",dataSnapshot.getKey());
+                    String id = dataSnapshot.getKey();
+                    int index = mListConversationKeys.indexOf(id);
+                    if (index > -1) {
+//                        getMessageFromConversation(id);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                }
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+//        mList.add(new Message(0, 1, 2, 1, "Hello", "13/02"));
+//        mList.add(new Message(0, 1, 3, 1, "How are you", "13/02"));
     }
 
     private void loadListview() {
         mAdapterMessage = new AdapterMessage(this, R.layout.activity_item_message, mList);
         mListMessage.setAdapter(mAdapterMessage);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent chatting = new Intent(this, ChattingActivity.class);
-        Message message = mList.get(position);
-        chatting.putExtra(TAG_MESSAGE, message);
-        startActivity(chatting);
     }
 
     @Override

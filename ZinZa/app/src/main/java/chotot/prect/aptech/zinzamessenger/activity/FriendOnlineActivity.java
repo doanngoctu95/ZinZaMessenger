@@ -5,6 +5,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -22,7 +23,7 @@ import chotot.prect.aptech.zinzamessenger.model.Friend;
 import chotot.prect.aptech.zinzamessenger.model.User;
 import chotot.prect.aptech.zinzamessenger.utils.Utils;
 
-public class FriendOnlineActivity extends AppCompatActivity {
+public class FriendOnlineActivity extends AppCompatActivity implements ListView.OnItemClickListener{
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private ListView mListFriend;
@@ -187,5 +188,10 @@ public class FriendOnlineActivity extends AppCompatActivity {
         super.onStop();
 //        mListUser.clear();
 //        mListFriends.clear();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
     }
 }

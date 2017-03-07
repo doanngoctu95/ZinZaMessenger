@@ -8,11 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
-import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.model.Message;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
@@ -52,32 +49,32 @@ public class AdapterMessageChat extends BaseAdapter {
         EmojiconTextView content;
         TextView time;
         ImageView imageContent;
-        if(mList.get(position).getmType() == 1 && mList.get(position).getRecipientOrSenderStatus() == SENDER){
-            mLayout = R.layout.layout_sender_message;
-            convertView = inflater.inflate(mLayout,null);
-            content = (EmojiconTextView)convertView.findViewById(R.id.text_view_sender_message);
-            time = (TextView)convertView.findViewById(R.id.text_view_time_sender);
-            content.setText(mList.get(position).getmContent());
-        } else if(mList.get(position).getmType() == 3 && mList.get(position).getRecipientOrSenderStatus() == SENDER) {
-            mLayout = R.layout.layout_sender_image;
-            convertView = inflater.inflate(mLayout,null);
-            imageContent = (ImageView) convertView.findViewById(R.id.img_message_sender);
-            time = (TextView)convertView.findViewById(R.id.text_view_time_sender_image);
-            Picasso.with(mContext).load(mList.get(position).getmContent()).into(imageContent);
-        } else if(mList.get(position).getmType() == 3 && mList.get(position).getRecipientOrSenderStatus() == RECIPENT) {
-            mLayout = R.layout.layout_recipent_image;
-            convertView = inflater.inflate(mLayout,null);
-            imageContent = (ImageView) convertView.findViewById(R.id.img_message_recipent);
-            time = (TextView)convertView.findViewById(R.id.text_view_time_recipent_image);
-            Picasso.with(mContext).load(mList.get(position).getmContent()).into(imageContent);
-        } else {
-            mLayout = R.layout.layout_recipent_message;
-            convertView = inflater.inflate(mLayout,null);
-            content = (EmojiconTextView)convertView.findViewById(R.id.text_view_recipient_message);
-            time = (TextView)convertView.findViewById(R.id.text_view_time_recipent);
-            content.setText(mList.get(position).getmContent());
-        }
-        time.setText(String.valueOf(mList.get(position).getmTime()));
+//        if(mList.get(position).getmType() == 1 && mList.get(position).getRecipientOrSenderStatus() == SENDER){
+//            mLayout = R.layout.layout_sender_message;
+//            convertView = inflater.inflate(mLayout,null);
+//            content = (EmojiconTextView)convertView.findViewById(R.id.text_view_sender_message);
+//            time = (TextView)convertView.findViewById(R.id.text_view_time_sender);
+//            content.setText(mList.get(position).getmContent());
+//        } else if(mList.get(position).getmType() == 3 && mList.get(position).getRecipientOrSenderStatus() == SENDER) {
+//            mLayout = R.layout.layout_sender_image;
+//            convertView = inflater.inflate(mLayout,null);
+//            imageContent = (ImageView) convertView.findViewById(R.id.img_message_sender);
+//            time = (TextView)convertView.findViewById(R.id.text_view_time_sender_image);
+//            Picasso.with(mContext).load(mList.get(position).getmContent()).into(imageContent);
+//        } else if(mList.get(position).getmType() == 3 && mList.get(position).getRecipientOrSenderStatus() == RECIPENT) {
+//            mLayout = R.layout.layout_recipent_image;
+//            convertView = inflater.inflate(mLayout,null);
+//            imageContent = (ImageView) convertView.findViewById(R.id.img_message_recipent);
+//            time = (TextView)convertView.findViewById(R.id.text_view_time_recipent_image);
+//            Picasso.with(mContext).load(mList.get(position).getmContent()).into(imageContent);
+//        } else {
+//            mLayout = R.layout.layout_recipent_message;
+//            convertView = inflater.inflate(mLayout,null);
+//            content = (EmojiconTextView)convertView.findViewById(R.id.text_view_recipient_message);
+//            time = (TextView)convertView.findViewById(R.id.text_view_time_recipent);
+//            content.setText(mList.get(position).getmContent());
+//        }
+//        time.setText(String.valueOf(mList.get(position).getmTime()));
         return convertView;
     }
 

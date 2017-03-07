@@ -29,16 +29,21 @@ public class Utils {
     public static final String FB_NAME = "FB_NAME";
     public static final String FB_URL = "FB_URL";
     //Current USER
-    public static  String USER_ID = "";
-    public static  String AVATAR_URL = "";
-    public static  String USER_NAME = "";
-    public static  String USER_TOKEN = getToken();
+    public static String USER_ID = "";
+    public static String AVATAR_URL = "";
+    public static String USER_NAME = "";
+    public static String USER_TOKEN = getToken();
     //Type
     public static String TYPE_ADD = "ADD";
     public static String TYPE_ANSWER = "ANSWER";
-
-
-
+    //Type chat
+    public static String TEXT = "TEXT";
+    public static String IMAGE = "IMAGE";
+    public static String FILE = "FILE";
+    public static String INTRO_ACCEPT = "Hai bạn đã là bạn của nhau. Hãy bắt đầu trò chuyện";
+    //Chating
+    public static String FR_URL = "FR_URL";
+    public static String FR_NAME = "FR_NAME";
 
 
     public static AlertDialog buildAlertDialog(String title, String message, boolean isCancelable, Context context) {
@@ -88,6 +93,7 @@ public class Utils {
     public static String getToken() {
         return FirebaseInstanceId.getInstance().getToken();
     }
+
     public static String createAt() {
         return java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
     }
