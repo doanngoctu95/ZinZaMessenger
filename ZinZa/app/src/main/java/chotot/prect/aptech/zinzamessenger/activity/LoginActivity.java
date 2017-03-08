@@ -38,7 +38,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
-import java.util.Calendar;
 
 import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.model.User;
@@ -152,7 +151,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         String username = task.getResult().getUser().getDisplayName();
                         String email = task.getResult().getUser().getEmail();
                         String photoUrl = String.valueOf(task.getResult().getUser().getPhotoUrl());
-                        final User mUser = new User(id,username,email,"",photoUrl,"","on",Utils.USER_TOKEN,createAt());
+                        final User mUser = new User(id,username,email,"",photoUrl,"","on",Utils.USER_TOKEN,Utils.createAt());
                         mReference.child(id).setValue(mUser);
 //                        mReference.child("users").orderByChild("mID").equalTo(id).addValueEventListener(new ValueEventListener() {
 //                            @Override
@@ -323,12 +322,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String password = "";
         String avata = task.getResult().getUser().getPhotoUrl()+"";
         String token = FirebaseInstanceId.getInstance().getToken();
-        User mUser = new User(id,displayName,email,password,avata,"","on",token,createAt());
+        User mUser = new User(id,displayName,email,password,avata,"","on",token,Utils.createAt());
         mReference.child(id).setValue(mUser);
 
-    }
-    private String createAt(){
-        return java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
     }
 
     @Override

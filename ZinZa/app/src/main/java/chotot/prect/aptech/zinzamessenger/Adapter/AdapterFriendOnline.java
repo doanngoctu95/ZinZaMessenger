@@ -1,6 +1,7 @@
 package chotot.prect.aptech.zinzamessenger.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,9 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import chotot.prect.aptech.zinzamessenger.R;
+import chotot.prect.aptech.zinzamessenger.activity.ChattingActivity;
 import chotot.prect.aptech.zinzamessenger.model.User;
+import chotot.prect.aptech.zinzamessenger.utils.Utils;
 
 /**
  * Created by ASUS on 02/10/2017.
@@ -64,8 +67,17 @@ public class AdapterFriendOnline extends BaseAdapter {
         else {
             statusUser.setImageResource(R.drawable.offline);
         }
-
-//        statusUser.setImageResource(mListUser.get(position).getmStatus());
+        final User user = mListUser.get(position);
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent chatting = new Intent(mContext, ChattingActivity.class);
+                chatting.putExtra(Utils.FR_USER, user);
+                chatting.putExtra(Utils.SENDER_ID, Utils.USER_ID);
+                chatting.putExtra(Utils.RECIPIENT_ID, user.getmId());
+                mContext.startActivity(chatting);
+            }
+        });
         return convertView;
     }
     public void refill(User user){

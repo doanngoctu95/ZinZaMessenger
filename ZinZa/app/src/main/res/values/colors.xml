@@ -11,4 +11,6 @@
     <color name="fbcolor">#3b5998</color>
     <color name="gray">#787676</color>
     <color name="red">#FF0000</color>
+    <color name="normal">#757575</color>
+    <color name="pressed">#3F51B5</color>
 </resources>

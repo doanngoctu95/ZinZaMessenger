@@ -9,7 +9,8 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -42,8 +43,10 @@ public class Utils {
     public static String FILE = "FILE";
     public static String INTRO_ACCEPT = "Hai bạn đã là bạn của nhau. Hãy bắt đầu trò chuyện";
     //Chating
-    public static String FR_URL = "FR_URL";
-    public static String FR_NAME = "FR_NAME";
+    public static String FR_USER = "FR_USER";
+    public static String FORMAT_TIME = "dd-MM-yyyy hh:mm:ss";
+    public static String SENDER_ID = "SENDER_ID";
+    public static String RECIPIENT_ID = "RECIPIENT_ID";
 
 
     public static AlertDialog buildAlertDialog(String title, String message, boolean isCancelable, Context context) {
@@ -95,6 +98,6 @@ public class Utils {
     }
 
     public static String createAt() {
-        return java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+        return new SimpleDateFormat(Utils.FORMAT_TIME).format(new Date());
     }
 }

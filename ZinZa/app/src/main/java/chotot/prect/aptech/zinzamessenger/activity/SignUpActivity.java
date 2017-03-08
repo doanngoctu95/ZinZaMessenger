@@ -110,7 +110,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         if (task.isSuccessful()) {
                             String id = task.getResult().getUser().getUid();
                             Utils.USER_ID = id;
-                            User mUser = new User(id, username, email, password, "", dateOfBirth, "on", Utils.USER_TOKEN, createAt());
+                            User mUser = new User(id, username, email, password, "", dateOfBirth, "on", Utils.USER_TOKEN, Utils.createAt());
                             mReference.child(id).setValue(mUser);
                             Utils.showToast("Register success", getApplicationContext());
                             goToMainActivity();
@@ -153,10 +153,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 logIn();
                 break;
         }
-    }
-
-    private String createAt(){
-        return java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
     }
     private boolean isCorrectPassword(String pass,String confirm){
         if(pass.equals(confirm)){

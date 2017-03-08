@@ -14,7 +14,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
-import java.util.Calendar;
 import java.util.List;
 
 import chotot.prect.aptech.zinzamessenger.R;
@@ -111,10 +110,6 @@ public class AdapterFriendSearch extends BaseAdapter {
         return convertView;
     }
 
-
-    private String createAt(){
-        return java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
-    }
     private void instanceRetrofit(Notification mNotification,Data mData,String tokenFr){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Utils.FCM_SEND_URL)

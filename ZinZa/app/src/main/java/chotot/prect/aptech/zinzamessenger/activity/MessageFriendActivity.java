@@ -45,7 +45,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import chotot.prect.aptech.zinzamessenger.R;
@@ -100,7 +99,6 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
 
     private GoogleApiClient mGoogleApiClient;
     private String mProvider;
-    //private String idCurrentUser;
     private User mUser;
     private String idFriend;
 
@@ -115,7 +113,6 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
         loadConversation();
         loadUser();
         loadListview();
-        //Setup implement
         mNavigationView.setNavigationItemSelectedListener(this);
 
     }
@@ -200,45 +197,17 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
     }
     private void getMessageFromConversation(final String keyConversation){
         DatabaseReference mConverRef = mDatabase.getInstance().getReference().child("tblChat").child(keyConversation);
-//        mConverRef.orderByChild("mTime").limitToLast(1).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for(DataSnapshot ds:dataSnapshot.getChildren()){
-//                    Log.e("Result","Key:"+ds.child("mId").getValue()+"Time:"+ds.child("mTime").getValue());
-//                    Message message = ds.getValue(Message.class);
-//                    mAdapterMessage.refill(message);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-        mConverRef.orderByChild("mTime").limitToLast(1).addChildEventListener(new ChildEventListener() {
+        mConverRef.orderByChild("mTime").limitToLast(1).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.exists()){
-                    Log.e("First message",dataSnapshot.getValue()+"");
-                    Message message = dataSnapshot.getValue(Message.class);
-                    mAdapterMessage.refill(message);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds:dataSnapshot.getChildren()){
+                    Log.e("Result","Key:"+ds.child("mId").getValue()+"Time:"+ds.child("mTime").getValue());
+                    Message message = ds.getValue(Message.class);
+                    if(isMyConvesation(keyConversation)){
+                        mAdapterMessage.refill(message);
+                    }
 
                 }
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
@@ -248,43 +217,7 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
         });
 
     }
-//    private void getLastestMessage(String idFriend,String key){
-//        DatabaseReference mUserRef = mDatabase.getInstance().getReference().child("users");
-//        mUserRef.orderByKey().equalTo(idFriend).addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                if(dataSnapshot.exists()){
-//                    String key = dataSnapshot.getKey();
-//                    mListUserKey.add(key);
-//                    User user = dataSnapshot.getValue(User.class);
-//                    mListUser.add(user);
-//                    getMessageFromConversation(key);
-//                }
-//
-//
-//            }
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
+
     private boolean isMyConvesation(String key){
         String []parts = key.split("-");
         String uId1 = parts[0];
@@ -301,6 +234,7 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
     }
 
     private void loadConversation() {
+        showProgress("Loading...","Please wait");
         mListUserKey = new ArrayList<>();
         mListMessageKeys = new ArrayList<>();
         mListConversationKeys = new ArrayList<>();
@@ -311,7 +245,6 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if(dataSnapshot.exists()){
                     Log.e("Key",dataSnapshot.getKey());
-
                     String key = dataSnapshot.getKey();
                     mListConversationKeys.add(key);
                     getMessageFromConversation(key);
@@ -320,15 +253,6 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.exists()) {
-                    Log.e("Key",dataSnapshot.getKey());
-                    String id = dataSnapshot.getKey();
-                    int index = mListConversationKeys.indexOf(id);
-                    if (index > -1) {
-//                        getMessageFromConversation(id);
-                    }
-
-                }
             }
 
             @Override
@@ -347,9 +271,7 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
 
             }
         });
-
-//        mList.add(new Message(0, 1, 2, 1, "Hello", "13/02"));
-//        mList.add(new Message(0, 1, 3, 1, "How are you", "13/02"));
+        mProgressDialog.dismiss();
     }
 
     private void loadListview() {
@@ -421,19 +343,6 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 searchByUsername(edtSearchFr.getText().toString().trim());
                 showDetailProfileDialog(mListFriendSearch);
-//                if(mListFriendSearch.size() == 0){
-//                    Utils.showToast("Can't search your friend.Please input another name!!", getApplicationContext());
-//                } else {
-//                    showDetailProfileDialog(mListFriendSearch);
-//                Utils.showToast("Size list:"+mListFriendSearch.size(), getApplicationContext());
-//                }
-
-//                mProgressDialog.dismiss();
-//                if(mListFriendSearch.size()!=0){
-//                    showDetailProfileDialog(mListFriendSearch);
-//                } else {
-//                    Utils.showToast("Can't search your friend.Please input another name!!", getApplicationContext());
-//                }
 //
             }
         });
@@ -442,40 +351,6 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
     private void searchByUsername(String username) {
         mListFriendSearch = new ArrayList<>();
         mListSearchFrKeys = new ArrayList<>();
-//        mReference = mDatabase.getInstance().getReference();
-//        mReference.child("users").orderByChild("mUsername").startAt(username)
-//                .endAt(username + "\uf8ff").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-//                    String id = (String) ds.child("mId").getValue();
-//                    String url = (String) ds.child("mAvatar").getValue();
-//                    String name = (String) ds.child("mUsername").getValue();
-//                    String token = (String) ds.child("mToken").getValue();
-//                    String email = (String) ds.child("mEmail").getValue();
-//                    User mUser = new User(id, name, email, "", url, "", "off", token, "");
-//                    if(Utils.USER_ID.equals(id)){
-//
-//                    } else {
-//                        mListFriendSearch.add(mUser);
-//                    }
-//
-//                }
-//                Log.e("ListFriendSearch size:",mListFriendSearch.size()+"");
-//                mProgressDialog.dismiss();
-//                if (mListFriendSearch.size() > 0) {
-//                    mDlAddFriend.dismiss();
-//                    showDetailProfileDialog(mListFriendSearch);
-//                } else {
-//                    Utils.showToast("Can't search your friend.Please input another name!!", getApplicationContext());
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                mProgressDialog.dismiss();
-//            }
-//        });
         mReference = mDatabase.getInstance().getReference();
         mReference.child("users").orderByChild("mUsername").startAt(username)
                 .endAt(username + "\uf8ff").addChildEventListener(new ChildEventListener() {
@@ -658,45 +533,6 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
 
     private String getTypeLogIn() {
         return mAuth.getCurrentUser().getProviders().get(0);
-    }
-
-//    private void addNewFriend(){
-//        String idTblFriend="";
-//        final String tblContact=idCurrentUser+"-"+idFriend;
-//        idTblFriend= tblContact;
-//        final Friend friend= new Friend(idTblFriend,idCurrentUser,idFriend,createAt());
-//
-//
-//        mReference= mDatabase.getInstance().getReference();
-//        mReference.orderByChild("tblFriend").equalTo(tblContact).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.getChildrenCount() > 0){
-//                    Toast.makeText(getApplicationContext(),"no add",Toast.LENGTH_LONG).show();
-//                }
-//                else {
-//                    mReference= mDatabase.getInstance().getReference("tblFriend");
-//                    mReference.child(tblContact).setValue(friend);
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//
-//
-//    }
-
-    private String createAt() {
-        return java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
-    }
-
-    private boolean checkIdFriendExisted(String tblContact) {
-
-        return false;
     }
 
 

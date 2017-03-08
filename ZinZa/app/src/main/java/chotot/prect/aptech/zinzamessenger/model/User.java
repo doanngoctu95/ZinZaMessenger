@@ -1,10 +1,12 @@
 package chotot.prect.aptech.zinzamessenger.model;
 
+import java.io.Serializable;
+
 /**
  * Created by ASUS on 02/10/2017.
  */
 
-    public class User {
+    public class User implements Serializable{
     private String mId;
     private String mUsername;
     private String mEmail;

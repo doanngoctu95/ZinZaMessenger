@@ -1,5 +1,6 @@
 package chotot.prect.aptech.zinzamessenger.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,14 +11,21 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.List;
 
 import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.adapter.AdapterMessageChat;
 import chotot.prect.aptech.zinzamessenger.model.Message;
+import chotot.prect.aptech.zinzamessenger.model.User;
 import chotot.prect.aptech.zinzamessenger.utils.Utils;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
@@ -26,6 +34,10 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     private ImageButton mBtnBack;
     private ImageView mImgAvatar;
     private TextView mTxtName;
+
+    private String mIdRecipient;
+    private String mIdSender;
+    private String keyConversation;
 
     private AdapterMessageChat mAdapterMessageChat;
     private ListView mListview;
@@ -37,19 +49,26 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     private ImageView mBtEmoji;
     private View contentRoot;
 
-    private Calendar mCalendar = Calendar.getInstance();
+    private FirebaseDatabase mMsDatabase;
+    private DatabaseReference mMsRef;
+
+    private ProgressDialog mProgressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
         initControl();
+        setFirebaseInstance();
         mBtnBack.setOnClickListener(this);
         mBtnSendMessage.setOnClickListener(this);
         getExtra();
-//        loadMessageContent();
-//        setListview();
+        showProgress("Loading message..","Please wait");
+        loadData();
+        setListview();
+        mProgressDialog.dismiss();
     }
     private void initControl(){
+        mMessageList = new ArrayList<>();
         contentRoot = findViewById(R.id.activity_chatting);
         mBtnBack = (ImageButton)findViewById(R.id.btnBackChatting);
 
@@ -76,8 +95,13 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.btnSendMessage:
                 String message = mEdtMessage.getText().toString();
-                sendMessage(message);
-                mEdtMessage.setText("");
+                if(message.equals("")){
+
+                } else {
+                    sendMessage(message);
+                    mEdtMessage.setText("");
+                }
+
                 break;
         }
 
@@ -87,47 +111,94 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         mListview.setAdapter(mAdapterMessageChat);
     }
     private void sendMessage(String message){
-//        mMessageList.add(new Message(mMessageList.size()+1,2,1,1,message,getTimeNow()));
-        mAdapterMessageChat.notifyDataSetChanged();
+
+        String mId = mMsRef.push().getKey();
+        Message mMessage = new Message(mId,Utils.USER_ID,mIdRecipient,Utils.TEXT,message,Utils.createAt());
+        mAdapterMessageChat.addMessage(mMessage);
+        mMsRef.child(keyConversation).child(mId).setValue(mMessage);
     }
     private void getExtra(){
         Bundle bd = getIntent().getExtras();
         if(bd!= null){
             Intent t= getIntent();
-            String fr_url = t.getStringExtra(Utils.FR_URL);
-            String fr_name = t.getStringExtra(Utils.FR_NAME);
-            if(!fr_url.equals("")){
-                Picasso.with(this).load(fr_url).into(mImgAvatar);
+            User user = (User)t.getSerializableExtra(Utils.FR_USER);
+            if(!user.getmAvatar().equals("")){
+                Picasso.with(this).load(user.getmAvatar()).into(mImgAvatar);
             }
-            mTxtName.setText(fr_name);
+            mTxtName.setText(user.getmUsername());
+            mIdRecipient = t.getStringExtra(Utils.RECIPIENT_ID);
+            mIdSender = t.getStringExtra(Utils.SENDER_ID);
 
         }
     }
-    private void loadMessageContent() {
-//        String url = "http://1.bp.blogspot.com/-U96MqFNsOGA/Uzv6DLtpsHI/AAAAAAAABHs/P7lp0Kc-hYg/s1600/hinh+avatar+dep+6.jpg";
-//        mMessageList = new ArrayList<>();
-//        String[] content = {"Hello","How are you","I'm fine,thank you","How old are you","16 years old",url};
-//        Message newMessage;
-//        for(int j=0;j<content.length;j++){
-//            if (j % 2 == 0 && j != 5) {
-//                newMessage = new Message(j,1,2,1,content[j],"12:30");
-//                newMessage.setRecipientOrSenderStatus(AdapterMessageChat.SENDER);
-//            } else if(j == 5) {
-//                newMessage = new Message(j,1,2,3,content[j],"12:30");
-//                newMessage.setRecipientOrSenderStatus(AdapterMessageChat.SENDER);
-//            } else {
-//                newMessage = new Message(j,2,1,1,content[j],"09:41");
-//                newMessage.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT);
-//            }
-//            mMessageList.add(newMessage);
-//            mAdapterMessageChat.refillAdapter(newMessage);
-//            mChatRecyclerView.scrollToPosition(mAdapterMessageChat.getItemCount()-1);
-//        }
-    }
+    private void getMessage() {
+        mAdapterMessageChat.cleanUp();
+        mMsRef.child(keyConversation).orderByChild("mTime").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                //Load message here
+                if(dataSnapshot.exists()){
+                    Message message = dataSnapshot.getValue(Message.class);
+                    if(message.getmIdSender().equals(Utils.USER_ID)){
+                        message.setRecipientOrSenderStatus(AdapterMessageChat.SENDER);
+                    } else {
+                        message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT);
+                    }
+                    mAdapterMessageChat.addMessage(message);
+                }
+            }
 
-    private String getTimeNow(){
-        int hour = mCalendar.get(Calendar.HOUR_OF_DAY);
-        int minute = mCalendar.get(Calendar.MINUTE);
-        return String.valueOf(hour)+":" + String.valueOf(minute);
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void loadData(){
+
+        final String kcv1 = mIdSender+"-"+mIdRecipient;
+        final String kcv2 = mIdRecipient+"-"+mIdSender;
+
+        mMsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(kcv1).exists()){
+                    keyConversation = kcv1;
+                }else {
+                    keyConversation = kcv2;
+                }
+                getMessage();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void setFirebaseInstance(){
+        mMsRef = mMsDatabase.getInstance().getReference().child("tblChat");
+    }
+    private void showProgress(String title, String message) {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setTitle(title);
+        mProgressDialog.setMessage(message);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
     }
 }

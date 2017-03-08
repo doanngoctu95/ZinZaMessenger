@@ -16,10 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,6 +24,7 @@ import chotot.prect.aptech.zinzamessenger.R;
 import chotot.prect.aptech.zinzamessenger.activity.ChattingActivity;
 import chotot.prect.aptech.zinzamessenger.model.Message;
 import chotot.prect.aptech.zinzamessenger.model.User;
+import chotot.prect.aptech.zinzamessenger.utils.Helper;
 import chotot.prect.aptech.zinzamessenger.utils.Utils;
 
 /**
@@ -37,12 +35,16 @@ public class AdapterMessage extends BaseAdapter {
     private Context mContext;
     private int mLayout;
     private List<Message> mListMessage;
+
     private List<Message> searchList;
     private List<String> mListUserKeys;
     private List<String> mListMessageKeys;
-    private String mPreviousMessage;
+
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserReference;
+
+    private String mSender_id = "";
+    private String mRecipient_id = "";
 
     public AdapterMessage(Context mContext, int mLayout, List<Message> mListMessage) {
         this.mContext = mContext;
@@ -55,21 +57,33 @@ public class AdapterMessage extends BaseAdapter {
         searchList.addAll(mListMessage);
     }
 
-    public void refill(Message message) {
-        if(mListMessage.size() == 0){
-            mPreviousMessage = message.getmId();
-            mListMessageKeys.add(mPreviousMessage);
-            mListMessage.add(message);
-        } else {
-            int index = mListMessageKeys.indexOf(mPreviousMessage);
-            mListMessage.remove(index);
-            mListMessage.add(message);
+    private String getIdFr(Message message) {
+        String result = "";
+        if (Utils.USER_ID.equals(message.getmIdSender())) {
+            result = message.getmIdRecipient();
+        } else if (Utils.USER_ID.equals(message.getmIdRecipient())) {
+            result = message.getmIdSender();
         }
-
-
-        notifyDataSetChanged();
+        return result;
     }
 
+    public void refill(Message message) {
+        String idFr = getIdFr(message);
+        if (!mListMessageKeys.contains(idFr)) {
+            mListMessageKeys.add(idFr);
+            mListMessage.add(message);
+        } else {
+            for (int i = 0; i < mListMessage.size(); i++) {
+                if (mListMessage.get(i).getmIdRecipient().equals(idFr)) {
+                    mListMessage.remove(i);
+                    mListMessage.add(message);
+                }
+            }
+
+
+        }
+        notifyDataSetChanged();
+    }
     public void chaneMessage(int index, Message message) {
         mListMessage.add(index, message);
         notifyDataSetChanged();
@@ -106,21 +120,22 @@ public class AdapterMessage extends BaseAdapter {
         TextView numberNewMs = (TextView) convertView.findViewById(R.id.txtNumberNewMessage);
 
         String idFriend = "";
-        String idSender = mListMessage.get(position).getmIdSender();
-        String idRecipent = mListMessage.get(position).getmIdRecipient();
-        if (Utils.USER_ID.equals(idSender)) {
-            idFriend = idRecipent;
+        mSender_id = mListMessage.get(position).getmIdSender();
+        mRecipient_id = mListMessage.get(position).getmIdRecipient();
+        if (Utils.USER_ID.equals(mSender_id)) {
+            idFriend = mRecipient_id;
         } else {
-            idFriend = idSender;
+            idFriend = mSender_id;
         }
+        mListMessageKeys.add(idFriend);
         numberNewMs.setText("   1   ");
-        getUser(idFriend, avatarUser, nameUser,convertView);
+        getUser(idFriend, avatarUser, nameUser, convertView);
         contentMessage.setText(mListMessage.get(position).getmContent());
-        timeMessage.setText(this.convertTime(mListMessage.get(position).getmTime()));
+        timeMessage.setText(Helper.convertTime(mListMessage.get(position).getmTime()));
         return convertView;
     }
 
-    private void getUser(String idFriend, final ImageView avatar, final TextView txtname,final View view) {
+    private void getUser(String idFriend, final ImageView avatar, final TextView txtname, final View view) {
         mUserReference = mDatabase.getInstance().getReference().child("users");
         mUserReference.orderByChild("mId").equalTo(idFriend).addChildEventListener(new ChildEventListener() {
             @Override
@@ -134,13 +149,13 @@ public class AdapterMessage extends BaseAdapter {
                         @Override
                         public void onClick(View v) {
                             Intent chatting = new Intent(mContext, ChattingActivity.class);
-                            chatting.putExtra(Utils.FR_URL,user.getmAvatar());
-                            chatting.putExtra(Utils.FR_NAME,user.getmUsername());
+                            chatting.putExtra(Utils.FR_USER, user);
+                            chatting.putExtra(Utils.SENDER_ID, Utils.USER_ID);
+                            chatting.putExtra(Utils.RECIPIENT_ID, user.getmId());
                             mContext.startActivity(chatting);
                         }
                     });
                 }
-
 
             }
 
@@ -183,16 +198,6 @@ public class AdapterMessage extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    private String convertTime(String time) {
-        SimpleDateFormat output = new SimpleDateFormat("hh:mm");
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-        try {
-            Date parsed = formatter.parse(time);
-            return output.format(parsed);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return time;
 
-    }
+
 }
