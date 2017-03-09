@@ -9,11 +9,23 @@ import java.util.ArrayList;
 public class FileHistory extends ArrayList {
     private int mImg;
     private String mName,mDate;
+    private String mSize;
 
     public FileHistory(int mImg, String mName, String mDate) {
         this.mImg = mImg;
         this.mName = mName;
         this.mDate = mDate;
+    }
+
+    public FileHistory() {
+    }
+
+    public String getSize() {
+        return mSize;
+    }
+
+    public void setSize(String mSize) {
+        this.mSize = mSize;
     }
 
     public int getImg() {
