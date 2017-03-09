@@ -77,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
+        checkUser();
         setDbReference();
         initGgSignIn();
         initFbSignIn();
@@ -126,16 +127,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             }
         });
+
+
+    }
+    private void checkUser(){
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user!= null){
                     goMainScreen();
+                    finish();
                 }
+
             }
         };
-
     }
     private void handleFacebookAccessToken(AccessToken accessToken){
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());

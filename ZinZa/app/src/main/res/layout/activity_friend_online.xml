@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="chotot.prect.aptech.zinzamessenger.activity.FriendOnlineActivity">
+    tools:context="vn.com.zinza.zinzamessenger.activity.FriendOnlineActivity">
     <android.support.v4.widget.DrawerLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -8,11 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -54,7 +54,7 @@ import vn.com.zinza.zinzamessenger.model.User;
 import vn.com.zinza.zinzamessenger.utils.Helper;
 import vn.com.zinza.zinzamessenger.utils.Utils;
 
-public class MessageFriendActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+public class MessageFriendActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -101,6 +101,8 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
     private User mUser;
     private String idFriend;
 
+    private boolean checkListResult = false;
+    private boolean doubleBackToExitPressedOnce = false;
 
 
     @Override
@@ -194,14 +196,15 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
         }
         return super.onOptionsItemSelected(item);
     }
-    private void getMessageFromConversation(final String keyConversation){
+
+    private void getMessageFromConversation(final String keyConversation) {
         DatabaseReference mConverRef = mDatabase.getInstance().getReference().child("tblChat").child(keyConversation);
-        mConverRef.orderByChild("mTime").limitToLast(1).addValueEventListener(new ValueEventListener() {
+        mConverRef.limitToLast(1).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds:dataSnapshot.getChildren()){
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Message message = ds.getValue(Message.class);
-                    if(isMyConvesation(keyConversation)){
+                    if (isMyConvesation(keyConversation)) {
                         mAdapterMessage.refill(message);
                     }
 
@@ -216,14 +219,14 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
 
     }
 
-    private boolean isMyConvesation(String key){
-        String []parts = key.split("-");
+    private boolean isMyConvesation(String key) {
+        String[] parts = key.split("-");
         String uId1 = parts[0];
         String uId2 = parts[1];
 
-        if(Utils.USER_ID.equals(uId1)){
+        if (Utils.USER_ID.equals(uId1)) {
             return true;
-        } else if(Utils.USER_ID.equals(uId2)){
+        } else if (Utils.USER_ID.equals(uId2)) {
             return true;
         } else {
             return false;
@@ -232,7 +235,7 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
     }
 
     private void loadConversation() {
-        showProgress("Loading...","Please wait");
+        showProgress("Loading...", "Please wait");
         mListUserKey = new ArrayList<>();
         mListMessageKeys = new ArrayList<>();
         mListConversationKeys = new ArrayList<>();
@@ -241,7 +244,7 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
         mRefMessage.orderByKey().addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     String key = dataSnapshot.getKey();
                     mListConversationKeys.add(key);
                     getMessageFromConversation(key);
@@ -254,7 +257,7 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                 }
             }
 
@@ -295,6 +298,7 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
                 break;
             case R.id.action_logout:
                 setUpAlert("Log out", "Are you sure to log out ? ");
+
                 break;
         }
         return true;
@@ -339,44 +343,64 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 searchByUsername(edtSearchFr.getText().toString().trim());
-                showDetailProfileDialog(mListFriendSearch);
+//                Log.e("Check:",checkListResult+"");
+//                if(checkListResult){
+//                    mProgressDialog.dismiss();
+                    showDetailProfileDialog(mListFriendSearch);
+//                } else {
+                    mProgressDialog.dismiss();
+//                }
 //
             }
         });
+
+
     }
 
-    private void searchByUsername(String username) {
+    private void searchByUsername(final String username) {
+
         mListFriendSearch = new ArrayList<>();
         mListSearchFrKeys = new ArrayList<>();
         mReference = mDatabase.getInstance().getReference();
-        mReference.child("users").orderByChild("mUsername").startAt(username)
-                .endAt(username + "\uf8ff").addChildEventListener(new ChildEventListener() {
+        mReference.child("users").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()) {
                     String key = dataSnapshot.getKey();
                     User user = dataSnapshot.getValue(User.class);
                     mListSearchFrKeys.add(key);
-                    mAdapterFriendSearch.refill(user);
+                    if (user.getmUsername().toLowerCase().contains(username.toLowerCase())) {
+                        mAdapterFriendSearch.refill(user);
+                        checkListResult = true;
+                    }
+                    mProgressDialog.dismiss();
+                } else {
+                    checkListResult = false;
+
+                }
+
+                //So sanh vs username xem co trung hay k
+
             }
 
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    String key = dataSnapshot.getKey();
-                    User user = dataSnapshot.getValue(User.class);
-                    int index = mListSearchFrKeys.indexOf(key);
-                    if(index > -1){
-                        mAdapterFriendSearch.changeUser(index,user);
+                String key = dataSnapshot.getKey();
+                User user = dataSnapshot.getValue(User.class);
+                int index = mListSearchFrKeys.indexOf(key);
+                if (index > -1) {
+                    mAdapterFriendSearch.changeUser(index, user);
 
                 }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     String key = dataSnapshot.getKey();
                     int index = mListSearchFrKeys.indexOf(key);
-                    if(index > -1){
+                    if (index > -1) {
                         mAdapterFriendSearch.removeUser(index);
                     }
 
@@ -394,7 +418,6 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
             }
 
         });
-        mProgressDialog.dismiss();
 
 
 
@@ -430,6 +453,7 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
                 Intent intent = new Intent(MessageFriendActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+
 
             }
         });
@@ -496,16 +520,21 @@ public class MessageFriendActivity extends AppCompatActivity implements  Navigat
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerlayout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else if (mBackPressed + 2000 > System.currentTimeMillis()) {
+        if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;
-        } else {
-            Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT).show();
         }
-        mBackPressed = System.currentTimeMillis();
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 
     @Override
