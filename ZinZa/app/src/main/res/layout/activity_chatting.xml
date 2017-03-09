@@ -138,7 +138,7 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:listSelector="@android:color/transparent"
         android:cacheColorHint="@android:color/transparent"
         android:id="@+id/list_content_message"
