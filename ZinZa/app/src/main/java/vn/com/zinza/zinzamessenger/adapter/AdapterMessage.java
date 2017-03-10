@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 import vn.com.zinza.zinzamessenger.R;
 import vn.com.zinza.zinzamessenger.activity.ChattingActivity;
 import vn.com.zinza.zinzamessenger.model.Message;
@@ -115,7 +116,7 @@ public class AdapterMessage extends BaseAdapter {
         convertView = inflater.inflate(mLayout, null);
         ImageView avatarUser = (ImageView) convertView.findViewById(R.id.imgAvatar);
         TextView nameUser = (TextView) convertView.findViewById(R.id.txtName);
-        TextView contentMessage = (TextView) convertView.findViewById(R.id.txtContent);
+        EmojiconTextView contentMessage = (EmojiconTextView) convertView.findViewById(R.id.txtContent);
         TextView timeMessage = (TextView) convertView.findViewById(R.id.txtTime);
         TextView numberNewMs = (TextView) convertView.findViewById(R.id.txtNumberNewMessage);
 

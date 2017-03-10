@@ -1,6 +1,7 @@
 package vn.com.zinza.zinzamessenger.utils;
 
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,9 +13,11 @@ import java.util.Date;
 
 public class Helper {
     public static void setUserOnline(DatabaseReference mReference){
+        mReference = FirebaseDatabase.getInstance().getReference();
         mReference.child("users").child(Utils.USER_ID).child("mStatus").setValue("on");//Set user online
     }
     public static void setUserOffline(DatabaseReference mReference){
+        mReference = FirebaseDatabase.getInstance().getReference();
         mReference.child("users").child(Utils.USER_ID).child("mStatus").setValue("off");//Set user offline
     }
     public static String convertTime(String time) {

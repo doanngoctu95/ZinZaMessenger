@@ -23,9 +23,10 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.com.zinza.zinzamessenger.R;
+import butterknife.ButterKnife;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
+import vn.com.zinza.zinzamessenger.R;
 import vn.com.zinza.zinzamessenger.adapter.AdapterMessageChat;
 import vn.com.zinza.zinzamessenger.model.Message;
 import vn.com.zinza.zinzamessenger.model.User;
@@ -52,6 +53,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
 
     private FirebaseDatabase mMsDatabase;
     private DatabaseReference mMsRef;
+    private ChildEventListener messageChatListener;
 
     private ProgressDialog mProgressDialog;
 
@@ -59,17 +61,20 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
+        bindButterKnife();
         initControl();
         setFirebaseInstance();
         mBtnBack.setOnClickListener(this);
         mBtnSendMessage.setOnClickListener(this);
         getExtra();
-        showProgress("Loading message..", "Please wait");
+//        showProgress("Loading message..", "Please wait");
         loadData();
         setListview();
-        mProgressDialog.dismiss();
+//        mProgressDialog.dismiss();
     }
-
+    private void bindButterKnife() {
+        ButterKnife.bind(this);
+    }
     private void initControl() {
         mMessageList = new ArrayList<>();
         contentRoot = findViewById(R.id.activity_chatting);
@@ -114,6 +119,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     private void setListview() {
         mListview.setLayoutManager(new LinearLayoutManager(this));
         mListview.setHasFixedSize(true);
+//        ((SimpleItemAnimator) mListview.getItemAnimator()).setSupportsChangeAnimations(false);
         mAdapterMessageChat = new AdapterMessageChat(this, mMessageList);
         mListview.setAdapter(mAdapterMessageChat);
     }
@@ -143,7 +149,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
 
     private void getMessage() {
         mAdapterMessageChat.cleanUp();
-        mMsRef.child(keyConversation).orderByChild("mTime").limitToLast(20).addChildEventListener(new ChildEventListener() {
+        mMsRef.child(keyConversation).limitToLast(100).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //Load message here
@@ -203,6 +209,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
             }
         });
     }
+
 
     private void setFirebaseInstance() {
         mMsRef = mMsDatabase.getInstance().getReference().child("tblChat");
