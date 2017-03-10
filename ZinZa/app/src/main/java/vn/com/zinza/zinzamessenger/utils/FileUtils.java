@@ -102,6 +102,7 @@ public class FileUtils {
             // th�m ph?n t? new Files , tham s? truy?n : uri , size
             FileHistory fileInfo = new FileHistory();
             String path = fileCursor.getString(1);
+            fileInfo.setPathFileInStorage(path);
             fileInfo.setName(path.substring(path.lastIndexOf("/") + 1));
             fileInfo.setSize(fileCursor.getLong(2) + "");
             fileList.add(fileInfo);
@@ -111,9 +112,7 @@ public class FileUtils {
         return fileList;
     }
 
-    public static ArrayList<FileHistory> getTextListFileConvert(Context context) {
-
-
+    public ArrayList<FileHistory> getTextListFile(Context context) {
         if (context == null) {
             return new ArrayList<>();
         }
@@ -151,6 +150,7 @@ public class FileUtils {
         while (fileCursor.moveToNext()) {
             FileHistory fileInfo = new FileHistory();
             String path = fileCursor.getString(1);
+            fileInfo.setPathFileInStorage(path);
             fileInfo.setName(path.substring(path.lastIndexOf("/") + 1));
             fileInfo.setSize(fileCursor.getLong(2) + "");
             fileList.add(fileInfo);
@@ -163,6 +163,7 @@ public class FileUtils {
         while (fileCursor.moveToNext()) {
             FileHistory fileInfo = new FileHistory();
             String path = fileCursor.getString(1);
+            fileInfo.setPathFileInStorage(path);
             fileInfo.setName(path.substring(path.lastIndexOf("/") + 1));
             fileInfo.setSize(fileCursor.getLong(2) + "");
 
@@ -176,6 +177,7 @@ public class FileUtils {
         while (fileCursor.moveToNext()) {
             FileHistory fileInfo = new FileHistory();
             String path = fileCursor.getString(1);
+            fileInfo.setPathFileInStorage(path);
             fileInfo.setName(path.substring(path.lastIndexOf("/") + 1));
             fileInfo.setSize(fileCursor.getLong(2) + "");
 
@@ -189,6 +191,7 @@ public class FileUtils {
         while (fileCursor.moveToNext()) {
             FileHistory fileInfo = new FileHistory();
             String path = fileCursor.getString(1);
+            fileInfo.setPathFileInStorage(path);
             fileInfo.setName(path.substring(path.lastIndexOf("/") + 1));
             fileInfo.setSize(fileCursor.getLong(2) + "");
 
@@ -202,6 +205,7 @@ public class FileUtils {
         while (fileCursor.moveToNext()) {
             FileHistory fileInfo = new FileHistory();
             String path = fileCursor.getString(1);
+            fileInfo.setPathFileInStorage(path);
             fileInfo.setName(path.substring(path.lastIndexOf("/") + 1));
             fileInfo.setSize(fileCursor.getLong(2) + "");
 
@@ -215,6 +219,7 @@ public class FileUtils {
         while (fileCursor.moveToNext()) {
             FileHistory fileInfo = new FileHistory();
             String path = fileCursor.getString(1);
+            fileInfo.setPathFileInStorage(path);
             fileInfo.setName(path.substring(path.lastIndexOf("/") + 1));
             fileInfo.setSize(fileCursor.getLong(2) + "");
 
@@ -228,6 +233,7 @@ public class FileUtils {
         while (fileCursor.moveToNext()) {
             FileHistory fileInfo = new FileHistory();
             String path = fileCursor.getString(1);
+            fileInfo.setPathFileInStorage(path);
             fileInfo.setName(path.substring(path.lastIndexOf("/") + 1));
             fileInfo.setSize(fileCursor.getLong(2) + "");
 
@@ -235,10 +241,19 @@ public class FileUtils {
         }
         fileCursor.close();
 
-//
+        // get pdf file
+        fileCursor = cr.query(uri, projection, selection, selectionPdf, null);
+        while (fileCursor.moveToNext()) {
+            FileHistory fileInfo = new FileHistory();
+            String path = fileCursor.getString(1);
+            fileInfo.setPathFileInStorage(path);
+            fileInfo.setName(path.substring(path.lastIndexOf("/") + 1));
+            fileInfo.setSize(fileCursor.getLong(2) + "");
+            fileList.add(fileInfo);
+        }
+        fileCursor.close();
+
         return fileList;
-
-
     }
 
     public ArrayList<FileHistory> getRarFileList(Context context) {
@@ -271,6 +286,7 @@ public class FileUtils {
         while (fileCursor.moveToNext()) {
             FileHistory fileInfo = new FileHistory();
             String path = fileCursor.getString(1);
+            fileInfo.setPathFileInStorage(path);
             fileInfo.setName(path.substring(path.lastIndexOf("/") + 1));
             fileInfo.setSize(fileCursor.getLong(2) + "");
 
@@ -287,6 +303,7 @@ public class FileUtils {
         while (fileCursor.moveToNext()) {
             FileHistory fileInfo = new FileHistory();
             String path = fileCursor.getString(1);
+            fileInfo.setPathFileInStorage(path);
             fileInfo.setName(path.substring(path.lastIndexOf("/") + 1));
             fileInfo.setSize(fileCursor.getLong(2) + "");
 
@@ -301,6 +318,7 @@ public class FileUtils {
         while (fileCursor.moveToNext()) {
             FileHistory fileInfo = new FileHistory();
             String path = fileCursor.getString(1);
+            fileInfo.setPathFileInStorage(path);
             fileInfo.setName(path.substring(path.lastIndexOf("/") + 1));
             fileInfo.setSize(fileCursor.getLong(2) + "");
 

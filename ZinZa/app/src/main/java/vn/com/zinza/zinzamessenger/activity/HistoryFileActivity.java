@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import vn.com.zinza.zinzamessenger.R;
 import vn.com.zinza.zinzamessenger.adapter.AdapterHistoryFile;
 import vn.com.zinza.zinzamessenger.model.FileHistory;
+import vn.com.zinza.zinzamessenger.utils.FileUtils;
 
 /**
  * Created by dell on 17/02/2017.
@@ -60,6 +62,50 @@ public class HistoryFileActivity extends AppCompatActivity implements AdapterVie
         listFileHis.add(f2);
         FileHistory f3= new FileHistory(R.drawable.ppt_icon,"Slide architecture computer","14/02/2017");
         listFileHis.add(f3);
+
+        LogFileExternal(listFileHis);
+    }
+
+    //test load file external storage
+    private void LogFileExternal(ArrayList<FileHistory> listFileHis){
+        FileUtils fileUtils= new FileUtils();
+        ArrayList<FileHistory> arrayListFile=fileUtils.getTextListFile(this);
+        if (!arrayListFile.isEmpty()) {
+            for (int i = 0; i < arrayListFile.size(); i++) {
+                Log.e("arrList",arrayListFile.get(i).getPathFileInStorage());
+            }
+        }
+        else {
+            Log.e("arrList","no found!");
+
+        }
+
+        ArrayList<FileHistory> arrayList= fileUtils.getRarFileList(this);
+        if (!arrayList.isEmpty()) {
+            for (int i = 0; i < arrayList.size(); i++) {
+                Log.e("arrList",arrayList.get(i).getPathFileInStorage());
+            }
+        }
+        else {
+            Log.e("arrList","no found!");
+
+        }
+
+        ArrayList<FileHistory> arrayListPdf= fileUtils.getPdfFileList(this);
+        if (!arrayListPdf.isEmpty()) {
+            for (int i = 0; i < arrayListPdf.size(); i++) {
+                Log.e("arrList",arrayListPdf.get(i).getPathFileInStorage());
+            }
+        }
+        else {
+            Log.e("arrList","no found!");
+
+        }
+
+        listFileHis.addAll(arrayList);
+        listFileHis.addAll(arrayListFile);
+        listFileHis.addAll(arrayListPdf);
+
     }
 
     @Override
