@@ -1,8 +1,17 @@
 package vn.com.zinza.zinzamessenger.activity;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,12 +21,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -36,6 +51,8 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     private ImageButton mBtnBack;
     private ImageView mImgAvatar;
     private TextView mTxtName;
+    private Button mBtnOpenCamera;
+    private Button mBtnOpenGallery;
 
     private String mIdRecipient;
     private String mIdSender;
@@ -56,25 +73,40 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     private ChildEventListener messageChatListener;
 
     private ProgressDialog mProgressDialog;
+    private static int REQUEST_CAMERA = 1;
+    private static int REQUEST_GALLERY = 2;
+
+    private FirebaseStorage mFirebaseStorage;
+    private StorageReference mStorageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
         bindButterKnife();
+
         initControl();
         setFirebaseInstance();
-        mBtnBack.setOnClickListener(this);
-        mBtnSendMessage.setOnClickListener(this);
+        setFirebaseStorage();
+
+        implementLisenter();
+
         getExtra();
-//        showProgress("Loading message..", "Please wait");
         loadData();
         setListview();
-//        mProgressDialog.dismiss();
+
+    }
+
+    private void implementLisenter(){
+        mBtnBack.setOnClickListener(this);
+        mBtnSendMessage.setOnClickListener(this);
+        mBtnOpenCamera.setOnClickListener(this);
+        mBtnOpenGallery.setOnClickListener(this);
     }
     private void bindButterKnife() {
         ButterKnife.bind(this);
     }
+
     private void initControl() {
         mMessageList = new ArrayList<>();
         contentRoot = findViewById(R.id.activity_chatting);
@@ -83,7 +115,11 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         mImgAvatar = (ImageView) findViewById(R.id.imgAvatarFriend);
         mTxtName = (TextView) findViewById(R.id.txtnameFriendChatting);
 
+        //Extra action
+        mBtnOpenCamera = (Button) findViewById(R.id.btnOpenCamera);
+        mBtnOpenGallery = (Button) findViewById(R.id.btnOpenGallery);
         mBtnSendMessage = (Button) findViewById(R.id.btnSendMessage);
+
         mListview = (RecyclerView) findViewById(R.id.list_content_message);
         mBtEmoji = (ImageView) findViewById(R.id.btnEmotion);
         mEdtMessage = (EmojiconEditText) findViewById(R.id.edtMessageInput);
@@ -110,7 +146,12 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
                     sendMessage(message);
                     mEdtMessage.setText("");
                 }
-
+                break;
+            case R.id.btnOpenCamera:
+                openCamera();
+                break;
+            case R.id.btnOpenGallery:
+                openGallery();
                 break;
         }
 
@@ -125,13 +166,17 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void sendMessage(String message) {
-
         String mId = mMsRef.push().getKey();
         Message mMessage = new Message(mId, Utils.USER_ID, mIdRecipient, Utils.TEXT, message, Utils.createAt());
         mAdapterMessageChat.addMessage(mMessage);
         mMsRef.child(keyConversation).child(mId).setValue(mMessage);
     }
-
+    private void sendMessageImage(Uri uriContent){
+        String mId = mMsRef.push().getKey();
+        Message mMessage = new Message(mId, Utils.USER_ID, mIdRecipient, Utils.IMAGE, uriContent.toString(), Utils.createAt());
+        mAdapterMessageChat.addMessage(mMessage);
+        mMsRef.child(keyConversation).child(mId).setValue(mMessage);
+    }
     private void getExtra() {
         Bundle bd = getIntent().getExtras();
         if (bd != null) {
@@ -155,13 +200,17 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
                 //Load message here
                 if (dataSnapshot.exists()) {
                     Message message = dataSnapshot.getValue(Message.class);
-                    if (message.getmIdSender().equals(Utils.USER_ID)) {
-                        message.setRecipientOrSenderStatus(AdapterMessageChat.SENDER);
-                    } else {
-                        message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT);
+                    if (message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.TEXT)) {
+                        message.setRecipientOrSenderStatus(AdapterMessageChat.SENDER_TEXT);
+                    } else if(message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.IMAGE)){
+                        message.setRecipientOrSenderStatus(AdapterMessageChat.SENDER_IMAGE);
+                    } else if (!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.TEXT)) {
+                        message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT_TEXT);
+                    } else if(!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.IMAGE)){
+                        message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT_IMAGE);
                     }
                     mAdapterMessageChat.addMessage(message);
-                    mListview.scrollToPosition(mAdapterMessageChat.getItemCount()-1);
+                    mListview.scrollToPosition(mAdapterMessageChat.getItemCount() - 1);
                 }
             }
 
@@ -210,9 +259,100 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
+    private void openCamera() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
+
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.CAMERA)) {
+                    showAlert();
+                } else {
+                    // No explanation needed, we can request the permission.
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.CAMERA},
+                            REQUEST_CAMERA);
+                }
+            }
+        } else {
+            Intent intentCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intentCamera,REQUEST_CAMERA);
+        }
+
+    }
+    private void openGallery(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_GALLERY);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CAMERA && resultCode == RESULT_OK){
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setTitle("Send image");
+            mProgressDialog.show();
+            final Uri uri = data.getData();
+            StorageReference filePath = mStorageReference.child(keyConversation).child("images").child(uri.getLastPathSegment());
+            filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    mProgressDialog.dismiss();
+                    Uri url= taskSnapshot.getDownloadUrl();
+                    sendMessageImage(url);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    mProgressDialog.dismiss();
+                    Utils.showToast(e.toString(),getApplicationContext());
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                    //displaying percentage in progress dialog
+                    mProgressDialog.setMessage("Sent image " + ((int) progress) + "%...");
+                }
+            });
+        } else if((requestCode == REQUEST_GALLERY && resultCode == RESULT_OK)){
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setTitle("Send image");
+            mProgressDialog.show();
+            final Uri uri = data.getData();
+            StorageReference filePath = mStorageReference.child(keyConversation).child("images").child(uri.getLastPathSegment());
+            filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    mProgressDialog.dismiss();
+                    Uri url= taskSnapshot.getDownloadUrl();
+                    sendMessageImage(url);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    mProgressDialog.dismiss();
+                    Utils.showToast(e.toString(),getApplicationContext());
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                    //displaying percentage in progress dialog
+                    mProgressDialog.setMessage("Sent image " + ((int) progress) + "%...");
+                }
+            });
+        }
+    }
 
     private void setFirebaseInstance() {
         mMsRef = mMsDatabase.getInstance().getReference().child("tblChat");
+    }
+    private void setFirebaseStorage(){
+        mStorageReference = FirebaseStorage.getInstance().getReference();
     }
 
     private void showProgress(String title, String message) {
@@ -221,5 +361,30 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         mProgressDialog.setMessage(message);
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
+    }
+    private void showAlert() {
+        AlertDialog alertDialog = new AlertDialog.Builder(ChattingActivity.this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage("App needs to access the Camera.");
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "DONT ALLOW",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                });
+
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "ALLOW",
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        ActivityCompat.requestPermissions(ChattingActivity.this,
+                                new String[]{Manifest.permission.CAMERA},
+                                REQUEST_CAMERA);
+                    }
+                });
+        alertDialog.show();
     }
 }

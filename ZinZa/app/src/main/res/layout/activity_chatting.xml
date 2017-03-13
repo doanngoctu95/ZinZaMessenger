@@ -53,7 +53,6 @@
         android:background="@drawable/bordertop"
         android:orientation="vertical"
         android:weightSum="2">
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -78,7 +77,7 @@
                 android:background="@drawable/ic_action_camera" />
 
             <Button
-                android:id="@+id/btnOpenGalery"
+                android:id="@+id/btnOpenGallery"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_alignBaseline="@+id/btnOpenCamera"
@@ -92,8 +91,8 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/btnOpenGalery"
-                android:layout_toRightOf="@+id/btnOpenGalery"
+                android:layout_toEndOf="@+id/btnOpenGallery"
+                android:layout_toRightOf="@+id/btnOpenGallery"
                 android:src="@drawable/ic_action_emotion" />
 
             <Button

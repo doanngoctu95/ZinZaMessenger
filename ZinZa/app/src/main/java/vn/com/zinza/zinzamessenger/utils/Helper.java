@@ -12,6 +12,8 @@ import java.util.Date;
  */
 
 public class Helper {
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
+
     public static void setUserOnline(DatabaseReference mReference){
         mReference = FirebaseDatabase.getInstance().getReference();
         mReference.child("users").child(Utils.USER_ID).child("mStatus").setValue("on");//Set user online
@@ -32,4 +34,6 @@ public class Helper {
         return time;
 
     }
+
+
 }

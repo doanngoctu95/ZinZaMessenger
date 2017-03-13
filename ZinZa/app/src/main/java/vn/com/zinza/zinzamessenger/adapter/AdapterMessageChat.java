@@ -5,22 +5,31 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import vn.com.zinza.zinzamessenger.R;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
+import vn.com.zinza.zinzamessenger.R;
 import vn.com.zinza.zinzamessenger.model.Message;
 import vn.com.zinza.zinzamessenger.utils.Helper;
+import vn.com.zinza.zinzamessenger.utils.Utils;
 
 /**
  * Created by ASUS on 02/20/2017.
  */
 
 public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
     public static final int SENDER = 0;
     public static final int RECIPENT = 1;
+    public static final int SENDER_TEXT = 2;
+    public static final int SENDER_IMAGE = 3;
+    public static final int RECIPENT_TEXT = 4;
+    public static final int RECIPENT_IMAGE = 5;
     private Context mContext;
     private List<Message> mList;
     private int mLayout;
@@ -32,25 +41,33 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public void addMessage(Message message) {
         mList.add(message);
-        notifyItemInserted(getItemCount()-1);
+        notifyItemInserted(getItemCount() - 1);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        switch (viewType){
-            case SENDER:
-                View viewSender = inflater.inflate(R.layout.layout_sender_message,parent,false);
-                viewHolder = new ViewHolderSenderText(viewSender);
+        switch (viewType) {
+            case SENDER_TEXT:
+                View viewSenderText = inflater.inflate(R.layout.layout_sender_message, parent, false);
+                viewHolder = new ViewHolderSenderText(viewSenderText);
                 break;
-            case RECIPENT:
-                View viewRecipient = inflater.inflate(R.layout.layout_recipent_message, parent, false);
-                viewHolder=new ViewHolderRecipientText(viewRecipient);
+            case SENDER_IMAGE:
+                View viewSenderImage = inflater.inflate(R.layout.layout_sender_image, parent, false);
+                viewHolder = new ViewHolderSenderImage(viewSenderImage);
+                break;
+            case RECIPENT_TEXT:
+                View viewRecipientText = inflater.inflate(R.layout.layout_recipent_message, parent, false);
+                viewHolder = new ViewHolderRecipientText(viewRecipientText);
+                break;
+            case RECIPENT_IMAGE:
+                View viewRecipientImage = inflater.inflate(R.layout.layout_recipent_image, parent, false);
+                viewHolder = new ViewHolderRecipientImage(viewRecipientImage);
                 break;
             default:
                 View viewSenderDefault = inflater.inflate(R.layout.layout_sender_message, parent, false);
-                viewHolder= new ViewHolderSenderText(viewSenderDefault);
+                viewHolder = new ViewHolderSenderText(viewSenderDefault);
                 break;
         }
         return viewHolder;
@@ -58,14 +75,22 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        switch (holder.getItemViewType()){
-            case SENDER:
-                ViewHolderSenderText viewHolderSenderText = (ViewHolderSenderText)holder;
-                configureSenderView(viewHolderSenderText,position);
+        switch (holder.getItemViewType()) {
+            case SENDER_TEXT:
+                ViewHolderSenderText viewHolderSenderText = (ViewHolderSenderText) holder;
+                configureMessageSenderView(viewHolderSenderText, position);
                 break;
-            case RECIPENT:
-                ViewHolderRecipientText viewHolderRecipientText = (ViewHolderRecipientText)holder;
-                configureRecipientView(viewHolderRecipientText,position);
+            case SENDER_IMAGE:
+                ViewHolderSenderImage viewHolderSenderImage = (ViewHolderSenderImage) holder;
+                configureImageSenderView(viewHolderSenderImage, position);
+                break;
+            case RECIPENT_TEXT:
+                ViewHolderRecipientText viewHolderRecipientText = (ViewHolderRecipientText) holder;
+                configureMessageRecipientView(viewHolderRecipientText, position);
+                break;
+            case RECIPENT_IMAGE:
+                ViewHolderRecipientImage viewHolderRecipientImage = (ViewHolderRecipientImage) holder;
+                configureImageRecipientView(viewHolderRecipientImage, position);
                 break;
 
         }
@@ -73,22 +98,18 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-        if (mList.get(position).getRecipientOrSenderStatus() == SENDER) {
-            return SENDER;
+        String type = mList.get(position).getmType();
+        int status = mList.get(position).getRecipientOrSenderStatus();
+        if (status == SENDER_TEXT && type.equals(Utils.TEXT)) {
+            return SENDER_TEXT;
+        } else if (status == SENDER_IMAGE && type.equals(Utils.IMAGE)) {
+            return SENDER_IMAGE;
+        } else if (status == RECIPENT_TEXT && type.equals(Utils.TEXT)) {
+            return RECIPENT_TEXT;
         } else {
-            return RECIPENT;
+            return RECIPENT_IMAGE;
         }
     }
-//
-//    @Override
-//    public int getCount() {
-//        return mList.size();
-//    }
-//
-//    @Override
-//    public Object getItem(int position) {
-//        return null;
-//    }
 
     @Override
     public long getItemId(int position) {
@@ -100,52 +121,32 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
         return mList.size();
     }
 
-
-    //    public View getView(int position, View convertView, ViewGroup parent) {
-//        LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        EmojiconTextView content;
-//        TextView time;
-//        ImageView imageContent;
-//        String type = mList.get(position).getmType();
-//        if(type.equals(Utils.TEXT) && mList.get(position).getRecipientOrSenderStatus() == SENDER){
-//            mLayout = R.layout.layout_sender_message;
-//            convertView = inflater.inflate(mLayout,null);
-//            content = (EmojiconTextView)convertView.findViewById(R.id.text_view_sender_message);
-//            time = (TextView)convertView.findViewById(R.id.text_view_time_sender);
-//            content.setText(mList.get(position).getmContent());
-//        } else if(type.equals(Utils.IMAGE) && mList.get(position).getRecipientOrSenderStatus() == SENDER) {
-//            mLayout = R.layout.layout_sender_image;
-//            convertView = inflater.inflate(mLayout,null);
-//            imageContent = (ImageView) convertView.findViewById(R.id.img_message_sender);
-//            time = (TextView)convertView.findViewById(R.id.text_view_time_sender_image);
-//            Picasso.with(mContext).load(mList.get(position).getmContent()).into(imageContent);
-//        } else if(type.equals(Utils.IMAGE) && mList.get(position).getRecipientOrSenderStatus() == RECIPENT) {
-//            mLayout = R.layout.layout_recipent_image;
-//            convertView = inflater.inflate(mLayout,null);
-//            imageContent = (ImageView) convertView.findViewById(R.id.img_message_recipent);
-//            time = (TextView)convertView.findViewById(R.id.text_view_time_recipent_image);
-//            Picasso.with(mContext).load(mList.get(position).getmContent()).into(imageContent);
-//        } else {
-//            mLayout = R.layout.layout_recipent_message;
-//            convertView = inflater.inflate(mLayout,null);
-//            content = (EmojiconTextView)convertView.findViewById(R.id.text_view_recipient_message);
-//            time = (TextView)convertView.findViewById(R.id.text_view_time_recipent);
-//            content.setText(mList.get(position).getmContent());
-//        }
-//        time.setText(Helper.convertTime(mList.get(position).getmTime()));
-//
-//        return convertView;
-//    }
-    private void configureSenderView(ViewHolderSenderText viewHolderSender, int position) {
+    private void configureMessageSenderView(ViewHolderSenderText viewHolderSender, int position) {
         Message senderFireMessage = mList.get(position);
         viewHolderSender.getSenderContent().setText(senderFireMessage.getmContent());
         viewHolderSender.getTime().setText(Helper.convertTime(senderFireMessage.getmTime()));
     }
 
-    private void configureRecipientView(ViewHolderRecipientText viewHolderRecipient, int position) {
+    private void configureImageSenderView(ViewHolderSenderImage viewHolderSenderImage, int position) {
         Message senderFireMessage = mList.get(position);
-        viewHolderRecipient.getRecipientContent().setText(senderFireMessage.getmContent());
-        viewHolderRecipient.getTime().setText(Helper.convertTime(senderFireMessage.getmTime()));
+        Picasso.with(mContext)
+                .load(senderFireMessage
+                        .getmContent())
+                .placeholder(R.drawable.place_hoder)
+                .into(viewHolderSenderImage.getSenderImage());
+        viewHolderSenderImage.getTime().setText(Helper.convertTime(senderFireMessage.getmTime()));
+    }
+
+    private void configureMessageRecipientView(ViewHolderRecipientText viewHolderMessageRecipient, int position) {
+        Message senderFireMessage = mList.get(position);
+        viewHolderMessageRecipient.getRecipientContent().setText(senderFireMessage.getmContent());
+        viewHolderMessageRecipient.getTime().setText(Helper.convertTime(senderFireMessage.getmTime()));
+    }
+
+    private void configureImageRecipientView(ViewHolderRecipientImage viewHolderRecipientImage, int position) {
+        Message senderFireMessage = mList.get(position);
+        Picasso.with(mContext).load(senderFireMessage.getmContent()).into(viewHolderRecipientImage.getRecipientImage());
+        viewHolderRecipientImage.getTime().setText(Helper.convertTime(senderFireMessage.getmTime()));
     }
 
     public void cleanUp() {
@@ -184,6 +185,44 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public EmojiconTextView getRecipientContent() {
             return content;
+        }
+
+        public TextView getTime() {
+            return time;
+        }
+    }
+
+    public class ViewHolderSenderImage extends RecyclerView.ViewHolder {
+        ImageView imageView;
+        TextView time;
+
+        public ViewHolderSenderImage(View itemView) {
+            super(itemView);
+            imageView = (ImageView) itemView.findViewById(R.id.img_message_sender);
+            time = (TextView) itemView.findViewById(R.id.text_view_time_sender_image);
+        }
+
+        public ImageView getSenderImage() {
+            return imageView;
+        }
+
+        public TextView getTime() {
+            return time;
+        }
+    }
+
+    public class ViewHolderRecipientImage extends RecyclerView.ViewHolder {
+        ImageView imageView;
+        TextView time;
+
+        public ViewHolderRecipientImage(View itemView) {
+            super(itemView);
+            imageView = (ImageView) itemView.findViewById(R.id.img_message_recipent);
+            time = (TextView) itemView.findViewById(R.id.text_view_time_recipent_image);
+        }
+
+        public ImageView getRecipientImage() {
+            return imageView;
         }
 
         public TextView getTime() {
