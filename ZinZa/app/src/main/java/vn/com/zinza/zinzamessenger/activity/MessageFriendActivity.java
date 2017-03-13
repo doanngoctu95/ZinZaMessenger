@@ -30,6 +30,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
@@ -41,7 +42,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -503,7 +503,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
             displayName = mAuth.getCurrentUser().getDisplayName();
             mEmail.setText(email);
             mUsername.setText(displayName);
-            Picasso.with(getApplicationContext()).load(avatarURL).into(mImCurrenUser);
+            Glide.with(getApplicationContext()).load(avatarURL).into(mImCurrenUser);
 
         } else {
             mReference = mDatabase.getInstance().getReference();
@@ -519,7 +519,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
                     }
                     mUsername.setText(Uname);
                     if (!Uavatar.equals("")) {
-                        Picasso.with(getApplicationContext()).load(Uavatar).into(mImCurrenUser);
+                        Glide.with(getApplicationContext()).load(Uavatar).crossFade().into(mImCurrenUser);
                     }
                     mEmail.setText(Uemail);
 

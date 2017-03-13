@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -33,7 +34,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ import vn.com.zinza.zinzamessenger.model.Message;
 import vn.com.zinza.zinzamessenger.model.User;
 import vn.com.zinza.zinzamessenger.utils.Utils;
 
-public class ChattingActivity extends AppCompatActivity implements View.OnClickListener {
+public class ChattingActivity extends AppCompatActivity implements View.OnClickListener{
     private ImageButton mBtnBack;
     private ImageView mImgAvatar;
     private TextView mTxtName;
@@ -76,19 +76,25 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     private static int REQUEST_CAMERA = 1;
     private static int REQUEST_GALLERY = 2;
 
+
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
+
+    public static final String MESSAGE_PROGRESS = "message_progress";
+
+
+    private Bundle myBackupBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myBackupBundle = savedInstanceState;
         setContentView(R.layout.activity_chatting);
         bindButterKnife();
 
         initControl();
         setFirebaseInstance();
         setFirebaseStorage();
-
         implementLisenter();
 
         getExtra();
@@ -164,7 +170,6 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         mAdapterMessageChat = new AdapterMessageChat(this, mMessageList);
         mListview.setAdapter(mAdapterMessageChat);
     }
-
     private void sendMessage(String message) {
         String mId = mMsRef.push().getKey();
         Message mMessage = new Message(mId, Utils.USER_ID, mIdRecipient, Utils.TEXT, message, Utils.createAt());
@@ -183,7 +188,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
             Intent t = getIntent();
             User user = (User) t.getSerializableExtra(Utils.FR_USER);
             if (!user.getmAvatar().equals("")) {
-                Picasso.with(this).load(user.getmAvatar()).into(mImgAvatar);
+                Glide.with(this).load(user.getmAvatar()).into(mImgAvatar);
             }
             mTxtName.setText(user.getmUsername());
             mIdRecipient = t.getStringExtra(Utils.RECIPIENT_ID);
@@ -362,6 +367,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
     }
+
     private void showAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(ChattingActivity.this).create();
         alertDialog.setTitle("Alert");
@@ -387,4 +393,16 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
                 });
         alertDialog.show();
     }
+
+
+
+
+
+
+
+
+
+
+
+
 }

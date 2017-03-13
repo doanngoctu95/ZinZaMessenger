@@ -9,19 +9,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import vn.com.zinza.zinzamessenger.R;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
+import vn.com.zinza.zinzamessenger.R;
 import vn.com.zinza.zinzamessenger.model.BodyRequest;
 import vn.com.zinza.zinzamessenger.model.Data;
 import vn.com.zinza.zinzamessenger.model.Notification;
@@ -87,7 +87,7 @@ public class AdapterFriendSearch extends BaseAdapter {
         TextView nameUser = (TextView)convertView.findViewById(R.id.txtNameFriendSearch);
         Button btnAddFr= (Button) convertView.findViewById(R.id.btnAddFriend);
         if(!mListUser.get(position).getmAvatar().equals("")){
-            Picasso.with(mContext).load(mListUser.get(position).getmAvatar()).into(avatarUser);
+            Glide.with(mContext).load(mListUser.get(position).getmAvatar()).into(avatarUser);
         }
 
         nameUser.setText(mListUser.get(position).getmUsername());

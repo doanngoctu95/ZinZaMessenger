@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class AdapterFriendOnline extends BaseAdapter {
         ImageView statusUser = (ImageView)convertView.findViewById(R.id.imgStatus);
         String urlAvatar = mListUser.get(position).getmAvatar();
         if(!urlAvatar.equals("")){
-            Picasso.with(mContext).load(urlAvatar).into(avatarUser);
+            Glide.with(mContext).load(urlAvatar).crossFade().into(avatarUser);
         }
         nameUser.setText(mListUser.get(position).getmUsername());
 

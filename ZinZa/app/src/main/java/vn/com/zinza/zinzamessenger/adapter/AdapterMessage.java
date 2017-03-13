@@ -9,12 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +144,7 @@ public class AdapterMessage extends BaseAdapter {
                 if (dataSnapshot.exists()) {
                     mListUserKeys.add(dataSnapshot.getKey());
                     final User user = dataSnapshot.getValue(User.class);
-                    Picasso.with(mContext).load(user.getmAvatar()).into(avatar);
+                    Glide.with(mContext).load(user.getmAvatar()).crossFade().into(avatar);
                     txtname.setText(user.getmUsername());
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override

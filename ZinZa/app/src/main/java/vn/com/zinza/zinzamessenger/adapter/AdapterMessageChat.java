@@ -1,22 +1,36 @@
 package vn.com.zinza.zinzamessenger.adapter;
 
+import android.Manifest;
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 import vn.com.zinza.zinzamessenger.R;
+import vn.com.zinza.zinzamessenger.downloadfirebase.Download;
+import vn.com.zinza.zinzamessenger.downloadfirebase.DownloadService;
 import vn.com.zinza.zinzamessenger.model.Message;
 import vn.com.zinza.zinzamessenger.utils.Helper;
 import vn.com.zinza.zinzamessenger.utils.Utils;
+
+import static vn.com.zinza.zinzamessenger.activity.ChattingActivity.MESSAGE_PROGRESS;
 
 /**
  * Created by ASUS on 02/20/2017.
@@ -30,6 +44,7 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
     public static final int SENDER_IMAGE = 3;
     public static final int RECIPENT_TEXT = 4;
     public static final int RECIPENT_IMAGE = 5;
+    public static final int PERMISSION_REQUEST_CODE = 1;
     private Context mContext;
     private List<Message> mList;
     private int mLayout;
@@ -37,6 +52,7 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
     public AdapterMessageChat(Context mContext, List<Message> mList) {
         this.mContext = mContext;
         this.mList = mList;
+        registerReceiver();
     }
 
     public void addMessage(Message message) {
@@ -74,7 +90,7 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         switch (holder.getItemViewType()) {
             case SENDER_TEXT:
                 ViewHolderSenderText viewHolderSenderText = (ViewHolderSenderText) holder;
@@ -83,6 +99,13 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
             case SENDER_IMAGE:
                 ViewHolderSenderImage viewHolderSenderImage = (ViewHolderSenderImage) holder;
                 configureImageSenderView(viewHolderSenderImage, position);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDetailImage(mList.get(position).getmContent());
+
+                    }
+                });
                 break;
             case RECIPENT_TEXT:
                 ViewHolderRecipientText viewHolderRecipientText = (ViewHolderRecipientText) holder;
@@ -91,6 +114,12 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
             case RECIPENT_IMAGE:
                 ViewHolderRecipientImage viewHolderRecipientImage = (ViewHolderRecipientImage) holder;
                 configureImageRecipientView(viewHolderRecipientImage, position);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDetailImage(mList.get(position).getmContent());
+                    }
+                });
                 break;
 
         }
@@ -127,12 +156,13 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
         viewHolderSender.getTime().setText(Helper.convertTime(senderFireMessage.getmTime()));
     }
 
-    private void configureImageSenderView(ViewHolderSenderImage viewHolderSenderImage, int position) {
+    private void configureImageSenderView(ViewHolderSenderImage viewHolderSenderImage, final int position) {
         Message senderFireMessage = mList.get(position);
-        Picasso.with(mContext)
+        Glide.with(mContext)
                 .load(senderFireMessage
                         .getmContent())
                 .placeholder(R.drawable.place_hoder)
+                .crossFade()
                 .into(viewHolderSenderImage.getSenderImage());
         viewHolderSenderImage.getTime().setText(Helper.convertTime(senderFireMessage.getmTime()));
     }
@@ -143,9 +173,13 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
         viewHolderMessageRecipient.getTime().setText(Helper.convertTime(senderFireMessage.getmTime()));
     }
 
-    private void configureImageRecipientView(ViewHolderRecipientImage viewHolderRecipientImage, int position) {
+    private void configureImageRecipientView(ViewHolderRecipientImage viewHolderRecipientImage, final int position) {
         Message senderFireMessage = mList.get(position);
-        Picasso.with(mContext).load(senderFireMessage.getmContent()).into(viewHolderRecipientImage.getRecipientImage());
+        Glide.with(mContext)
+                .load(senderFireMessage.getmContent())
+                .placeholder(R.drawable.place_hoder)
+                .crossFade()
+                .into(viewHolderRecipientImage.getRecipientImage());
         viewHolderRecipientImage.getTime().setText(Helper.convertTime(senderFireMessage.getmTime()));
     }
 
@@ -229,6 +263,92 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
             return time;
         }
     }
+
+    private void showDetailImage(final String url) {
+        final Dialog nagDialog = new Dialog(mContext, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
+        nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        nagDialog.setCancelable(false);
+        nagDialog.setContentView(R.layout.detail_image);
+        Button btnDownload = (Button) nagDialog.findViewById(R.id.btnDownloadImage);
+        ImageView ivPreview = (ImageView) nagDialog.findViewById(R.id.imgDetail);
+        Glide.with(mContext).load(url).crossFade().placeholder(R.drawable.place_hoder).into(ivPreview);
+        final String finalURl = url.substring(url.lastIndexOf("apis.com")+8);
+        Utils.FIREBASE_END_URL = finalURl;
+        btnDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nagDialog.dismiss();
+                startDownload();
+            }
+        });
+        nagDialog.show();
+    }
+
+    private void startDownload(){
+
+        Intent intent = new Intent(mContext,DownloadService.class);
+        mContext.startService(intent);
+
+    }
+
+    private void registerReceiver(){
+
+        LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(mContext);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MESSAGE_PROGRESS);
+        bManager.registerReceiver(broadcastReceiver, intentFilter);
+
+    }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if(intent.getAction().equals(MESSAGE_PROGRESS)){
+
+                Download download = intent.getParcelableExtra("download");
+                if(download.getProgress() == 100){
+
+                } else {
+
+                }
+            }
+        }
+    };
+
+    private boolean checkPermission(){
+        int result = ContextCompat.checkSelfPermission(mContext,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED){
+
+            return true;
+
+        } else {
+
+            return false;
+        }
+    }
+
+//    private void requestPermission(){
+//
+//        ActivityCompat.requestPermissions(mContext,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},PERMISSION_REQUEST_CODE);
+//
+//    }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+//        switch (requestCode) {
+//            case PERMISSION_REQUEST_CODE:
+//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//
+//                    startDownload();
+//                } else {
+//
+//
+//                }
+//                break;
+//        }
+//    }
 
 
 }

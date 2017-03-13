@@ -20,9 +20,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class Utils {
     public static int NOTIFICATION_ID = 0;
+
     public static final String FCM_KEY = "AAAAxJKOUg8:APA91bFCRClxYF_8Ro_sEvS2gMQmfXzA4eNcSFKFVNwM8TkCJOZTpVGTXecgrJFDKCRqAHDoWpJm1_c5r8Jxt2PmQ5coamI5_um8V0dXfOhNarGGZ20Mi9IqtMNYHof5FVsbKmLBSTnm";
     public static final String FCM_SEND_URL = "https://fcm.googleapis.com";
 
+    public static final String FIREBASE_DOWNLOAD = "https://firebasestorage.googleapis.com";
+    public static String IMAGE_NAME = "";
+    public static  String FIREBASE_END_URL = "";
     public static String REJECT_ACTION = "REJECT";
     public static String ACCEPT_ACTION = "ACCEPT";
     public static final String INTERNET = "Turn on internet connection";
@@ -99,5 +103,11 @@ public class Utils {
 
     public static String createAt() {
         return new SimpleDateFormat(Utils.FORMAT_TIME).format(new Date());
+    }
+    public static String createNameImage(){
+        Date date = new Date();
+        String name = "IMG"+date.getYear()+date.getMonth()+date.getDay()+date.getTime();
+        return name;
+
     }
 }

@@ -24,7 +24,6 @@
         android:id="@+id/imgStatus"/>
 
     <TextView
-        android:text="Văn Cường"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="11dp"
