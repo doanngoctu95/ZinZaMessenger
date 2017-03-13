@@ -1,32 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <me.himanshusoni.chatmessageview.ChatMessageView
+        android:id="@+id/contentMessageChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cmv_arrowGravity="end"
+        app:cmv_arrowMargin="3dp"
+        app:cmv_arrowPosition="right"
+        app:cmv_backgroundColor="@color/senderColor"
+        app:cmv_backgroundColorPressed="#FFBABABA"
+        app:cmv_contentPadding="10dp"
+        app:cmv_cornerRadius="3dp"
+        app:cmv_showArrow="true"
+        android:layout_marginRight="10dp">
     <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
         android:id="@+id/text_view_sender_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="I am doing ok"
-        android:padding="8dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="2dp"
-        android:textStyle="bold"
-        android:textSize="14sp"
-        android:textColor="#FFFFFF"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/sender_rounded_corners"/>
+        android:textSize="14dp"
+        android:textIsSelectable="true"
+        android:textColor="@color/white"
+        />
+    </me.himanshusoni.chatmessageview.ChatMessageView>
+
     <TextView
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="10sp"
         android:id="@+id/text_view_time_sender"
-        android:layout_below="@+id/text_view_sender_message"
-        android:layout_alignRight="@+id/text_view_sender_message"/>
+        android:layout_below="@+id/contentMessageChat"
+        android:layout_alignRight="@+id/contentMessageChat"/>
 
 </RelativeLayout>

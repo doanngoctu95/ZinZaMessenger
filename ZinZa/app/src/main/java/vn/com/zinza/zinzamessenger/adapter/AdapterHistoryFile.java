@@ -1,5 +1,6 @@
 package vn.com.zinza.zinzamessenger.adapter;
 
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -32,6 +34,9 @@ public class AdapterHistoryFile  extends ArrayAdapter<FileHistory> {
     private ArrayList<FileHistory> searchList;
     private LayoutInflater inflater;
     private Context context;
+    private Dialog mDialogDetail;
+    private TextView mTvNameFile,mTvPathFile,mTvSizeFile;
+    private Button mBtnClose;
 
     public AdapterHistoryFile(Context mContext, int resource, ArrayList<FileHistory> objects) {
         super(mContext, resource, objects);
@@ -122,7 +127,10 @@ public class AdapterHistoryFile  extends ArrayAdapter<FileHistory> {
                                         }
                                         break;
                                     case R.id.showDetail:
-                                        Toast.makeText(getContext(), "Show detail at position " + " : " + position, Toast.LENGTH_LONG).show();
+                                        String nameFile= arrFile.get(position).getName();
+                                        String pathFile= arrFile.get(position).getPathFileInStorage();
+                                        String sizeFile= arrFile.get(position).getSize();
+                                        initDialogDetail(nameFile,pathFile,sizeFile);
                                         break;
                                     case R.id.delete:
                                         Toast.makeText(getContext(), "Deleted at position " + " : " + position, Toast.LENGTH_LONG).show();
@@ -149,6 +157,31 @@ public class AdapterHistoryFile  extends ArrayAdapter<FileHistory> {
         private TextView tvName,tvDate;
     }
 
+    private void initDialogDetail(String nameFile, String pathFile, String sizeFile){
+        mDialogDetail= new Dialog(context, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
+        mDialogDetail.setContentView(R.layout.dialog_show_file_info);
+        mDialogDetail.show();
+        mDialogDetail.setCancelable(true);
+
+        mTvNameFile= (TextView) mDialogDetail.findViewById(R.id.tvNameFileDl);
+        mTvPathFile= (TextView) mDialogDetail.findViewById(R.id.tvPathDl);
+        mTvSizeFile= (TextView) mDialogDetail.findViewById(R.id.tvSizeFileDl);
+        mBtnClose= (Button) mDialogDetail.findViewById(R.id.btnClose);
+
+        if (nameFile!=null) {
+            mTvNameFile.setText("- Name: " + nameFile);
+            mTvPathFile.setText("- Path: " + pathFile);
+            mTvSizeFile.setText("- Size: " + sizeFile);
+        }
+
+        mBtnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDialogDetail.dismiss();
+            }
+        });
+    }
+
     private String fileExt(String url) {
         if (url.indexOf("?") > -1) {
             url = url.substring(0, url.indexOf("?"));
@@ -163,7 +196,8 @@ public class AdapterHistoryFile  extends ArrayAdapter<FileHistory> {
             if (ext.indexOf("/") > -1) {
                 ext = ext.substring(0, ext.indexOf("/"));
             }
-            return ext.toLowerCase();
+            Log.e("fileExt",ext);
+            return ("."+ext.toLowerCase());
 
         }
     }

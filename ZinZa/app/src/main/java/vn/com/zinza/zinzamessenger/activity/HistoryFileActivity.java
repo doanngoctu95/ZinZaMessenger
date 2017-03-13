@@ -56,12 +56,12 @@ public class HistoryFileActivity extends AppCompatActivity implements AdapterVie
     //load data file.
     private void loadData() {
         listFileHis= new ArrayList<>();
-        FileHistory f1= new FileHistory(R.drawable.word_icon,"Amazing animal","17/02/2017");
-        listFileHis.add(f1);
-        FileHistory f2= new FileHistory(R.drawable.exel_icon,"Report today","17/02/2017");
-        listFileHis.add(f2);
-        FileHistory f3= new FileHistory(R.drawable.ppt_icon,"Slide architecture computer","14/02/2017");
-        listFileHis.add(f3);
+//        FileHistory f1= new FileHistory(R.drawable.word_icon,"Amazing animal","17/02/2017");
+//        listFileHis.add(f1);
+//        FileHistory f2= new FileHistory(R.drawable.exel_icon,"Report today","17/02/2017");
+//        listFileHis.add(f2);
+//        FileHistory f3= new FileHistory(R.drawable.ppt_icon,"Slide architecture computer","14/02/2017");
+//        listFileHis.add(f3);
 
         LogFileExternal(listFileHis);
     }

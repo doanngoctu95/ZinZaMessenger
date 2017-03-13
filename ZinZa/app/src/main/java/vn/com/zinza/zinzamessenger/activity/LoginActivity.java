@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void initFbSignIn(){
         if (!Utils.verifyConnection(this)){
             Utils.showToast(Utils.INTERNET,this);
-            finish();
+//            finish();
         }
         mBtnFbSignIn = (Button)findViewById(R.id.sign_in_fb_button);
         mBtnFbSignIn.setOnClickListener(this);

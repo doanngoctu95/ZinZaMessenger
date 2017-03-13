@@ -21,45 +21,6 @@ public class FileUtils {
 
     public FileUtils() {
     }
-
-    public String getRealPathFromURI(Context context, Uri contentURI) {
-        String result;
-        Cursor cursor = context.getContentResolver().query(contentURI, null, null, null, null);
-        if (cursor == null) { // Source is Dropbox or other similar local file path
-            result = contentURI.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            result = cursor.getString(idx);
-            cursor.close();
-        }
-        return result;
-    }
-
-
-    public Drawable getImageIconFromAPK(Context context, String path) {
-
-        Drawable APKicon = null;
-
-        try {
-            PackageManager pm = context.getPackageManager();
-            PackageInfo pi = pm.getPackageArchiveInfo(path, 0);
-
-            // the secret are these two lines....
-            pi.applicationInfo.sourceDir = path;
-            pi.applicationInfo.publicSourceDir = path;
-            //
-
-            APKicon = pi.applicationInfo.loadIcon(pm);
-        } catch (Exception e) {
-
-        }
-
-
-        return APKicon;
-    }
-
-
     public ArrayList<FileHistory> getApkFileList(Activity context) {
         //l?y list files apk
         ArrayList<FileHistory> apkfileList = new ArrayList<>();

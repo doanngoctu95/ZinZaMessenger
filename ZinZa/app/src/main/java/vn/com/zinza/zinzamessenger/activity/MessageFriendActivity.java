@@ -111,6 +111,8 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
         setContentView(R.layout.activity_messenger_friend);
         initControl();
         setAuthInstace();
+//        showAddDialog();
+        showProgress("Loading...","Please wait...");
         loadConversation();
         loadUser();
         loadListview();
@@ -235,12 +237,14 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
     }
 
     private void loadConversation() {
-        showProgress("Loading...", "Please wait");
+//        showProgress("Loading...", "Please wait");
         mListUserKey = new ArrayList<>();
         mListMessageKeys = new ArrayList<>();
         mListConversationKeys = new ArrayList<>();
         mList = new ArrayList<>();
         mRefMessage = mDatabase.getInstance().getReference().child("tblChat");
+
+
         mRefMessage.orderByKey().addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -271,7 +275,19 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
 
             }
         });
-        mProgressDialog.dismiss();
+        mRefMessage.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+//                mDlAddFriend.dismiss();
+                mProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+//        mProgressDialog.dismiss();
     }
 
     private void loadListview() {
@@ -329,7 +345,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
 
     private void showAddDialog() {
         mDlAddFriend = new Dialog(this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
-        ;
+
         mDlAddFriend.setContentView(R.layout.dialog_search_friend);
         mDlAddFriend.show();
         mDlAddFriend.setCancelable(true);
