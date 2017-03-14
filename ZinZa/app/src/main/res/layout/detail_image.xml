@@ -18,8 +18,10 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/imgDetail"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_above="@+id/btnDownloadImage"/>

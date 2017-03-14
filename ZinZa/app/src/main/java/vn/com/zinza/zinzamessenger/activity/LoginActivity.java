@@ -17,6 +17,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -75,9 +76,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(this);
+        AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_login);
         initView();
-        checkUser();
+
         setDbReference();
         initGgSignIn();
         initFbSignIn();
@@ -109,7 +112,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mBtnFbSignIn = (Button)findViewById(R.id.sign_in_fb_button);
         mBtnFbSignIn.setOnClickListener(this);
 
-        FacebookSdk.sdkInitialize(this);
+
         mCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance() .registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -149,7 +152,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                     if(!task.isSuccessful()){
-
                         Utils.showToast("Firebase fb login error",getApplicationContext());
                     } else {
                         final String id = task.getResult().getUser().getUid();
@@ -159,19 +161,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         String photoUrl = String.valueOf(task.getResult().getUser().getPhotoUrl());
                         final User mUser = new User(id,username,email,"",photoUrl,"","on", Utils.USER_TOKEN, Utils.createAt());
                         mReference.child(id).setValue(mUser);
-//                        mReference.child("users").orderByChild("mID").equalTo(id).addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-//                                if(dataSnapshot.getChildrenCount() > 0){
-//
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//
-//                            }
-//                        });
+                        mProgressDialog.dismiss();
 
                     }
             }
@@ -211,6 +201,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.sign_in_fb_button:
                 signInFB();
+                showProgress("Log in facebook","Loading...");
                 break;
             default:
                 return;
@@ -220,6 +211,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
+        checkUser();
         mAuth.addAuthStateListener(mAuthStateListener);
     }
 
@@ -287,28 +279,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //check user existed or not
     private void checkExitedUser(final GoogleSignInAccount account){
-        String id = account.getId();
         firebaseAuthWithGoogle(account);
-//        mReference.child("users").orderByChild("mID").equalTo(id).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.getChildrenCount() > 0){
-//
-//                }
-//                else {
-//                    // init gmail user in users table db
-////                    initUserDatabase(account);
-//                    firebaseAuthWithGoogle(account);
-//
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
     }
 
     private void setDbReference(){
@@ -362,9 +333,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         LoginManager.getInstance().logInWithReadPermissions(
                 this,
                 Arrays.asList("public_profile", "user_friends","email"));
-        LoginManager.getInstance().logInWithPublishPermissions(
-                this,
-                Arrays.asList("publish_actions"));
 
     }
     @Override
@@ -378,5 +346,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mProgressDialog.setMessage(message);
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
+    }
+    private void active(){
+
     }
 }

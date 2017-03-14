@@ -30,6 +30,7 @@ import com.viewpagerindicator.PageIndicator;
 
 import vn.com.zinza.zinzamessenger.R;
 import vn.com.zinza.zinzamessenger.utils.AndroidUtilities;
+import vn.com.zinza.zinzamessenger.utils.PrefManager;
 
 public class IntroActivity extends Activity{
     private ViewPager mViewPager;
@@ -41,6 +42,7 @@ public class IntroActivity extends Activity{
     private int[] mIcons;
     private int[] mMessages;
     private TextView mStartLogin, mStartMessagingButton;
+    private PrefManager mPrefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,13 @@ public class IntroActivity extends Activity{
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        mPrefManager = new PrefManager(this);
+        if (!mPrefManager.isFirstTimeLaunch()) {
+            launchHomeScreen();
+            finish();
+        }
         setContentView(R.layout.intro_layout);
+
 
         mIcons = new int[]{
                 R.drawable.zinza_icon,
@@ -169,25 +177,26 @@ public class IntroActivity extends Activity{
                     return;
                 }
                 mStartPressed = true;
-                Intent intent2 = new Intent(IntroActivity.this, LoginActivity.class);
-                startActivity(intent2);
-                finish();
+                launchHomeScreen();
             }
         });
 
         mStartLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent2 = new Intent(IntroActivity.this, LoginActivity.class);
-                startActivity(intent2);
-                finish();
+                launchHomeScreen();
             }
         });
 
     }
 
 
-
+    private void launchHomeScreen() {
+        mPrefManager.setFirstimeLaunch(false);
+        Intent intent = new Intent(this, SplashActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     private class IntroAdapter extends PagerAdapter {
 

@@ -14,4 +14,8 @@
     <color name="normal">#757575</color>
     <color name="pressed">#3F51B5</color>
     <color name="recipientColor">#fa7dc0</color>
+    <color name="page1">#f64c73</color>
+    <color name="page2">#20d2bb</color>
+    <color name="page3">#3395ff</color>
+    <color name="page4">#c873f4</color>
 </resources>

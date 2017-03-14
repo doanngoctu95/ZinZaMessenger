@@ -31,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -111,7 +110,6 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
         setContentView(R.layout.activity_messenger_friend);
         initControl();
         setAuthInstace();
-//        showAddDialog();
         showProgress("Loading...","Please wait...");
         loadConversation();
         loadUser();
@@ -206,6 +204,9 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Message message = ds.getValue(Message.class);
+                    if(message.getmType().equals(Utils.IMAGE)){
+                        message.setmContent("\uD83C\uDFDD Image");
+                    }
                     if (isMyConvesation(keyConversation)) {
                         mAdapterMessage.refill(message);
                     }
@@ -237,7 +238,6 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
     }
 
     private void loadConversation() {
-//        showProgress("Loading...", "Please wait");
         mListUserKey = new ArrayList<>();
         mListMessageKeys = new ArrayList<>();
         mListConversationKeys = new ArrayList<>();
@@ -362,9 +362,10 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
 //                Log.e("Check:",checkListResult+"");
 //                if(checkListResult){
 //                    mProgressDialog.dismiss();
+//                    showProgress("Searching","Please wait.....");
                     showDetailProfileDialog(mListFriendSearch);
 //                } else {
-                    mProgressDialog.dismiss();
+//                    mProgressDialog.dismiss();
 //                }
 //
             }
@@ -389,7 +390,6 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
                         mAdapterFriendSearch.refill(user);
                         checkListResult = true;
                     }
-                    mProgressDialog.dismiss();
                 } else {
                     checkListResult = false;
 
@@ -462,7 +462,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 FirebaseAuth.getInstance().signOut();
-                LoginManager.getInstance().logOut();
+//                LoginManager.getInstance().logOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
 
                 Helper.setUserOffline(mReference);

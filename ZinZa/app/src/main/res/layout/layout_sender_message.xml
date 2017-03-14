@@ -4,6 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:id="@+id/text_view_time_sender"
+        android:layout_below="@+id/contentMessageChat"
+        android:layout_alignRight="@+id/contentMessageChat"/>
+
     <me.himanshusoni.chatmessageview.ChatMessageView
         android:id="@+id/contentMessageChat"
         android:layout_width="wrap_content"
@@ -16,7 +26,9 @@
         app:cmv_contentPadding="10dp"
         app:cmv_cornerRadius="3dp"
         app:cmv_showArrow="true"
-        android:layout_marginRight="10dp">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
     <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
         android:id="@+id/text_view_sender_message"
         android:layout_width="wrap_content"
@@ -27,14 +39,5 @@
         android:textColor="@color/white"
         />
     </me.himanshusoni.chatmessageview.ChatMessageView>
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="10sp"
-        android:id="@+id/text_view_time_sender"
-        android:layout_below="@+id/contentMessageChat"
-        android:layout_alignRight="@+id/contentMessageChat"/>
 
 </RelativeLayout>

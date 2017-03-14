@@ -99,13 +99,20 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
             case SENDER_IMAGE:
                 ViewHolderSenderImage viewHolderSenderImage = (ViewHolderSenderImage) holder;
                 configureImageSenderView(viewHolderSenderImage, position);
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                ImageView img = (ImageView)viewHolderSenderImage.getSenderImage();
+                img.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         showDetailImage(mList.get(position).getmContent());
-
                     }
                 });
+//                holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        showDetailImage(mList.get(position).getmContent());
+//
+//                    }
+//                });
                 break;
             case RECIPENT_TEXT:
                 ViewHolderRecipientText viewHolderRecipientText = (ViewHolderRecipientText) holder;
@@ -114,12 +121,19 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
             case RECIPENT_IMAGE:
                 ViewHolderRecipientImage viewHolderRecipientImage = (ViewHolderRecipientImage) holder;
                 configureImageRecipientView(viewHolderRecipientImage, position);
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                ImageView img2 = (ImageView)viewHolderRecipientImage.getRecipientImage();
+                img2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         showDetailImage(mList.get(position).getmContent());
                     }
                 });
+//                holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        showDetailImage(mList.get(position).getmContent());
+//                    }
+//                });
                 break;
 
         }
@@ -267,7 +281,7 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
     private void showDetailImage(final String url) {
         final Dialog nagDialog = new Dialog(mContext, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
         nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        nagDialog.setCancelable(false);
+        nagDialog.setCancelable(true);
         nagDialog.setContentView(R.layout.detail_image);
         Button btnDownload = (Button) nagDialog.findViewById(R.id.btnDownloadImage);
         ImageView ivPreview = (ImageView) nagDialog.findViewById(R.id.imgDetail);

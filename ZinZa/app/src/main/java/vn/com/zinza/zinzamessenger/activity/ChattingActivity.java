@@ -82,16 +82,11 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
 
     public static final String MESSAGE_PROGRESS = "message_progress";
 
-
-    private Bundle myBackupBundle;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        myBackupBundle = savedInstanceState;
-        setContentView(R.layout.activity_chatting);
-        bindButterKnife();
 
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chatting);
         initControl();
         setFirebaseInstance();
         setFirebaseStorage();
