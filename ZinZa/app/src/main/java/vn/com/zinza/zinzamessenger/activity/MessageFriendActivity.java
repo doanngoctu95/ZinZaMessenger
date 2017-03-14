@@ -352,7 +352,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
         btnAddFr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showProgress("Search Friend", "Searching");
+//                showProgress("Search Friend", "Searching");
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 searchByUsername(edtSearchFr.getText().toString().trim());
@@ -399,25 +399,11 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                String key = dataSnapshot.getKey();
-                User user = dataSnapshot.getValue(User.class);
-                int index = mListSearchFrKeys.indexOf(key);
-                if (index > -1) {
-                    mAdapterFriendSearch.changeUser(index, user);
 
-                }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String key = dataSnapshot.getKey();
-                    int index = mListSearchFrKeys.indexOf(key);
-                    if (index > -1) {
-                        mAdapterFriendSearch.removeUser(index);
-                    }
-
-                }
             }
 
             @Override
@@ -441,6 +427,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
         mDlDetailFriend.setContentView(R.layout.dialog_detail_friend);
 
         mDlDetailFriend.show();
+        mDlAddFriend.dismiss();
         mDlDetailFriend.setCancelable(true);
 
         mLstFriendSearch = (ListView) mDlDetailFriend.findViewById(R.id.lstFriendSearch);

@@ -60,6 +60,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //Constants
     private static final String TAG = LoginActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 10;
+    private static final int FB_SIGN_IN = 12;
 
     private Button mSignInButton;
     //Firebase and GoogleApiClient
@@ -345,8 +346,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mProgressDialog.setMessage(message);
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
-    }
-    private void active(){
-
     }
 }

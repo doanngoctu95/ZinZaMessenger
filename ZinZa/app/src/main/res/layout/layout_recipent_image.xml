@@ -13,7 +13,7 @@
         app:cmv_arrowPosition="left"
         app:cmv_backgroundColor="@color/recipientColor"
         app:cmv_backgroundColorPressed="#FFBABABA"
-        app:cmv_contentPadding="10dp"
+        app:cmv_contentPadding="3dp"
         app:cmv_cornerRadius="3dp"
         app:cmv_showArrow="true"
         android:layout_marginLeft="10dp"
