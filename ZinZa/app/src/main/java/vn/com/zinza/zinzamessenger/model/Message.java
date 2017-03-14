@@ -14,6 +14,7 @@ public class Message implements Serializable{
     private String mIdRecipient;
     private String mType;
     private String mContent;
+    private String mNameOfFile;
     private String mTime;
     private int mRecipientOrSenderStatus;
 

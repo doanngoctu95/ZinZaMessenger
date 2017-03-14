@@ -45,6 +45,11 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
     public static final int SENDER_IMAGE = 3;
     public static final int RECIPENT_TEXT = 4;
     public static final int RECIPENT_IMAGE = 5;
+
+    public static final int SENDER_FILE = 6;
+    public static final int SENDER_VIDEO = 7;
+    public static final int RECIPENT_FILE = 8;
+    public static final int RECIPENT_VIDEO = 9;
     public static final int PERMISSION_REQUEST_CODE = 1;
     private Context mContext;
     private List<Message> mList;
@@ -74,6 +79,10 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
                 View viewSenderImage = inflater.inflate(R.layout.layout_sender_image, parent, false);
                 viewHolder = new ViewHolderSenderImage(viewSenderImage);
                 break;
+            case SENDER_FILE:
+                View viewSenderFile = inflater.inflate(R.layout.layout_sender_file,parent,false);
+                viewHolder = new ViewHolderSenderFile(viewSenderFile);
+                break;
             case RECIPENT_TEXT:
                 View viewRecipientText = inflater.inflate(R.layout.layout_recipent_message, parent, false);
                 viewHolder = new ViewHolderRecipientText(viewRecipientText);
@@ -81,6 +90,10 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
             case RECIPENT_IMAGE:
                 View viewRecipientImage = inflater.inflate(R.layout.layout_recipent_image, parent, false);
                 viewHolder = new ViewHolderRecipientImage(viewRecipientImage);
+                break;
+            case RECIPENT_FILE:
+                View viewRecipientFile = inflater.inflate(R.layout.layout_recipient_file,parent,false);
+                viewHolder = new ViewHolderRecipientFile(viewRecipientFile);
                 break;
             default:
                 View viewSenderDefault = inflater.inflate(R.layout.layout_sender_message, parent, false);
@@ -108,6 +121,10 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
                 });
                 break;
+            case SENDER_FILE:
+                ViewHolderSenderFile viewHolderSenderFile = (ViewHolderSenderFile)holder;
+                configureFileSender(viewHolderSenderFile,position);
+                break;
             case RECIPENT_TEXT:
                 ViewHolderRecipientText viewHolderRecipientText = (ViewHolderRecipientText) holder;
                 configureMessageRecipientView(viewHolderRecipientText, position);
@@ -123,6 +140,10 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
                 });
                 break;
+            case RECIPENT_FILE:
+                ViewHolderRecipientFile viewHolderRecipientFile = (ViewHolderRecipientFile)holder;
+                configureFileRecipient(viewHolderRecipientFile,position);
+                break;
 
         }
     }
@@ -135,10 +156,14 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
             return SENDER_TEXT;
         } else if (status == SENDER_IMAGE && type.equals(Utils.IMAGE)) {
             return SENDER_IMAGE;
+        } else if (status == SENDER_FILE && type.equals(Utils.FILE)) {
+            return SENDER_FILE;
         } else if (status == RECIPENT_TEXT && type.equals(Utils.TEXT)) {
             return RECIPENT_TEXT;
-        } else {
+        } else  if (status == RECIPENT_IMAGE && type.equals(Utils.IMAGE)) {
             return RECIPENT_IMAGE;
+        } else {
+            return RECIPENT_FILE;
         }
     }
 
@@ -168,7 +193,11 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
                 .into(viewHolderSenderImage.getSenderImage());
         viewHolderSenderImage.getTime().setText(Helper.convertTime(senderFireMessage.getmTime()));
     }
-
+    private void configureFileSender(ViewHolderSenderFile viewHolderSenderFile,final int position){
+        Message senderFireMessage = mList.get(position);
+        viewHolderSenderFile.getSenderFile().setText(Helper.getName(senderFireMessage.getmContent()));
+        viewHolderSenderFile.getTime().setText(Helper.convertTime(senderFireMessage.getmTime()));
+    }
     private void configureMessageRecipientView(ViewHolderRecipientText viewHolderMessageRecipient, int position) {
         Message senderFireMessage = mList.get(position);
         viewHolderMessageRecipient.getRecipientContent().setText(senderFireMessage.getmContent());
@@ -183,6 +212,11 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
                 .crossFade()
                 .into(viewHolderRecipientImage.getRecipientImage());
         viewHolderRecipientImage.getTime().setText(Helper.convertTime(senderFireMessage.getmTime()));
+    }
+    private void configureFileRecipient(ViewHolderRecipientFile viewHolderRecipientFile,final int position){
+        Message senderFireMessage = mList.get(position);
+        viewHolderRecipientFile.getRecipientFile().setText(Helper.getName(senderFireMessage.getmContent()));
+        viewHolderRecipientFile.getTime().setText(Helper.convertTime(senderFireMessage.getmTime()));
     }
 
     public void cleanUp() {
@@ -265,6 +299,40 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
             return time;
         }
     }
+    public class ViewHolderSenderFile extends RecyclerView.ViewHolder{
+        TextView txtNameFile;
+        TextView time;
+        public ViewHolderSenderFile(View itemView) {
+            super(itemView);
+            txtNameFile = (TextView) itemView.findViewById(R.id.text_view_sender_file);
+            time = (TextView) itemView.findViewById(R.id.file_time_sender);
+        }
+
+        public TextView getSenderFile() {
+            return txtNameFile;
+        }
+
+        public TextView getTime() {
+            return time;
+        }
+    }
+    public class ViewHolderRecipientFile extends RecyclerView.ViewHolder{
+        TextView txtNameFile;
+        TextView time;
+        public ViewHolderRecipientFile(View itemView) {
+            super(itemView);
+            txtNameFile = (TextView) itemView.findViewById(R.id.text_view_recipient_file);
+            time = (TextView) itemView.findViewById(R.id.file_time_recipent);
+        }
+
+        public TextView getRecipientFile() {
+            return txtNameFile;
+        }
+
+        public TextView getTime() {
+            return time;
+        }
+    }
 
     private void showDetailImage(final String url) {
         final Dialog nagDialog = new Dialog(mContext, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
@@ -273,12 +341,10 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
         nagDialog.setContentView(R.layout.detail_image);
         Button btnDownload = (Button) nagDialog.findViewById(R.id.btnDownloadImage);
         ImageView ivPreview = (ImageView) nagDialog.findViewById(R.id.imgDetail);
+        final String finalURl = Helper.getUrl(url);
+        Utils.FIREBASE_END_URL = finalURl;
         Picasso.with(mContext).load(url).placeholder(R.drawable.place_hoder).into(ivPreview);
 //        Glide.with(mContext).load(url).placeholder(R.drawable.place_hoder).into(ivPreview);
-        final String finalURl = url.substring(url.lastIndexOf("apis.com")+8);
-
-        String aa="aa";
-        Utils.FIREBASE_END_URL = finalURl;
         btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

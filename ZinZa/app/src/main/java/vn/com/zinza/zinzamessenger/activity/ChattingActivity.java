@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,7 +38,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -198,8 +196,9 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void sendMessageAttach(Uri uriContent, String type) {
+        String nameOfFile = Utils.NAME_FILE;
         String mId = mMsRef.push().getKey();
-        Message mMessage = new Message(mId, Utils.USER_ID, mIdRecipient, type, uriContent.toString(), Utils.createAt());
+        Message mMessage = new Message(mId, Utils.USER_ID, mIdRecipient, type, uriContent.toString() + "---" + nameOfFile, Utils.createAt());
         mAdapterMessageChat.addMessage(mMessage);
         mMsRef.child(keyConversation).child(mId).setValue(mMessage);
     }
@@ -332,8 +331,9 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         mProgressDialog.setTitle(title);
         mProgressDialog.show();
         final Uri uri = data.getData();
-
-        StorageReference filePath = mStorageReference.child(keyConversation).child(folder).child(uri.getLastPathSegment());
+        Utils.NAME_FILE = getNameData(uri);
+        StorageReference filePath = mStorageReference.child(keyConversation).child(folder).child(Utils.NAME_FILE);
+        Log.e("File path:", filePath + "--- " + uri.getLastPathSegment() + "");
         filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -359,8 +359,8 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     }
 
     // get name of file upload
-    private String getNameData(Uri uri){
-        String nameFile="";
+    private String getNameData(Uri uri) {
+        String nameFile = "";
         if (uri.toString().startsWith("content://")) {
             Cursor cursor = null;
             try {

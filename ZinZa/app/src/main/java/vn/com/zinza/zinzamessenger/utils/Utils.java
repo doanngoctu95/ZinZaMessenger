@@ -45,6 +45,7 @@ public class Utils {
     public static String TEXT = "TEXT";
     public static String IMAGE = "IMAGE";
     public static String FILE = "FILE";
+    public static String NAME_FILE = "";
     public static String INTRO_ACCEPT = "Hai bạn đã là bạn của nhau. Hãy bắt đầu trò chuyện";
     //Chating
     public static String FR_USER = "FR_USER";

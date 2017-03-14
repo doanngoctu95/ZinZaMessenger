@@ -20,7 +20,7 @@
     <ImageView
         android:layout_width="128dp"
         android:layout_height="128dp"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:adjustViewBounds="true"
         android:id="@+id/img_message_sender"
         />

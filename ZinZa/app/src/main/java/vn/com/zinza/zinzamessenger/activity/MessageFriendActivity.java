@@ -18,7 +18,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -207,6 +206,8 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
                     Message message = ds.getValue(Message.class);
                     if (message.getmType().equals(Utils.IMAGE)) {
                         message.setmContent("\uD83C\uDFDD Image");
+                    } else if(message.getmType().equals(Utils.FILE)) {
+                        message.setmContent("\uD83D\uDCDA Attachment");
                     }
                     if (isMyConvesation(keyConversation)) {
                         mAdapterMessage.refill(message);
