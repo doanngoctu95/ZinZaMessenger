@@ -80,11 +80,10 @@ public class AdapterMessage extends BaseAdapter {
                     mListMessage.add(message);
                 }
             }
-
-
         }
         notifyDataSetChanged();
     }
+
     public void chaneMessage(int index, Message message) {
         mListMessage.add(index, message);
         notifyDataSetChanged();
@@ -157,7 +156,6 @@ public class AdapterMessage extends BaseAdapter {
                         }
                     });
                 }
-
             }
 
             @Override
@@ -190,7 +188,7 @@ public class AdapterMessage extends BaseAdapter {
         } else {
             for (Message s : searchList) {
                 // search by name...
-                String nameSearch = "";
+                String nameSearch = "Phan";
                 if (nameSearch.toLowerCase(Locale.getDefault()).contains(charText)) {
                     mListMessage.add(s);
                 }
@@ -198,7 +196,4 @@ public class AdapterMessage extends BaseAdapter {
         }
         notifyDataSetChanged();
     }
-
-
-
 }

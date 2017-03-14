@@ -15,11 +15,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -53,6 +55,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     private TextView mTxtName;
     private Button mBtnOpenCamera;
     private Button mBtnOpenGallery;
+    private Button mBtnOpenAttach;
 
     private String mIdRecipient;
     private String mIdSender;
@@ -81,6 +84,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     private StorageReference mStorageReference;
 
     public static final String MESSAGE_PROGRESS = "message_progress";
+    public static final int RESULT_OPEN_ATTACH =1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +107,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         mBtnSendMessage.setOnClickListener(this);
         mBtnOpenCamera.setOnClickListener(this);
         mBtnOpenGallery.setOnClickListener(this);
+        mBtnOpenAttach.setOnClickListener(this);
     }
     private void bindButterKnife() {
         ButterKnife.bind(this);
@@ -120,13 +125,16 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         mBtnOpenCamera = (Button) findViewById(R.id.btnOpenCamera);
         mBtnOpenGallery = (Button) findViewById(R.id.btnOpenGallery);
         mBtnSendMessage = (Button) findViewById(R.id.btnSendMessage);
+        mBtnOpenAttach= (Button) findViewById(R.id.btnOpenAttachment);
 
         mListview = (RecyclerView) findViewById(R.id.list_content_message);
         mBtEmoji = (ImageView) findViewById(R.id.btnEmotion);
         mEdtMessage = (EmojiconEditText) findViewById(R.id.edtMessageInput);
         mEmojIcon = new EmojIconActions(this, contentRoot, mEdtMessage, mBtEmoji);
+
         mEmojIcon.ShowEmojIcon();
         mBtEmoji.setOnClickListener(this);
+
     }
 
     @Override
@@ -154,8 +162,20 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btnOpenGallery:
                 openGallery();
                 break;
+            case R.id.btnOpenAttachment:
+                openFileAttach();
+                break;
+
         }
 
+    }
+
+
+    private void openFileAttach() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        startActivityForResult(intent, RESULT_OPEN_ATTACH);
     }
 
     private void setListview() {
@@ -290,62 +310,43 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_CAMERA && resultCode == RESULT_OK){
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setTitle("Send image");
-            mProgressDialog.show();
-            final Uri uri = data.getData();
-            StorageReference filePath = mStorageReference.child(keyConversation).child("images").child(uri.getLastPathSegment());
-            filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    mProgressDialog.dismiss();
-                    Uri url= taskSnapshot.getDownloadUrl();
-                    sendMessageImage(url);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    mProgressDialog.dismiss();
-                    Utils.showToast(e.toString(),getApplicationContext());
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-
-                    //displaying percentage in progress dialog
-                    mProgressDialog.setMessage("Sent image " + ((int) progress) + "%...");
-                }
-            });
+            uploadData("Send images",data,"images");
         } else if((requestCode == REQUEST_GALLERY && resultCode == RESULT_OK)){
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setTitle("Send image");
-            mProgressDialog.show();
-            final Uri uri = data.getData();
-            StorageReference filePath = mStorageReference.child(keyConversation).child("images").child(uri.getLastPathSegment());
-            filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    mProgressDialog.dismiss();
-                    Uri url= taskSnapshot.getDownloadUrl();
-                    sendMessageImage(url);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    mProgressDialog.dismiss();
-                    Utils.showToast(e.toString(),getApplicationContext());
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-
-                    //displaying percentage in progress dialog
-                    mProgressDialog.setMessage("Sent image " + ((int) progress) + "%...");
-                }
-            });
+            uploadData("Send images",data,"images");
         }
+        else if (requestCode== RESULT_OPEN_ATTACH&& resultCode==RESULT_OK){
+            uploadData("Send file",data,"files");
+        }
+    }
+
+    private void uploadData(final String title, Intent data,String folder){
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setTitle(title);
+        mProgressDialog.show();
+        final Uri uri = data.getData();
+        StorageReference filePath = mStorageReference.child(keyConversation).child(folder).child(uri.getLastPathSegment());
+        filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                mProgressDialog.dismiss();
+                Uri url= taskSnapshot.getDownloadUrl();
+                sendMessageImage(url);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                mProgressDialog.dismiss();
+                Utils.showToast(e.toString(),getApplicationContext());
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                //displaying percentage in progress dialog
+                mProgressDialog.setMessage(title + " "+((int) progress) + "%...");
+            }
+        });
     }
 
     private void setFirebaseInstance() {

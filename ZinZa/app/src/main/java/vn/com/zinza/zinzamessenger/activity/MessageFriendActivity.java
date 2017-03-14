@@ -18,6 +18,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -110,7 +111,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
         setContentView(R.layout.activity_messenger_friend);
         initControl();
         setAuthInstace();
-        showProgress("Loading...","Please wait...");
+        showProgress("Loading...", "Please wait...");
         loadConversation();
         loadUser();
         loadListview();
@@ -179,7 +180,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                return true;
             }
         });
         return super.onCreateOptionsMenu(menu);
@@ -204,13 +205,12 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Message message = ds.getValue(Message.class);
-                    if(message.getmType().equals(Utils.IMAGE)){
+                    if (message.getmType().equals(Utils.IMAGE)) {
                         message.setmContent("\uD83C\uDFDD Image");
                     }
                     if (isMyConvesation(keyConversation)) {
                         mAdapterMessage.refill(message);
                     }
-
                 }
             }
 
@@ -243,7 +243,6 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
         mListConversationKeys = new ArrayList<>();
         mList = new ArrayList<>();
         mRefMessage = mDatabase.getInstance().getReference().child("tblChat");
-
 
         mRefMessage.orderByKey().addChildEventListener(new ChildEventListener() {
             @Override
@@ -278,7 +277,6 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
         mRefMessage.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                mDlAddFriend.dismiss();
                 mProgressDialog.dismiss();
             }
 
@@ -287,7 +285,6 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
 
             }
         });
-//        mProgressDialog.dismiss();
     }
 
     private void loadListview() {
@@ -363,7 +360,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
 //                if(checkListResult){
 //                    mProgressDialog.dismiss();
 //                    showProgress("Searching","Please wait.....");
-                    showDetailProfileDialog(mListFriendSearch);
+                showDetailProfileDialog(mListFriendSearch);
 //                } else {
 //                    mProgressDialog.dismiss();
 //                }
@@ -434,7 +431,6 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
             }
 
         });
-
 
 
     }
@@ -548,7 +544,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
 
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
+                doubleBackToExitPressedOnce = false;
             }
         }, 2000);
     }
