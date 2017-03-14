@@ -106,13 +106,6 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
                         showDetailImage(mList.get(position).getmContent());
                     }
                 });
-//                holder.itemView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        showDetailImage(mList.get(position).getmContent());
-//
-//                    }
-//                });
                 break;
             case RECIPENT_TEXT:
                 ViewHolderRecipientText viewHolderRecipientText = (ViewHolderRecipientText) holder;
@@ -128,12 +121,6 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
                         showDetailImage(mList.get(position).getmContent());
                     }
                 });
-//                holder.itemView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        showDetailImage(mList.get(position).getmContent());
-//                    }
-//                });
                 break;
 
         }
