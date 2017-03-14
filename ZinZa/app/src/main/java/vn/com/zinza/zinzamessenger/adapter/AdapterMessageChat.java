@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -272,8 +273,11 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
         nagDialog.setContentView(R.layout.detail_image);
         Button btnDownload = (Button) nagDialog.findViewById(R.id.btnDownloadImage);
         ImageView ivPreview = (ImageView) nagDialog.findViewById(R.id.imgDetail);
-        Glide.with(mContext).load(url).crossFade().placeholder(R.drawable.place_hoder).into(ivPreview);
+        Picasso.with(mContext).load(url).placeholder(R.drawable.place_hoder).into(ivPreview);
+//        Glide.with(mContext).load(url).placeholder(R.drawable.place_hoder).into(ivPreview);
         final String finalURl = url.substring(url.lastIndexOf("apis.com")+8);
+
+        String aa="aa";
         Utils.FIREBASE_END_URL = finalURl;
         btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -304,9 +308,7 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
             if(intent.getAction().equals(MESSAGE_PROGRESS)){
-
                 Download download = intent.getParcelableExtra("download");
                 if(download.getProgress() == 100){
 
