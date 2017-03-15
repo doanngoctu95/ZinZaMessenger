@@ -105,9 +105,9 @@ public class Utils {
     public static String createAt() {
         return new SimpleDateFormat(Utils.FORMAT_TIME).format(new Date());
     }
-    public static String createNameImage(){
+    public static String createNameFile(){
         Date date = new Date();
-        String name = "IMG"+date.getYear()+date.getMonth()+date.getDay()+date.getTime();
+        String name = "ZinZa"+date.getYear()+date.getMonth()+date.getDay()+date.getTime();
         return name;
 
     }

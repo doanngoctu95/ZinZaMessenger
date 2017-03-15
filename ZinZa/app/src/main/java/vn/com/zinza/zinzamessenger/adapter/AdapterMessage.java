@@ -47,6 +47,8 @@ public class AdapterMessage extends BaseAdapter {
     private String mSender_id = "";
     private String mRecipient_id = "";
 
+    public static boolean IS_NEW_MESSAGE = false;
+
     public AdapterMessage(Context mContext, int mLayout, List<Message> mListMessage) {
         this.mContext = mContext;
         this.mLayout = mLayout;
@@ -83,7 +85,9 @@ public class AdapterMessage extends BaseAdapter {
         }
         notifyDataSetChanged();
     }
-
+    public void isNewMessage(boolean result){
+        this.IS_NEW_MESSAGE = result;
+    }
     public void chaneMessage(int index, Message message) {
         mListMessage.add(index, message);
         notifyDataSetChanged();
@@ -117,7 +121,7 @@ public class AdapterMessage extends BaseAdapter {
         TextView nameUser = (TextView) convertView.findViewById(R.id.txtName);
         EmojiconTextView contentMessage = (EmojiconTextView) convertView.findViewById(R.id.txtContent);
         TextView timeMessage = (TextView) convertView.findViewById(R.id.txtTime);
-        TextView numberNewMs = (TextView) convertView.findViewById(R.id.txtNumberNewMessage);
+        ImageView imgNewMessage =  (ImageView)convertView.findViewById(R.id.imgNewMessage);
 
         String idFriend = "";
         mSender_id = mListMessage.get(position).getmIdSender();
@@ -128,7 +132,11 @@ public class AdapterMessage extends BaseAdapter {
             idFriend = mSender_id;
         }
         mListMessageKeys.add(idFriend);
-        numberNewMs.setText("   1   ");
+//        if(IS_NEW_MESSAGE){
+//            imgNewMessage.setVisibility(View.VISIBLE);
+//        } else {
+//            imgNewMessage.setVisibility(View.GONE);
+//        }
         getUser(idFriend, avatarUser, nameUser, convertView);
         contentMessage.setText(mListMessage.get(position).getmContent());
         timeMessage.setText(Helper.convertTime(mListMessage.get(position).getmTime()));

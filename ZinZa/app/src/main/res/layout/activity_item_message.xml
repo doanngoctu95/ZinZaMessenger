@@ -51,13 +51,11 @@
         android:layout_toLeftOf="@+id/txtTime"
         android:layout_toStartOf="@+id/txtTime"/>
 
-    <TextView
-        android:textSize="15sp"
-        android:textColor="@color/white"
-        android:background="@drawable/rounded_new_message_text"
+    <ImageView
+        android:background="@drawable/ic_new_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txtNumberNewMessage"
+        android:id="@+id/imgNewMessage"
         android:layout_alignBottom="@+id/txtContent"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>

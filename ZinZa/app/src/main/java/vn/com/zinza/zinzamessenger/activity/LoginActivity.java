@@ -36,7 +36,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
 
@@ -245,6 +244,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     mProgressDialog.dismiss();
                     if(task.isSuccessful()){
+                        initUserDatabase(task);
                         Utils.showToast("Login Success",getApplicationContext());
                         Intent intent1 = new Intent(LoginActivity.this, MessageFriendActivity.class);
                         startActivity(intent1);
@@ -298,7 +298,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String email = task.getResult().getUser().getEmail();
         String password = "";
         String avata = task.getResult().getUser().getPhotoUrl()+"";
-        String token = FirebaseInstanceId.getInstance().getToken();
+        String token = Utils.USER_TOKEN;
         User mUser = new User(id,displayName,email,password,avata,"","on",token, Utils.createAt());
         mReference.child(id).setValue(mUser);
 

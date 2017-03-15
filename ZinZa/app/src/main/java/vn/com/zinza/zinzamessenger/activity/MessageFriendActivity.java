@@ -211,7 +211,9 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
                     }
                     if (isMyConvesation(keyConversation)) {
                         mAdapterMessage.refill(message);
+
                     }
+
                 }
             }
 
@@ -220,7 +222,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
 
             }
         });
-
+        mAdapterMessage.isNewMessage(false);
     }
 
     private boolean isMyConvesation(String key) {
@@ -353,7 +355,6 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
         btnAddFr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                showProgress("Search Friend", "Searching");
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 searchByUsername(edtSearchFr.getText().toString().trim());

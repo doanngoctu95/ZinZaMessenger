@@ -14,5 +14,5 @@ import retrofit.http.Url;
 public interface FirebaseService {
     @GET()
     @Streaming
-    Call<ResponseBody> downloadImage(@Url String fileUrl);
+    Call<ResponseBody> downloadAttachment(@Url String fileUrl);
 }

@@ -34,9 +34,12 @@ public class Helper {
         return time;
 
     }
-    public static String getUrl(String url){
+    public static String getUrlDownload(String url){
         String mURl = url.substring(url.lastIndexOf("apis.com")+8);
         return mURl.substring(0,mURl.lastIndexOf("---"));
+    }
+    public static String getURLImage(String url){
+        return url.substring(0,url.lastIndexOf("---"));
     }
     public static String getName(String url){
         return url.substring(url.lastIndexOf("---")+3);

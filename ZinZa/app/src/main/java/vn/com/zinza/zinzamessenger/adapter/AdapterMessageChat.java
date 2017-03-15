@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
+import me.himanshusoni.chatmessageview.ChatMessageView;
 import vn.com.zinza.zinzamessenger.R;
 import vn.com.zinza.zinzamessenger.downloadfirebase.Download;
 import vn.com.zinza.zinzamessenger.downloadfirebase.DownloadService;
@@ -143,6 +144,23 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
             case RECIPENT_FILE:
                 ViewHolderRecipientFile viewHolderRecipientFile = (ViewHolderRecipientFile)holder;
                 configureFileRecipient(viewHolderRecipientFile,position);
+                ChatMessageView chatMessageView = viewHolderRecipientFile.getChatView();
+                chatMessageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String urlToDownload = Helper.getUrlDownload(mList.get(position).getmContent());
+                        Utils.NAME_FILE = Helper.getName(mList.get(position).getmContent());
+                        Utils.FIREBASE_END_URL = urlToDownload;
+                        Utils.showToast("File đã bắt đầu được tải về",mContext);
+                        startDownload();
+                    }
+                });
+//                holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                    }
+//                });
                 break;
 
         }
@@ -186,8 +204,7 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
     private void configureImageSenderView(ViewHolderSenderImage viewHolderSenderImage, final int position) {
         Message senderFireMessage = mList.get(position);
         Glide.with(mContext)
-                .load(senderFireMessage
-                        .getmContent())
+                .load(Helper.getURLImage(senderFireMessage.getmContent()))
                 .placeholder(R.drawable.place_hoder)
                 .crossFade()
                 .into(viewHolderSenderImage.getSenderImage());
@@ -207,7 +224,7 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
     private void configureImageRecipientView(ViewHolderRecipientImage viewHolderRecipientImage, final int position) {
         Message senderFireMessage = mList.get(position);
         Glide.with(mContext)
-                .load(senderFireMessage.getmContent())
+                .load(Helper.getURLImage(senderFireMessage.getmContent()))
                 .placeholder(R.drawable.place_hoder)
                 .crossFade()
                 .into(viewHolderRecipientImage.getRecipientImage());
@@ -319,12 +336,16 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
     public class ViewHolderRecipientFile extends RecyclerView.ViewHolder{
         TextView txtNameFile;
         TextView time;
+        ChatMessageView view;
         public ViewHolderRecipientFile(View itemView) {
             super(itemView);
             txtNameFile = (TextView) itemView.findViewById(R.id.text_view_recipient_file);
             time = (TextView) itemView.findViewById(R.id.file_time_recipent);
+            view = (ChatMessageView)itemView.findViewById(R.id.contentMessageChat);
         }
-
+        public ChatMessageView getChatView(){
+            return view;
+        }
         public TextView getRecipientFile() {
             return txtNameFile;
         }
@@ -341,22 +362,24 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
         nagDialog.setContentView(R.layout.detail_image);
         Button btnDownload = (Button) nagDialog.findViewById(R.id.btnDownloadImage);
         ImageView ivPreview = (ImageView) nagDialog.findViewById(R.id.imgDetail);
-        final String finalURl = Helper.getUrl(url);
-        Utils.FIREBASE_END_URL = finalURl;
-        Picasso.with(mContext).load(url).placeholder(R.drawable.place_hoder).into(ivPreview);
+        String urlToDownload = Helper.getUrlDownload(url);
+        String urlToShowImage = Helper.getURLImage(url);
+        Utils.FIREBASE_END_URL = urlToDownload;
+        Picasso.with(mContext).load(urlToShowImage).placeholder(R.drawable.place_hoder).into(ivPreview);
 //        Glide.with(mContext).load(url).placeholder(R.drawable.place_hoder).into(ivPreview);
         btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 nagDialog.dismiss();
+                Utils.showToast("File đã bắt đầu được tải về",mContext);
                 startDownload();
+
             }
         });
         nagDialog.show();
     }
 
     private void startDownload(){
-
         Intent intent = new Intent(mContext,DownloadService.class);
         mContext.startService(intent);
 

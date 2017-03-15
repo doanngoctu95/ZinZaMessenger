@@ -77,15 +77,15 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
     private ChildEventListener messageChatListener;
 
     private ProgressDialog mProgressDialog;
-    private static int REQUEST_CAMERA = 1;
-    private static int REQUEST_GALLERY = 2;
+    private static final int REQUEST_CAMERA = 1;
+    private static final int REQUEST_GALLERY = 2;
 
 
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
 
     public static final String MESSAGE_PROGRESS = "message_progress";
-    public static final int RESULT_OPEN_ATTACH = 1001;
+    public static final int RESULT_OPEN_ATTACH = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,10 +230,14 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
                         message.setRecipientOrSenderStatus(AdapterMessageChat.SENDER_TEXT);
                     } else if (message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.IMAGE)) {
                         message.setRecipientOrSenderStatus(AdapterMessageChat.SENDER_IMAGE);
+                    } else if (message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.FILE)) {
+                        message.setRecipientOrSenderStatus(AdapterMessageChat.SENDER_FILE);
                     } else if (!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.TEXT)) {
                         message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT_TEXT);
                     } else if (!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.IMAGE)) {
                         message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT_IMAGE);
+                    }  else if (!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.FILE)) {
+                        message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT_FILE);
                     }
                     mAdapterMessageChat.addMessage(message);
                     mListview.scrollToPosition(mAdapterMessageChat.getItemCount() - 1);

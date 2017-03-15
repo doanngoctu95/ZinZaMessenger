@@ -58,7 +58,7 @@ public class DownloadService extends IntentService {
 
         FirebaseService retrofitInterface = retrofit.create(FirebaseService.class);
 
-        Call<ResponseBody> request = retrofitInterface.downloadImage(Utils.FIREBASE_END_URL);
+        Call<ResponseBody> request = retrofitInterface.downloadAttachment(Utils.FIREBASE_END_URL);
         try {
 
             downloadFile(request.execute().body());
@@ -77,7 +77,7 @@ public class DownloadService extends IntentService {
         long fileSize = body.contentLength();
         InputStream bis = new BufferedInputStream(body.byteStream(), 1024 * 8);
         String typeFile = body.contentType().subtype();
-        File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), Utils.createNameImage()+"."+typeFile);
+        File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), Utils.NAME_FILE +"."+ typeFile);
         OutputStream output = new FileOutputStream(outputFile);
         long total = 0;
         long startTime = System.currentTimeMillis();
