@@ -1,6 +1,11 @@
 package vn.com.zinza.zinzamessenger.activity;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -11,16 +16,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.bumptech.glide.util.Util;
+
+import java.io.File;
 import java.util.ArrayList;
 
 import vn.com.zinza.zinzamessenger.R;
 import vn.com.zinza.zinzamessenger.adapter.AdapterHistoryFile;
 import vn.com.zinza.zinzamessenger.model.FileHistory;
 import vn.com.zinza.zinzamessenger.utils.FileUtils;
+import vn.com.zinza.zinzamessenger.utils.Utils;
 
 /**
  * Created by dell on 17/02/2017.
@@ -36,8 +46,23 @@ public class HistoryFileActivity extends AppCompatActivity implements AdapterVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_history_file);
         initViews();
+        Uri uri = MediaStore.Files.getContentUri("external");
+        Log.e("MediaStore.Files", uri+"");
+//        getListFile();
 
     }
+
+//    private void getListFile(){
+//        String path = Utils.ROOT_FOLDER;
+//        Log.d("Files", "Path: " + path);
+//        File directory = new File(path);
+//        File[] files = directory.listFiles();
+//        Log.d("Files", "Size: "+ files.length);
+//        for (int i = 0; i < files.length; i++)
+//        {
+//            Log.d("Files", "FileName:" + files[i].getName());
+//        }
+//    }
 
     private void initViews() {
         mToolbarHis= (Toolbar) findViewById(R.id.historyToolbar);
@@ -56,56 +81,14 @@ public class HistoryFileActivity extends AppCompatActivity implements AdapterVie
     //load data file.
     private void loadData() {
         listFileHis= new ArrayList<>();
-//        FileHistory f1= new FileHistory(R.drawable.word_icon,"Amazing animal","17/02/2017");
-//        listFileHis.add(f1);
-//        FileHistory f2= new FileHistory(R.drawable.exel_icon,"Report today","17/02/2017");
-//        listFileHis.add(f2);
-//        FileHistory f3= new FileHistory(R.drawable.ppt_icon,"Slide architecture computer","14/02/2017");
-//        listFileHis.add(f3);
-
-        LogFileExternal(listFileHis);
-    }
-
-    //test load file external storage
-    private void LogFileExternal(ArrayList<FileHistory> listFileHis){
         FileUtils fileUtils= new FileUtils();
-        ArrayList<FileHistory> arrayListFile=fileUtils.getTextListFile(this);
-        if (!arrayListFile.isEmpty()) {
-            for (int i = 0; i < arrayListFile.size(); i++) {
-                Log.e("arrList",arrayListFile.get(i).getPathFileInStorage());
-            }
+        ArrayList<FileHistory> arrayListFile= fileUtils.getListFile();
+        if (arrayListFile.isEmpty()){
+            Toast.makeText(this,"Not have any files",Toast.LENGTH_SHORT).show();
         }
         else {
-            Log.e("arrList","no found!");
-
+            listFileHis.addAll(arrayListFile);
         }
-
-        ArrayList<FileHistory> arrayList= fileUtils.getRarFileList(this);
-        if (!arrayList.isEmpty()) {
-            for (int i = 0; i < arrayList.size(); i++) {
-                Log.e("arrList",arrayList.get(i).getPathFileInStorage());
-            }
-        }
-        else {
-            Log.e("arrList","no found!");
-
-        }
-
-        ArrayList<FileHistory> arrayListPdf= fileUtils.getPdfFileList(this);
-        if (!arrayListPdf.isEmpty()) {
-            for (int i = 0; i < arrayListPdf.size(); i++) {
-                Log.e("arrList",arrayListPdf.get(i).getPathFileInStorage());
-            }
-        }
-        else {
-            Log.e("arrList","no found!");
-
-        }
-
-        listFileHis.addAll(arrayList);
-        listFileHis.addAll(arrayListFile);
-        listFileHis.addAll(arrayListPdf);
-
     }
 
     @Override
@@ -140,8 +123,6 @@ public class HistoryFileActivity extends AppCompatActivity implements AdapterVie
         return super.onOptionsItemSelected(item);
     }
 
-
-
     @Override
     public void onClick(View view) {
         finish();
@@ -149,6 +130,19 @@ public class HistoryFileActivity extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Toast.makeText(this,"Open file at position: "+i,Toast.LENGTH_LONG).show();
+//        Toast.makeText(this,"Open file at position: "+i,Toast.LENGTH_LONG).show();
+
+        MimeTypeMap myMime = MimeTypeMap.getSingleton();
+        Intent newIntent = new Intent(Intent.ACTION_VIEW);
+        String mimeType = myMime.getMimeTypeFromExtension(AdapterHistoryFile.fileExt(listFileHis.get(i).getName()).substring(1));
+        Log.e("mimeType",mimeType);
+        File file=new File(listFileHis.get(i).getPathFileInStorage());
+        newIntent.setDataAndType(Uri.fromFile(file),mimeType);
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            this.startActivity(newIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, "No handler for this type of file.", Toast.LENGTH_LONG).show();
+        }
     }
 }

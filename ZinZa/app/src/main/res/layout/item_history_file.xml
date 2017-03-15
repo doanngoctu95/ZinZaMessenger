@@ -6,7 +6,7 @@
     <ImageView
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/word_icon"
+        android:src="@drawable/jpg"
         android:padding="15dp"
         android:id="@+id/imFile"/>
     <TextView

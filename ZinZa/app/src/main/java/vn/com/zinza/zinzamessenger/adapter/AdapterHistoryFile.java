@@ -18,7 +18,10 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -70,28 +73,45 @@ public class AdapterHistoryFile  extends ArrayAdapter<FileHistory> {
 
         viewHolder= (ViewHolder) convertView.getTag();
 //        viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(arrFile.get(position).getImg()));
+        viewHolder.tvDate.setText(arrFile.get(position).getDate());
         String typeFile= arrFile.get(position).getName();
         if (typeFile.contains(".html")){
 //            viewHolder.img.setImageDrawable(R.drawable.);
         }
         else if (typeFile.contains(".xls")){
-            viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.exel_icon));
+            viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.exel));
         }
         else if (typeFile.contains(".doc")){
-            viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.word_icon));
+            viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.doc));
         }
         else if (typeFile.contains(".zip")||typeFile.contains(".rar")){
             viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.rar));
         }
         else if (typeFile.contains(".ppt")){
-            viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ppt_icon));
+            viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ppt));
         }
         else if (typeFile.contains(".pdf")){
-            viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.pdf_icon));
+            viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.pdf));
+        }
+        else if (typeFile.contains(".mp3")){
+            viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.mp3));
+        }
+        else if (typeFile.contains(".mp4")){
+            viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.mp4));
+        }
+        else if (typeFile.contains(".txt")){
+            viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.txt));
+        }
+        else if (typeFile.contains(".jpg")||typeFile.contains(".png")){
+            Picasso.with(context)
+                    .load(arrFile.get(position).getPathFileInStorage())
+                    .resize(800, 800)
+                    .centerCrop()
+                    .into(viewHolder.img);
         }
         else {
             // other file
-            viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.a7));
+            viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.jpg));
         }
 
 
@@ -168,10 +188,12 @@ public class AdapterHistoryFile  extends ArrayAdapter<FileHistory> {
         mTvSizeFile= (TextView) mDialogDetail.findViewById(R.id.tvSizeFileDl);
         mBtnClose= (Button) mDialogDetail.findViewById(R.id.btnClose);
 
+        String sizeF= convertSizeFile(sizeFile);
+
         if (nameFile!=null) {
             mTvNameFile.setText("- Name: " + nameFile);
             mTvPathFile.setText("- Path: " + pathFile);
-            mTvSizeFile.setText("- Size: " + sizeFile);
+            mTvSizeFile.setText("- Size: " + sizeF);
         }
 
         mBtnClose.setOnClickListener(new View.OnClickListener() {
@@ -182,7 +204,30 @@ public class AdapterHistoryFile  extends ArrayAdapter<FileHistory> {
         });
     }
 
-    private String fileExt(String url) {
+    private String convertSizeFile(String sizeFile){
+        String sizeReturn="";
+        int sizeF= Integer.parseInt(sizeFile);
+        int kb=1024;
+        int mb=1024*1024;
+
+        if (sizeF>kb&&sizeF<mb){
+               sizeReturn= sizeF/kb+" Kbs";
+        }
+        else if (sizeF<kb){
+            sizeReturn=sizeF+ " Bytes";
+        }
+        else if (sizeF>mb){
+            double i=sizeF/mb;
+            i = Math.floor(i * 100) / 100;
+            sizeReturn= i+" Mbs";
+        }
+        else {
+
+        }
+        return sizeReturn;
+    }
+
+    public static String fileExt(String url) {
         if (url.indexOf("?") > -1) {
             url = url.substring(0, url.indexOf("?"));
         }
