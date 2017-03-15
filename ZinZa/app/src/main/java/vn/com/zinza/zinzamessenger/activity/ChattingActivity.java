@@ -334,6 +334,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setTitle(title);
         mProgressDialog.show();
+        mProgressDialog.setCancelable(false);
         final Uri uri = data.getData();
         Utils.NAME_FILE = getNameData(uri);
         StorageReference filePath = mStorageReference.child(keyConversation).child(folder).child(Utils.NAME_FILE);

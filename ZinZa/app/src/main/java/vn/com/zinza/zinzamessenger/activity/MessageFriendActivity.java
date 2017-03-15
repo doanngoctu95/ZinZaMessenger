@@ -358,16 +358,14 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
             public void onClick(View view) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                searchByUsername(edtSearchFr.getText().toString().trim());
-//                Log.e("Check:",checkListResult+"");
-//                if(checkListResult){
-//                    mProgressDialog.dismiss();
-//                    showProgress("Searching","Please wait.....");
-                showDetailProfileDialog(mListFriendSearch);
-//                } else {
-//                    mProgressDialog.dismiss();
-//                }
-//
+                String input = edtSearchFr.getText().toString().trim();
+                if(input.equals("")){
+                    edtSearchFr.setError("Please input name ");
+                } else {
+                    searchByUsername(edtSearchFr.getText().toString().trim());
+                    showDetailProfileDialog(mListFriendSearch);
+                }
+
             }
         });
 
@@ -386,14 +384,16 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
                     String key = dataSnapshot.getKey();
                     User user = dataSnapshot.getValue(User.class);
                     mListSearchFrKeys.add(key);
-                    if (user.getmUsername().toLowerCase().contains(username.toLowerCase())) {
-                        mAdapterFriendSearch.refill(user);
-                        checkListResult = true;
-                    }
-                } else {
-                    checkListResult = false;
+                        if (user.getmUsername().toLowerCase().contains(username.toLowerCase())) {
+                            if(!user.getmUsername().equals(Utils.USER_NAME)){
+                                mAdapterFriendSearch.refill(user);
+                                checkListResult = true;
+                            }
+
+                        }
 
                 }
+
 
                 //So sanh vs username xem co trung hay k
 
@@ -472,10 +472,30 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
     private void setAuthInstace() {
         mAuth = FirebaseAuth.getInstance();
 
-        String id = Utils.USER_ID = mAuth.getCurrentUser().getUid();
-        String username = Utils.USER_NAME = mAuth.getCurrentUser().getDisplayName();
-        String photoUrl = Utils.AVATAR_URL = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
-        mUser = new User(id, username, "", "", photoUrl, "", "on", Utils.getToken(), "");
+        final String id = Utils.USER_ID = mAuth.getCurrentUser().getUid();
+        final String photoUrl = Utils.AVATAR_URL = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
+        mReference = mDatabase.getInstance().getReference();
+        final String Uemail = mAuth.getCurrentUser().getEmail();
+        mReference.child("users").orderByChild("mEmail").equalTo(Uemail).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String Uname = "";
+                String Uavatar = "";
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Uname = (String) ds.child("mUsername").getValue();
+                    Uavatar = (String) ds.child("mAvatar").getValue();
+                }
+                mUser = new User(id, Uname, "", "", Uavatar, "", "on", Utils.getToken(), "");
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
     private void loadUser() {
@@ -489,6 +509,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
             displayName = mAuth.getCurrentUser().getDisplayName();
             mEmail.setText(email);
             mUsername.setText(displayName);
+            Utils.USER_NAME = displayName;
             Glide.with(getApplicationContext()).load(avatarURL).into(mImCurrenUser);
 
         } else {
@@ -508,6 +529,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
                         Glide.with(getApplicationContext()).load(Uavatar).crossFade().into(mImCurrenUser);
                     }
                     mEmail.setText(Uemail);
+                    Utils.USER_NAME = Uname;
 
                 }
 

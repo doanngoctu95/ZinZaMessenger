@@ -190,8 +190,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(intent2);
                 break;
             case R.id.btnLogin:
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                showKeyBoard(view);
                 logIn(getEmail(),getPassword());
                 break;
             case R.id.sign_in_gg_button:
@@ -238,14 +237,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
     private void logIn(String email,String password){
         showProgress("Login","Logging");
-        if(validateLogin()){
+        if(email.equals("") || (email.equals("") && password.equals(""))){
+            mProgressDialog.dismiss();
+            mEdtEmail.setFocusableInTouchMode(true);
+            mEdtEmail.requestFocus();
+            mEdtEmail.setFocusable(true);
+            mEdtEmail.setError("Email is required");
+        } else if(password.equals("")) {
+            mProgressDialog.dismiss();
+            mEdtPassword.setError("Password is required");
+            mEdtPassword.setFocusableInTouchMode(true);
+            mEdtPassword.requestFocus();
+            mEdtPassword.setFocusable(true);
+        } else {
             mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     mProgressDialog.dismiss();
                     if(task.isSuccessful()){
-                        initUserDatabase(task);
-                        Utils.showToast("Login Success",getApplicationContext());
+                        mReference.child(task.getResult().getUser().getUid()).child("mToken").setValue(Utils.USER_TOKEN);
                         Intent intent1 = new Intent(LoginActivity.this, MessageFriendActivity.class);
                         startActivity(intent1);
                     } else {
@@ -253,9 +263,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }
             });
-        } else {
-            mProgressDialog.dismiss();
-            Utils.showToast("Not enough information to login",this);
         }
 
 
@@ -322,6 +329,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Utils.showToast("Authentication failed",LoginActivity.this);
                         } else {
                             initUserDatabase(task);
+
                             startActivity(new Intent(LoginActivity.this, MessageFriendActivity.class));
                             mProgressDialog.dismiss();
                             finish();
@@ -346,5 +354,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mProgressDialog.setMessage(message);
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
+    }
+    private void showKeyBoard(View view){
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

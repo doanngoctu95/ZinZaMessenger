@@ -22,6 +22,7 @@ public class Helper {
     public static void setUserOffline(DatabaseReference mReference){
         mReference = FirebaseDatabase.getInstance().getReference();
         mReference.child("users").child(Utils.USER_ID).child("mStatus").setValue("off");//Set user offline
+        mReference.child("users").child(Utils.USER_ID).child("mToken").setValue("");//Set user offline
     }
     public static String convertTime(String time) {
         SimpleDateFormat output = new SimpleDateFormat("hh:mm");
