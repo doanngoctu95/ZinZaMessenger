@@ -3,6 +3,7 @@ package vn.com.zinza.zinzamessenger.utils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,4 +46,10 @@ public class Helper {
         return url.substring(url.lastIndexOf("---")+3);
     }
 
+    public static void createDirectory(){
+        File root = new File(Utils.ROOT_FOLDER);
+        if(!root.exists()) {
+            root.mkdir();
+        }
+    }
 }

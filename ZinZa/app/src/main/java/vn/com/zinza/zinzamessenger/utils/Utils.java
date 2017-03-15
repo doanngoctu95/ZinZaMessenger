@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.os.Environment;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -46,6 +47,7 @@ public class Utils {
     public static String IMAGE = "IMAGE";
     public static String FILE = "FILE";
     public static String NAME_FILE = "";
+    public static String ROOT_FOLDER = Environment.getExternalStorageDirectory()+"/ZINZAMessenger";
     public static String INTRO_ACCEPT = "Hai bạn đã là bạn của nhau. Hãy bắt đầu trò chuyện";
     //Chating
     public static String FR_USER = "FR_USER";

@@ -108,6 +108,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messenger_friend);
+        Helper.createDirectory();
         initControl();
         setAuthInstace();
         showProgress("Loading...", "Please wait...");
