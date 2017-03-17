@@ -209,6 +209,8 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
                         message.setmContent("\uD83C\uDFDD Image");
                     } else if(message.getmType().equals(Utils.FILE)) {
                         message.setmContent("\uD83D\uDCDA Attachment");
+                    }else if(message.getmType().equals(Utils.VIDEO)){
+                        message.setmContent("\uD83C\uDF9E video.mp4");
                     }
                     if (isMyConvesation(keyConversation)) {
                         mAdapterMessage.refill(message);
@@ -584,7 +586,6 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
     private String getTypeLogIn() {
         return mAuth.getCurrentUser().getProviders().get(0);
     }
-
 
     private void showProgress(String title, String message) {
         mProgressDialog = new ProgressDialog(this);

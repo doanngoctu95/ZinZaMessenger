@@ -226,19 +226,28 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
                 //Load message here
                 if (dataSnapshot.exists()) {
                     Message message = dataSnapshot.getValue(Message.class);
+                    //SENDER
                     if (message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.TEXT)) {
                         message.setRecipientOrSenderStatus(AdapterMessageChat.SENDER_TEXT);
                     } else if (message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.IMAGE)) {
                         message.setRecipientOrSenderStatus(AdapterMessageChat.SENDER_IMAGE);
                     } else if (message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.FILE)) {
                         message.setRecipientOrSenderStatus(AdapterMessageChat.SENDER_FILE);
-                    } else if (!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.TEXT)) {
+                    }else if (message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.VIDEO)){
+                        message.setRecipientOrSenderStatus(AdapterMessageChat.SENDER_VIDEO);
+                    }
+                    // RECIPIENT
+                    else if (!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.TEXT)) {
                         message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT_TEXT);
                     } else if (!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.IMAGE)) {
                         message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT_IMAGE);
                     }  else if (!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.FILE)) {
                         message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT_FILE);
                     }
+                    else if (!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.VIDEO)) {
+                        message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT_VIDEO);
+                    }
+
                     mAdapterMessageChat.addMessage(message);
                     mListview.scrollToPosition(mAdapterMessageChat.getItemCount() - 1);
                 }
@@ -264,6 +273,8 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
 
             }
         });
+
+        
     }
 
     private void loadData() {
@@ -326,7 +337,11 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         } else if ((requestCode == REQUEST_GALLERY && resultCode == RESULT_OK)) {
             uploadData("Send images", data, "images", Utils.IMAGE);
         } else if (requestCode == RESULT_OPEN_ATTACH && resultCode == RESULT_OK) {
-            uploadData("Send file", data, "files", Utils.FILE);
+            if (getNameData(data.getData()).contains("mp4")) {
+                uploadData("Send file", data, "files", Utils.VIDEO);
+            } else {
+                uploadData("Send file", data, "files", Utils.FILE);
+            }
         }
     }
 

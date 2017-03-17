@@ -16,11 +16,22 @@
         app:cmv_contentPadding="5dp"
         app:cmv_cornerRadius="3dp"
         app:cmv_showArrow="true"
-        android:layout_marginLeft="10dp">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="@drawable/ic_play_video"/>
+            android:background="@drawable/ic_play_video"
+            android:id="@+id/imgThumb"/>
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_below="@+id/imgThumb"
+            android:text="lang nghe nc mat.mp4"
+            android:singleLine="true"
+            android:id="@+id/tvNameFileVideo"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/black"/>
     </me.himanshusoni.chatmessageview.ChatMessageView>
     <TextView
         android:text="TextView"

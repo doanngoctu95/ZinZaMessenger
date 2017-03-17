@@ -27,7 +27,8 @@
         app:cmv_cornerRadius="3dp"
         app:cmv_showArrow="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true">
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="10dp">
 
 
         <ImageView

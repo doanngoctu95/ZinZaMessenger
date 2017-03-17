@@ -15,6 +15,7 @@
         android:id="@+id/tvNameFile"
         android:text="Amazing animals"
         android:textSize="16sp"
+        android:singleLine="true"
         android:textColor="@color/black"
         android:layout_toRightOf="@+id/imFile"
         android:layout_marginTop="30dp"
