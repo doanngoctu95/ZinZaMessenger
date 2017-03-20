@@ -56,6 +56,7 @@ public class Utils {
     public static String FORMAT_TIME = "dd-MM-yyyy hh:mm:ss";
     public static String SENDER_ID = "SENDER_ID";
     public static String RECIPIENT_ID = "RECIPIENT_ID";
+    public static String URL_STREAMING="URL_STREAMING";
 
 
     public static AlertDialog buildAlertDialog(String title, String message, boolean isCancelable, Context context) {
