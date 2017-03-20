@@ -88,7 +88,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
 
     public static final String MESSAGE_PROGRESS = "message_progress";
     public static final int RESULT_OPEN_ATTACH = 3;
-    public static final int REQUEST_STORAGE =  0x3;
+    public static final int REQUEST_STORAGE = 0x3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +96,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
         initControl();
-        askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,REQUEST_STORAGE);
+        askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, REQUEST_STORAGE);
         Helper.createDirectory();
         setFirebaseInstance();
         setFirebaseStorage();
@@ -107,6 +107,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         setListview();
 
     }
+
     private void askForPermission(String permission, Integer requestCode) {
         if (ContextCompat.checkSelfPermission(ChattingActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
 
@@ -125,14 +126,15 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
 
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED){
+        if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
             switch (requestCode) {
                 //Location
                 case REQUEST_STORAGE:
-                    askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,requestCode);
+                    askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, requestCode);
 
                     break;
                 //Call
@@ -140,10 +142,11 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
             }
 
             Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void implementLisenter() {
         mBtnBack.setOnClickListener(this);
         mBtnSendMessage.setOnClickListener(this);
@@ -274,7 +277,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
                         message.setRecipientOrSenderStatus(AdapterMessageChat.SENDER_IMAGE);
                     } else if (message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.FILE)) {
                         message.setRecipientOrSenderStatus(AdapterMessageChat.SENDER_FILE);
-                    }else if (message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.VIDEO)){
+                    } else if (message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.VIDEO)) {
                         message.setRecipientOrSenderStatus(AdapterMessageChat.SENDER_VIDEO);
                     }
                     // RECIPIENT
@@ -282,10 +285,9 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
                         message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT_TEXT);
                     } else if (!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.IMAGE)) {
                         message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT_IMAGE);
-                    }  else if (!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.FILE)) {
+                    } else if (!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.FILE)) {
                         message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT_FILE);
-                    }
-                    else if (!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.VIDEO)) {
+                    } else if (!message.getmIdSender().equals(Utils.USER_ID) && message.getmType().equals(Utils.VIDEO)) {
                         message.setRecipientOrSenderStatus(AdapterMessageChat.RECIPENT_VIDEO);
                     }
 
@@ -315,7 +317,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
-        
+
     }
 
     private void loadData() {
@@ -378,12 +380,20 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         } else if ((requestCode == REQUEST_GALLERY && resultCode == RESULT_OK)) {
             uploadData("Send images", data, "images", Utils.IMAGE);
         } else if (requestCode == RESULT_OPEN_ATTACH && resultCode == RESULT_OK) {
-            if (getNameData(data.getData()).contains("mp4")) {
+            if (checkDataVideo(getNameData(data.getData()))) {
                 uploadData("Send file", data, "files", Utils.VIDEO);
             } else {
                 uploadData("Send file", data, "files", Utils.FILE);
             }
         }
+    }
+
+    private boolean checkDataVideo(String nameData) {
+        if (nameData.contains("mp4") || nameData.contains("MP4") || nameData.contains("3gp") || nameData.contains("3GP") ||
+                nameData.contains(".avi") || nameData.contains(".wmv") || nameData.contains(".flv")) {
+            return true;
+        }
+        return false;
     }
 
     private void uploadData(final String title, Intent data, String folder, final String type) {

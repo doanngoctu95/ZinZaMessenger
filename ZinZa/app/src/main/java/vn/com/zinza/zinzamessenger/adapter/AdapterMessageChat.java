@@ -177,7 +177,6 @@ public class AdapterMessageChat extends RecyclerView.Adapter<RecyclerView.ViewHo
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
-
                                 switch (item.getItemId()) {
                                     case R.id.openVideo:
                                         String urlToStream = Helper.getURLImage(mList.get(position).getmContent());
