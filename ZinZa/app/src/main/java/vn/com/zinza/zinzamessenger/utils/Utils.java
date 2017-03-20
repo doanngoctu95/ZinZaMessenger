@@ -49,7 +49,7 @@ public class Utils {
     public static String VIDEO="VIDEO";
 
     public static String NAME_FILE = "";
-    public static String ROOT_FOLDER = Environment.getExternalStorageDirectory()+"/ZINZAMessenger";
+    public static String ROOT_FOLDER = Environment.getExternalStorageDirectory()+"/ZinZaMessenger";
     public static String INTRO_ACCEPT = "Hai bạn đã là bạn của nhau. Hãy bắt đầu trò chuyện";
     //Chating
     public static String FR_USER = "FR_USER";

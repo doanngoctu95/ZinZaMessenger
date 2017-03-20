@@ -49,8 +49,6 @@ public class Helper {
 
     public static void createDirectory(){
         File root = new File(Utils.ROOT_FOLDER);
-        if(!root.exists()) {
-            root.mkdir();
-        }
+        root.mkdir();
     }
 }

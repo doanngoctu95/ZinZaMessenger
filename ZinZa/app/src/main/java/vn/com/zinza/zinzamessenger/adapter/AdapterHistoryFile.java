@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -103,6 +102,12 @@ public class AdapterHistoryFile  extends ArrayAdapter<FileHistory> {
             viewHolder.img.setImageDrawable(getContext().getResources().getDrawable(R.drawable.txt));
         }
         else if (typeFile.contains(".jpg")||typeFile.contains(".png")){
+            Picasso.with(context)
+                    .load(arrFile.get(position).getPathFileInStorage())
+                    .resize(800, 800)
+                    .centerCrop()
+                    .into(viewHolder.img);
+        } else if (typeFile.contains(".jpg")||typeFile.contains(".png")){
             Picasso.with(context)
                     .load(arrFile.get(position).getPathFileInStorage())
                     .resize(800, 800)

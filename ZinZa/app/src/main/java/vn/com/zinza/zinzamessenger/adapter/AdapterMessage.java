@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.daimajia.swipe.SwipeLayout;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,7 +44,9 @@ public class AdapterMessage extends BaseAdapter {
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserReference;
+    private DatabaseReference mChatReference;
 
+     String keyConversation = "";
     private String mSender_id = "";
     private String mRecipient_id = "";
 
@@ -93,7 +96,7 @@ public class AdapterMessage extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void removeMessage(int index) {
+    public void removeConversation(int index) {
         mListMessage.remove(index);
         notifyDataSetChanged();
     }
@@ -117,6 +120,9 @@ public class AdapterMessage extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(mLayout, null);
+
+        SwipeLayout swipeLayout = (SwipeLayout)convertView.findViewById(R.id.swipeItemMessageMain);
+        setUpSwipe(swipeLayout);
         ImageView avatarUser = (ImageView) convertView.findViewById(R.id.imgAvatar);
         TextView nameUser = (TextView) convertView.findViewById(R.id.txtName);
         EmojiconTextView contentMessage = (EmojiconTextView) convertView.findViewById(R.id.txtContent);
@@ -137,13 +143,25 @@ public class AdapterMessage extends BaseAdapter {
 //        } else {
 //            imgNewMessage.setVisibility(View.GONE);
 //        }
-        getUser(idFriend, avatarUser, nameUser, convertView);
+        getUser(idFriend, avatarUser, nameUser,swipeLayout,position);
         contentMessage.setText(mListMessage.get(position).getmContent());
         timeMessage.setText(Helper.convertTime(mListMessage.get(position).getmTime()));
         return convertView;
     }
+    private void setUpSwipe(final SwipeLayout swipe){
+        swipe.setShowMode(SwipeLayout.ShowMode.PullOut);
+        swipe.addDrag(SwipeLayout.DragEdge.Right,swipe.findViewWithTag("Bottom2"));
 
-    private void getUser(String idFriend, final ImageView avatar, final TextView txtname, final View view) {
+        swipe.findViewById(R.id.cancle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swipe.close();
+            }
+        });
+
+
+    }
+    private void getUser(String idFriend, final ImageView avatar, final TextView txtname, final SwipeLayout swipeLayout, final int position) {
         mUserReference = mDatabase.getInstance().getReference().child("users");
         mUserReference.orderByChild("mId").equalTo(idFriend).addChildEventListener(new ChildEventListener() {
             @Override
@@ -153,7 +171,7 @@ public class AdapterMessage extends BaseAdapter {
                     final User user = dataSnapshot.getValue(User.class);
                     Glide.with(mContext).load(user.getmAvatar()).crossFade().into(avatar);
                     txtname.setText(user.getmUsername());
-                    view.setOnClickListener(new View.OnClickListener() {
+                    swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent chatting = new Intent(mContext, ChattingActivity.class);
@@ -161,6 +179,13 @@ public class AdapterMessage extends BaseAdapter {
                             chatting.putExtra(Utils.SENDER_ID, Utils.USER_ID);
                             chatting.putExtra(Utils.RECIPIENT_ID, user.getmId());
                             mContext.startActivity(chatting);
+                        }
+                    });
+                    swipeLayout.findViewById(R.id.trash).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final String kcv1 = Utils.USER_ID + "-" + user.getmId();
+                            final String kcv2 = user.getmId() + "-" + Utils.USER_ID;
                         }
                     });
                 }
@@ -203,5 +228,8 @@ public class AdapterMessage extends BaseAdapter {
             }
         }
         notifyDataSetChanged();
+    }
+    private void setChatReference(){
+        mChatReference = FirebaseDatabase.getInstance().getReference().child("tblChat");
     }
 }

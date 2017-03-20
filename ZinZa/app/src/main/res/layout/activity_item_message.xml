@@ -1,63 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<com.daimajia.swipe.SwipeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_item_message"
+    android:id="@+id/swipeItemMessageMain"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    >
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        app:civ_border_width="1dp"
-        app:civ_border_color="@color/black"
-        android:id="@+id/imgAvatar"/>
+    android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:id="@+id/txtName"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/imgAvatar"
-        android:textStyle="normal|bold"
-        android:textSize="18sp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_height="match_parent"
+        android:tag="Bottom2">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/txtName"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/txtTime"/>
+        <ImageView
+            android:id="@+id/trash"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/red"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:src="@drawable/ic_action_delete"/>
 
-    <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtContent"
-        android:lines="1"
-        android:ellipsize="end"
-        android:layout_marginBottom="12dp"
-        android:layout_alignBottom="@+id/imgAvatar"
-        android:layout_alignLeft="@+id/txtName"
-        android:layout_toLeftOf="@+id/txtTime"
-        android:layout_toStartOf="@+id/txtTime"/>
+        <ImageView
+            android:id="@+id/cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/senderColor"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:src="@drawable/ic_action_cancle"/>
+    </LinearLayout>
 
-    <ImageView
-        android:background="@drawable/ic_new_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imgNewMessage"
-        android:layout_alignBottom="@+id/txtContent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_item_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        >
 
-</RelativeLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imgAvatar"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            app:civ_border_color="@color/black"
+            app:civ_border_width="1dp"/>
+
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_toRightOf="@+id/imgAvatar"
+            android:textSize="18sp"
+            android:textStyle="normal|bold"/>
+
+        <TextView
+            android:id="@+id/txtTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/txtName"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"/>
+
+        <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+            android:id="@+id/txtContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imgAvatar"
+            android:layout_alignLeft="@+id/txtName"
+            android:layout_marginBottom="12dp"
+            android:layout_toLeftOf="@+id/txtTime"
+            android:layout_toStartOf="@+id/txtTime"
+            android:ellipsize="end"
+            android:lines="1"/>
+
+        <ImageView
+            android:id="@+id/imgNewMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/txtContent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_new_message"/>
+
+    </RelativeLayout>
+</com.daimajia.swipe.SwipeLayout>

@@ -83,14 +83,22 @@ public class AdapterFriendSearch extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(mLayout,null);
+
         ImageView avatarUser = (ImageView)convertView.findViewById(R.id.imgFriendSearch);
         TextView nameUser = (TextView)convertView.findViewById(R.id.txtNameFriendSearch);
         Button btnAddFr= (Button) convertView.findViewById(R.id.btnAddFriend);
+
         if(!mListUser.get(position).getmAvatar().equals("")){
             Glide.with(mContext).load(mListUser.get(position).getmAvatar()).into(avatarUser);
         }
-
         nameUser.setText(mListUser.get(position).getmUsername());
+        if(mListUser.get(position).getmIsFriend()){
+            btnAddFr.setVisibility(View.GONE);
+        } else {
+            btnAddFr.setVisibility(View.VISIBLE);
+        }
+
+
         btnAddFr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

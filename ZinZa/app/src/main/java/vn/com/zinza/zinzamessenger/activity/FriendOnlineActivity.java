@@ -186,8 +186,6 @@ public class FriendOnlineActivity extends AppCompatActivity implements ListView.
     @Override
     protected void onStop() {
         super.onStop();
-//        mListUser.clear();
-//        mListFriends.clear();
     }
 
     @Override

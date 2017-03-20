@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -48,6 +49,7 @@ import vn.com.zinza.zinzamessenger.R;
 import vn.com.zinza.zinzamessenger.adapter.AdapterMessageChat;
 import vn.com.zinza.zinzamessenger.model.Message;
 import vn.com.zinza.zinzamessenger.model.User;
+import vn.com.zinza.zinzamessenger.utils.Helper;
 import vn.com.zinza.zinzamessenger.utils.Utils;
 
 public class ChattingActivity extends AppCompatActivity implements View.OnClickListener {
@@ -86,6 +88,7 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
 
     public static final String MESSAGE_PROGRESS = "message_progress";
     public static final int RESULT_OPEN_ATTACH = 3;
+    public static final int REQUEST_STORAGE =  0x3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,8 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
         initControl();
+        askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,REQUEST_STORAGE);
+        Helper.createDirectory();
         setFirebaseInstance();
         setFirebaseStorage();
         implementLisenter();
@@ -102,7 +107,43 @@ public class ChattingActivity extends AppCompatActivity implements View.OnClickL
         setListview();
 
     }
+    private void askForPermission(String permission, Integer requestCode) {
+        if (ContextCompat.checkSelfPermission(ChattingActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
 
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(ChattingActivity.this, permission)) {
+
+                //This is called if user has denied the permission before
+                //In this case I am just asking the permission again
+                ActivityCompat.requestPermissions(ChattingActivity.this, new String[]{permission}, requestCode);
+
+            } else {
+
+                ActivityCompat.requestPermissions(ChattingActivity.this, new String[]{permission}, requestCode);
+            }
+        } else {
+
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED){
+            switch (requestCode) {
+                //Location
+                case REQUEST_STORAGE:
+                    askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,requestCode);
+
+                    break;
+                //Call
+
+            }
+
+            Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+        }
+    }
     private void implementLisenter() {
         mBtnBack.setOnClickListener(this);
         mBtnSendMessage.setOnClickListener(this);

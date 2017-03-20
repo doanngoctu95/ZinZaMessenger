@@ -16,6 +16,7 @@ import java.io.Serializable;
     private String mStatus;
     private String mToken;
     private String mCreatedAt;
+    private boolean mIsFriend;
 
     public User(String mId, String mUsername, String mEmail, String mPassword, String mAvatar, String mDateOfBirth, String mStatus, String mToken, String mCreatedAt) {
         this.mId = mId;
@@ -103,5 +104,13 @@ import java.io.Serializable;
 
     public void setmCreatedAt(String mCreatedAt) {
         this.mCreatedAt = mCreatedAt;
+    }
+
+    public boolean getmIsFriend() {
+        return mIsFriend;
+    }
+
+    public void setmIsFriend(boolean mIsFriend) {
+        this.mIsFriend = mIsFriend;
     }
 }

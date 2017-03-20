@@ -100,7 +100,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
     private User mUser;
     private String idFriend;
 
-    private boolean checkListResult = false;
+    public static final int REQUEST_STORAGE =  0x3;
     private boolean doubleBackToExitPressedOnce = false;
 
 
@@ -108,8 +108,8 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messenger_friend);
-        Helper.createDirectory();
         initControl();
+
         setAuthInstace();
         showProgress("Loading...", "Please wait...");
         loadConversation();
@@ -118,6 +118,8 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
         mNavigationView.setNavigationItemSelectedListener(this);
 
     }
+
+
 
     private void initControl() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -267,6 +269,12 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+//                    String key = dataSnapshot.getKey();
+//                    int index = mListConversationKeys.indexOf(key);
+//                    if(index > -1){
+//                        mAdapterMessage.removeConversation(index);
+//                        mListConversationKeys.remove(index);
+//                    }
                 }
             }
 
@@ -358,6 +366,7 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
         btnAddFr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 String input = edtSearchFr.getText().toString().trim();
@@ -375,7 +384,6 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
     }
 
     private void searchByUsername(final String username) {
-
         mListFriendSearch = new ArrayList<>();
         mListSearchFrKeys = new ArrayList<>();
         mReference = mDatabase.getInstance().getReference();
@@ -383,21 +391,39 @@ public class MessageFriendActivity extends AppCompatActivity implements Navigati
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
-                    String key = dataSnapshot.getKey();
-                    User user = dataSnapshot.getValue(User.class);
+
+                    final String key = dataSnapshot.getKey();
+                    final User user = dataSnapshot.getValue(User.class);
                     mListSearchFrKeys.add(key);
                         if (user.getmUsername().toLowerCase().contains(username.toLowerCase())) {
-                            if(!user.getmUsername().equals(Utils.USER_NAME)){
-                                mAdapterFriendSearch.refill(user);
-                                checkListResult = true;
-                            }
+                            final String key1 = Utils.USER_ID +"-"+ user.getmId();
+                            final String key2 = user.getmId()+"-"+Utils.USER_ID;
+                            mReference.child("tblFriend").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if(!user.getmUsername().equals(Utils.USER_NAME)){
+                                        if(dataSnapshot.child(key1).exists()){
+                                            user.setmIsFriend(true);
+                                        } else if(dataSnapshot.child(key2).exists()) {
+                                            user.setmIsFriend(true);
+                                        } else {
+                                            user.setmIsFriend(false);
+                                        }
+                                        mAdapterFriendSearch.refill(user);
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
 
                         }
 
                 }
-
-
-                //So sanh vs username xem co trung hay k
 
             }
 
